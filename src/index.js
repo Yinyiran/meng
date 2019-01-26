@@ -1,2 +1,7 @@
-import "./style.css"
-console.log("Hello world From webpack4")
+import Vue from "vue";
+import App from "./App.vue";
+
+new Vue({
+  el: "#root",
+  render: h => h(App)
+});

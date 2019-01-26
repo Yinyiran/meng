@@ -1,23 +1,24 @@
+// webpack v4
 const path = require("path");
+// update 23.12.2018
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const CleanWebpackPlugin = require("clean-webpack-plugin");
 module.exports = {
   entry: { main: "./src/index.js" },
   output: {
     path: path.resolve(__dirname, "dist"),
-    filename: "main.js"
+    filename: "[name].[chunkhash].js"
   },
   target: "node",
+  externals: [nodeExternals()],
   module: {
     rules: [
       {
         test: /\.js$/,
-        exclude: "/node_modules/",
+        exclude: /node_modules/,
         use: {
-          loader: "balel-loader"
+          loader: "babel-loader"
         }
-      },
-      {
-        test:/\.css$/,
-        use
       }
     ]
   }
