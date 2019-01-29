@@ -1,25 +1,44 @@
-// webpack v4
-const path = require("path");
-// update 23.12.2018
-const HtmlWebpackPlugin = require("html-webpack-plugin");
-const CleanWebpackPlugin = require("clean-webpack-plugin");
+// const path = require("path");
+// const HtmlWebpackPlugin = require("html-webpack-plugin");
+// const CleanWebpackPlugin = require("clean-webpack-plugin");
+const VueLoaderPlugin = require("vue-loader/lib/plugin");
 module.exports = {
+  resolve: {
+    extensions: [".ts", ".js"] // 将 `.ts` 添加为一个可解析的扩展名。
+  },
   entry: { main: "./src/index.js" },
   output: {
     path: path.resolve(__dirname, "dist"),
     filename: "[name].[chunkhash].js"
   },
   target: "node",
-  externals: [nodeExternals()],
   module: {
     rules: [
       {
+        test: /\.vue$/,
+        loader: "vue-loader"
+      },
+      {
         test: /\.js$/,
-        exclude: /node_modules/,
-        use: {
-          loader: "babel-loader"
-        }
+        loader: "babel-loader",
+        exclude: file => /node_modules/.test(file) && !/\.vue\.js/.test(file)
+      },
+      {
+        test: "/.scss$/",
+        use: [
+          "vue-style-loader",
+          "css-loader",
+          "postcss-loader",
+          {
+            loader: "sass-loader",
+            options: {
+              indentedSyntax: true,
+              data: "./src/variables.scss" // 共享全局变量
+            }
+          }
+        ]
       }
     ]
-  }
+  },
+  plugins: [new VueLoaderPlugin()]
 };
