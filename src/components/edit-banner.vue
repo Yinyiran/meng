@@ -48,7 +48,7 @@ import Vue from "vue";
 import {
   Form,
   FormItem,
-  tooltip,
+  Tooltip,
   Button,
   Input,
   Select,
@@ -56,7 +56,7 @@ import {
 } from "element-ui";
 Vue.use(Form);
 Vue.use(FormItem);
-Vue.use(tooltip);
+Vue.use(Tooltip);
 Vue.use(Button);
 Vue.use(Input);
 Vue.use(Select);

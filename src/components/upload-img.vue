@@ -22,9 +22,9 @@
 
 <script>
 import Vue from "vue";
-import { Upload, tooltip, Button } from "element-ui";
+import { Upload, Tooltip, Button } from "element-ui";
 Vue.use(Upload);
-Vue.use(tooltip);
+Vue.use(Tooltip);
 Vue.use(Button);
 import { API, Message, Http } from "../service";
 import imageList from "./image-list.vue";

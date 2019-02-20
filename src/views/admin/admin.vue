@@ -31,20 +31,29 @@
 <script>
 import { API, Cache } from "../../service";
 import imgCrop from "../../components/img-crop";
+import Home from "../../components/admin/home.vue";
+import Articles from "../../components/admin/articles.vue";
+import EditInfo from "../../components/admin/editInfo.vue";
+import Products from "../../components/admin/products.vue";
+import Setting from "../../components/admin/setting.vue";
+import Evaluate from "../../components/admin/evaluate.vue";
+import Images from "../../components/admin/images.vue";
+// const ProductPage = () => import("../../components/product-page.vue");
+// const Login = () => import("../../components/admin/login.vue");
 export default {
   data() {
     return {
-      componentId: "",
+      componentId: "EditInfo",
       logoSrc: API.imgSrc + "avatar.png",
       user: Cache.get("user_info") || "",
       menu: [
-        { name: "用户信息", icon: "view", component: "editInfo" },
-        { name: "首页管理", icon: "goods", component: "home" },
-        { name: "行业新闻", icon: "news", component: "articles" },
-        { name: "产品管理", icon: "star-off", component: "products" },
-        { name: "评价管理", icon: "edit-outline", component: "evaluate" },
-        { name: "图片管理", icon: "picture", component: "images" },
-        { name: "其他设置", icon: "setting", component: "setting" }
+        { name: "用户信息", icon: "view", component: "EditInfo" },
+        { name: "首页管理", icon: "goods", component: "Home" },
+        { name: "行业新闻", icon: "news", component: "Articles" },
+        { name: "产品管理", icon: "star-off", component: "Products" },
+        { name: "评价管理", icon: "edit-outline", component: "Evaluate" },
+        { name: "图片管理", icon: "picture", component: "Images" },
+        { name: "其他设置", icon: "setting", component: "Setting" }
       ],
       showlogout: false,
       showLogoEdit: false,
@@ -63,16 +72,22 @@ export default {
       this.showLogoEdit = true;
     },
     toHome() {
-      this.$router.push("/index");
+      // window.open("localhost")
     },
     loginOut() {
       Cache.clear();
-      Cache.remove("user_info");
       this.$router.replace("/login");
     }
   },
   components: {
-    imgCrop
+    imgCrop,
+    EditInfo,
+    Home,
+    Articles,
+    Products,
+    Setting,
+    Evaluate,
+    Images
   }
 };
 </script>

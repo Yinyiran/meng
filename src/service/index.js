@@ -1,5 +1,4 @@
 import axios from "axios";
-import router from "../views/admin/router";
 import { message, messageBox } from "element-ui";
 
 let API;
@@ -172,13 +171,13 @@ const Http = (() => {
       }
       if (error.response.status === 401) {
         Message.error(Status[error.response.status]);
-        router.replace({
-          path: "/login"
-        });
-      } else {
-        router.push({
-          path: `/error?status=${error.response.status}&message=${error}`
-        });
+      //   router.replace({
+      //     path: "/login"
+      //   });
+      // } else {
+      //   router.push({
+      //     path: `/error?status=${error.response.status}&message=${error}`
+      //   });
       }
       console.log(error);
       return Promise.reject(error);

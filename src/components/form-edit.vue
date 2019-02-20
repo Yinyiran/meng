@@ -29,7 +29,7 @@ import Vue from "vue";
 import {
   Form,
   FormItem,
-  tooltip,
+  Tooltip,
   Checkbox,
   Option,
   Button,
@@ -39,7 +39,7 @@ import {
 } from "element-ui";
 Vue.use(Form);
 Vue.use(FormItem);
-Vue.use(tooltip);
+Vue.use(Tooltip);
 Vue.use(Checkbox);
 Vue.use(Row);
 Vue.use(Col);
