@@ -12,7 +12,7 @@
         </span>
       </p>
       <div class="menu-list">
-        <li class="menu-item" @click="menuSwitch(item.component)" v-for="(item,index) in menu" :key="index">
+        <li class="menu-item" @click="menuSwitch(item.component)" :class="{active:item.component == componentId}" v-for="(item,index) in menus" :key="index">
           <i class="icon" :class="'el-icon-'+item.icon"></i>
           {{item.name}}
         </li>
@@ -30,30 +30,25 @@
 </template>
 <script>
 import { API, Cache } from "../../service";
-import imgCrop from "../../components/img-crop";
-import Home from "../../components/admin/home.vue";
-import Articles from "../../components/admin/articles.vue";
-import EditInfo from "../../components/admin/editInfo.vue";
-import Products from "../../components/admin/products.vue";
-import Setting from "../../components/admin/setting.vue";
-import Evaluate from "../../components/admin/evaluate.vue";
-import Images from "../../components/admin/images.vue";
-// const ProductPage = () => import("../../components/product-page.vue");
-// const Login = () => import("../../components/admin/login.vue");
+import { router } from "../../service";
+
 export default {
+  created() {
+    router();
+  },
   data() {
     return {
-      componentId: "EditInfo",
+      componentId: "home",
       logoSrc: API.imgSrc + "avatar.png",
       user: Cache.get("user_info") || "",
-      menu: [
-        { name: "用户信息", icon: "view", component: "EditInfo" },
-        { name: "首页管理", icon: "goods", component: "Home" },
-        { name: "行业新闻", icon: "news", component: "Articles" },
-        { name: "产品管理", icon: "star-off", component: "Products" },
-        { name: "评价管理", icon: "edit-outline", component: "Evaluate" },
-        { name: "图片管理", icon: "picture", component: "Images" },
-        { name: "其他设置", icon: "setting", component: "Setting" }
+      menus: [
+        { name: "首页管理", icon: "goods", component: "home" },
+        { name: "行业新闻", icon: "news", component: "articles" },
+        { name: "产品管理", icon: "star-off", component: "products" },
+        { name: "评价管理", icon: "edit-outline", component: "evaluate" },
+        { name: "图片管理", icon: "picture", component: "images" },
+        { name: "用户信息", icon: "view", component: "editInfo" },
+        { name: "其他设置", icon: "setting", component: "setting" }
       ],
       showlogout: false,
       showLogoEdit: false,
@@ -72,22 +67,22 @@ export default {
       this.showLogoEdit = true;
     },
     toHome() {
-      // window.open("localhost")
+      window.location.href = `${location.origin}/index.html`;
     },
     loginOut() {
       Cache.clear();
-      this.$router.replace("/login");
+      window.location.href = `${location.origin}/login.html`;
     }
   },
   components: {
-    imgCrop,
-    EditInfo,
-    Home,
-    Articles,
-    Products,
-    Setting,
-    Evaluate,
-    Images
+    imgCrop: () => import("../../components/img-crop.vue"),
+    home: () => import("../../components/admin/home.vue"),
+    articles: () => import("../../components/admin/articles.vue"),
+    products: () => import("../../components/admin/products.vue"),
+    setting: () => import("../../components/admin/setting.vue"),
+    evaluate: () => import("../../components/admin/evaluate.vue"),
+    editInfo: () => import("../../components/admin/editInfo.vue"),
+    images: () => import("../../components/admin/images.vue")
   }
 };
 </script>
@@ -199,7 +194,7 @@ export default {
     &:hover {
       background-color: #222429;
     }
-    &.router-link-active {
+    &.active {
       color: $comColor;
     }
     .icon {

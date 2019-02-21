@@ -54,6 +54,7 @@ export default {
   methods: {
     imgSrc(url) {
       let src = API.imgSrc + url;
+      // fawefaw
       return src;
     },
     toDetail(item) {

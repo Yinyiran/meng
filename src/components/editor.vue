@@ -29,7 +29,7 @@ export default {
             table                     { word-wrap:break-word; word-break:break-all; max-width:100%; border:none; border-color:#999; }
             ul,ol                     { list-style-position:inside; }
           `,
-        language_url: "/public/zh_CN.js" //This url points to location of persian language file.
+        language_url: "/src/assets/zh_CN.js" //This url points to location of persian language file.
       },
       plugins: [
         "paste",

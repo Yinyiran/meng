@@ -6,17 +6,15 @@ module.exports = {
   pages: {
     index: {
       entry: "src/views/index/main.js", // page 的入口
-      template: "public/index.html", // 模板来源
-      filename: "index.html", // 在 dist/index.html 的输出
-      title: "啦啦啦啦", //template 设置<title><%= htmlWebpackPlugin.options.title %></title>
-      chunks: ["chunk-vendors", "chunk-common", "index"] // 在这个页面中包含的块，默认情况下会包含// 提取出来的通用 chunk 和 vendor chunk。
+      title: "济南莱蒂斯酒具有限公司", //template 设置<title><%= htmlWebpackPlugin.options.title %></title>
     },
     admin: {
       entry: "src/views/admin/main.js",
-      template: "public/index.html",
-      filename: "admin.html",
-      title: "admin page",
-      chunks: ["chunk-vendors", "chunk-common", "admin"]
+      title: "莱蒂斯网站后台管理",
+    },
+    login: {
+      entry: "src/views/login/main.js",
+      title: "登陆",
     }
   },
   // 导致

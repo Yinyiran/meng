@@ -1,8 +1,8 @@
 <template>
   <div class="home">
     <header class="header">
-      <span class="item" @click="tabSwitch"><img class="logo" :src="logo"></span>
-      <span class="item" v-for="tab in tabs" :class="{active:isActive(tab)}" :key="tab.component" @click="tabSwitch(tab)">{{tab.label}}</span>
+      <span class="item" @click="reloadPage"><img class="logo" :src="logo"></span>
+      <span class="item" v-for="tab in tabs" :class="{active:isActive(tab)}" :key="tab.component" @click="tabSwitch(tab.component)">{{tab.label}}</span>
       <a class="item el-icon-setting" href="http://localhost:88/admin"></a>
     </header>
     <component :is="componentId"></component>
@@ -11,54 +11,60 @@
 
 <script>
 import { API } from "../../service";
-const Home = () => import("../../components/index/home.vue");
-const About = () => import("../../components/index/about.vue");
-const Products = () => import("../../components/index/products.vue");
-const Articles = () => import("../../components/index/articles.vue");
-const ArticlePage = () => import("../../components/article-page.vue");
-const ProductPage = () => import("../../components/product-page.vue");
-const ErrorComp = () => import("../../components/error.vue");
 export default {
+  created() {
+    if (location.pathname == "/") {
+      window.history.pushState(null, null, `${location.origin}/home`);
+      this.componentId = "home";
+    }
+    let compIds = this.tabs.map(tab => tab.component);
+    let pathname = location.pathname.replace(/\//g, "");
+    if (compIds.includes(pathname)) this.componentId = pathname;
+  },
   data() {
     return {
       logo: API.imgSrc + "avatar.png",
-      componentId: "Home",
+      componentId: "home",
       tabs: [
         {
           label: "首页",
-          component: "Home"
+          component: "home"
         },
         {
           label: "产品列表",
-          component: "Products"
+          component: "products"
         },
         {
           label: "行业新闻",
-          component: "Articles"
+          component: "articles"
         },
         {
           label: "关于我们",
-          component: "About"
+          component: "about"
         }
       ]
     };
   },
   methods: {
-    tabSwitch({ component = "index" } = {}) {
+    tabSwitch(component = "home") {
       this.componentId = component;
+      window.history.pushState(null, null, `${location.origin}/${component}`);
+    },
+    reloadPage() {
+      window.location.reload();
     },
     isActive(item) {
-      return location.pathname.includes(item.to);
+      return location.pathname.includes(item.component);
     }
   },
   components: {
-    Home,
-    About,
-    Products,
-    Articles,
-    ArticlePage,
-    ProductPage,
-    ErrorComp
+    home: () => import("../../components/index/home.vue"),
+    about: () => import("../../components/index/about.vue"),
+    products: () => import("../../components/index/products.vue"),
+    articles: () => import("../../components/index/articles.vue")
+    // ArticlePage: () => import("../../components/article-page.vue"),
+    // ProductPage: () => import("../../components/product-page.vue"),
+    // ErrorComp: () => import("../../components/error.vue")
   }
 };
 </script>

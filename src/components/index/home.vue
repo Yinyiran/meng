@@ -173,7 +173,8 @@ export default {
     background-color: #fff;
   }
   &:nth-child(2n) {
-    background-color: $bgColor;
+    // background-color: $bgColor;
+    background-color: #ff8181;
   }
 }
 .wrap {

@@ -428,23 +428,22 @@ const routeList = {
   },
   async getAllImages(ctx) {
     const data = querystring.parse(ctx.request.url.split("?")[1]);
-    let src = __dirname + "/../upload/";
+    let src = path.normalize(__dirname + "/../upload/");
 
     const readFileList = dir => {
       let files = fs.readdirSync(dir);
       let imgList = [];
-      for (let i = 0; i < files.length; i++) {
+      for (let i = 0, len = files.length; i < len; i++) {
         const file = files[i];
         let filePath = dir + file;
-        let isImg = [".png", ".jpg", ".gif", ".jpeg"].indexOf(
-          path.extname(filePath)
-        );
-        if (isImg < 0) continue;
+        let isImg = fs.statSync(filePath).isDirectory()
+        if (isImg) continue; // 如果是文件夹 跳过
         // 继续循环子文件夹
         // let stat = fs.statSync(filePath);
         // if (stat.isDirectory()) {
         //   readFileList(`${filePath}/`);
         // } else {
+        // if(i==29) continue
         let img = ImgInfo(filePath);
         img.size = Math.ceil(fs.readFileSync(filePath).length / 1024);
         img.name = file;
@@ -459,7 +458,7 @@ const routeList = {
           return value1 - value2; // 升序
         };
       }
-      return imgList.sort(compare("time"));
+      return imgList.sort(compare("time"))
     };
     const Allfiles = readFileList(src).reverse();
     ctx.body = {

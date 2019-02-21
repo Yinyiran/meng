@@ -1,37 +1,31 @@
 import axios from "axios";
 import { message, messageBox } from "element-ui";
 
-let API;
+let baseURL = process.env.NODE_ENV === "production" ? "https://api.yunyiran.com" : "http://localhost:8888";
 
-if (process.env.NODE_ENV === "production") {
-  API = {
-    imgSrc: "https://api.yunyiran.com/upload/",
-    serve: "https://api.yunyiran.com/api"
-  };
-} else {
-  API = {
-    imgSrc: "http://localhost:8888/upload/",
-    serve: "http://localhost:88/api"
-  };
-}
+const API = {
+  imgSrc: `${baseURL}/upload/`,
+  serve: `${baseURL}/api`
+};
 
-const Cache = (() => {
-  return {
-    get(key) {
-      let value = window.sessionStorage.getItem(key);
-      return value ? window.JSON.parse(value) : "";
-    },
-    set(key, value) {
-      return window.sessionStorage.setItem(key, JSON.stringify(value));
-    },
-    remove(key) {
-      window.sessionStorage.removeItem(key);
-    },
-    clear() {
-      window.sessionStorage.clear();
-    }
-  };
-})();
+/**
+ * 获取本地
+ */
+const Cache = {
+  get(key) {
+    let value = window.sessionStorage.getItem(key);
+    return value ? window.JSON.parse(value) : null;
+  },
+  set(key, value) {
+    return window.sessionStorage.setItem(key, JSON.stringify(value));
+  },
+  remove(key) {
+    window.sessionStorage.removeItem(key);
+  },
+  clear() {
+    window.sessionStorage.clear();
+  }
+};
 
 // banner类型
 const BannerType = {
@@ -163,21 +157,19 @@ const Http = (() => {
     },
     error => {
       if (error && error.response) {
-        error.message =
-          Status[error.response.status] ||
-          `连接错误，错误码：${error.response.status}`;
+        error.message = Status[error.response.status] || `连接错误，错误码：${error.response.status}`;
       } else {
         error.message = "连接到服务器失败";
       }
       if (error.response.status === 401) {
         Message.error(Status[error.response.status]);
-      //   router.replace({
-      //     path: "/login"
-      //   });
-      // } else {
-      //   router.push({
-      //     path: `/error?status=${error.response.status}&message=${error}`
-      //   });
+        //   router.replace({
+        //     path: "/login"
+        //   });
+        // } else {
+        //   router.push({
+        //     path: `/error?status=${error.response.status}&message=${error}`
+        //   });
       }
       console.log(error);
       return Promise.reject(error);
@@ -235,4 +227,15 @@ const Query = key => {
   }
 };
 
-export { API, BannerType, Message, Http, Query, Cache, ClassifyImages };
+// 路由处理
+const router = () => {
+  // 判断是否需要登录权限
+  let user = Cache.get("user_info");
+  if (!user) {
+    // 没登录则跳转到登录界面
+    // path: ""
+    window.location.href = `${location.origin}/login.html`;
+  }
+};
+
+export { API, BannerType, Message, Http, Query, Cache, ClassifyImages, router };
