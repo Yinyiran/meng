@@ -17,7 +17,7 @@
           {{item.name}}
         </li>
       </div>
-      <span class="to-home" @click="toHome"></span>
+      <a class="to-home" target="_blank" :href="indexHref"></a>
     </div>
     <div class="content">
       <component :is="componentId"></component>
@@ -41,6 +41,7 @@ export default {
       componentId: "home",
       logoSrc: API.imgSrc + "avatar.png",
       user: Cache.get("user_info") || "",
+      indexHref: `${location.origin}/index.html`,
       menus: [
         { name: "首页管理", icon: "goods", component: "home" },
         { name: "行业新闻", icon: "news", component: "articles" },
@@ -67,7 +68,7 @@ export default {
       this.showLogoEdit = true;
     },
     toHome() {
-      window.location.href = `${location.origin}/index.html`;
+      window.location.href = ``;
     },
     loginOut() {
       Cache.clear();

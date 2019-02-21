@@ -40,7 +40,7 @@ export default {
     },
     maxSize: {
       type: Number,
-      default: 0.05
+      default: 0.5
     },
     type: {
       type: String,

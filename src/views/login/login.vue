@@ -56,7 +56,7 @@ export default {
       Http.post("login", this.form).then(res => {
         if (res.data.status) {
           Cache.set("user_info", res.data.data);
-          window.history.back();
+          window.location.href = `${location.origin}/admin.html`
           this.form.name = "";
           this.form.password = "";
         } else {
