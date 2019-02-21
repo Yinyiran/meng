@@ -1,7 +1,7 @@
 import axios from "axios";
 import { message, messageBox } from "element-ui";
 
-let baseURL = process.env.NODE_ENV === "production" ? "https://api.yunyiran.com" : "http://localhost:8888";
+let baseURL = process.env.NODE_ENV === "production" ? "https://api.yunyiran.com" : "http://localhost:88";
 
 const API = {
   imgSrc: `${baseURL}/upload/`,

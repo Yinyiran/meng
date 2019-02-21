@@ -2,7 +2,7 @@
   <div class="img-crop">
     <span class="el-icon-circle-close close-btn" @click="$emit('close')"></span>
     <div class="cropper" :style="{'height':height,'width':width}">
-      <vueCropper ref="cropper" :autoCropWidth="autoCropWidth" :autoCropHeight="autoCropHeight" :img="option.img" :outputSize="option.size" :outputType="option.outputType" :info="true" :full="option.full" :canMove="option.canMove" :canMoveBox="option.canMoveBox" :fixedBox="option.fixedBox" :autoCrop="true" :original="option.original" @realTime="realTime"></vueCropper>
+      <vue-cropper ref="cropper" :autoCropWidth="autoCropWidth" :autoCropHeight="autoCropHeight" :img="option.img" :outputSize="option.size" :outputType="option.outputType" :info="true" :full="option.full" :canMove="option.canMove" :canMoveBox="option.canMoveBox" :fixedBox="option.fixedBox" :autoCrop="true" :original="option.original" @realTime="realTime"></vue-cropper>
     </div>
     <div class="show-preview" :style="{'width': previews.w + 'px', 'height': previews.h + 'px',  'overflow': 'hidden', 'margin': '5px'}">
       <div :style="previews.div">
@@ -32,7 +32,7 @@
   </div>
 </template>
 <script>
-import vueCropper from "vue-cropper";
+import { VueCropper } from "vue-cropper";
 import { Http, Message, API } from "../service";
 export default {
   data: function() {
@@ -44,10 +44,10 @@ export default {
       autoCropWidth: 70,
       autoCropHeight: 70,
       previews: {
-        img: API.imgSrc + "avatar.png"
+        img: `${API.imgSrc}avatar.png`
       },
       option: {
-        img: API.imgSrc + "avatar.png",
+        img: `${API.imgSrc}/avatar.png`,
         size: 1,
         full: true,
         outputTypes: "png",
@@ -158,7 +158,7 @@ export default {
     }
   },
   components: {
-    vueCropper
+    VueCropper
   }
 };
 </script>
