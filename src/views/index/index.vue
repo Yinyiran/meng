@@ -11,6 +11,7 @@
 
 <script>
 import { API } from "../../service";
+import Event from "../../service/Event.js";
 export default {
   created() {
     if (location.pathname == "/") {
@@ -20,6 +21,9 @@ export default {
     let compIds = this.tabs.map(tab => tab.component);
     let pathname = location.pathname.replace(/\//g, "");
     if (compIds.includes(pathname)) this.componentId = pathname;
+    Event.$on("change_router", compId => {
+      this.tabSwitch(compId);
+    });
   },
   data() {
     return {
@@ -61,10 +65,10 @@ export default {
     home: () => import("../../components/index/home.vue"),
     about: () => import("../../components/index/about.vue"),
     products: () => import("../../components/index/products.vue"),
-    articles: () => import("../../components/index/articles.vue")
-    // ArticlePage: () => import("../../components/article-page.vue"),
-    // ProductPage: () => import("../../components/product-page.vue"),
-    // ErrorComp: () => import("../../components/error.vue")
+    articles: () => import("../../components/index/articles.vue"),
+    ArticlePage: () => import("../../components/article-page.vue"),
+    ProductPage: () => import("../../components/product-page.vue"),
+    ErrorComp: () => import("../../components/error.vue")
   }
 };
 </script>

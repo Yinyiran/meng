@@ -85,6 +85,7 @@
 import Carousel from "../carousel.vue";
 import ProdList from "../prod-list.vue";
 import { API, Http, History } from "../../service";
+import Event from '../../service/Event';
 
 export default {
   name: "home",
@@ -136,6 +137,7 @@ export default {
   methods: {
     toProduts(catalog) {
       History(`products?catalog=${catalog.id}`);
+      Event.$emit("change_router","products")
     },
     toArticlePage(catalog) {
       History(`articles?catalog=${catalog.id}`);
