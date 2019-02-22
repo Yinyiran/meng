@@ -44,16 +44,9 @@ router.get("/getSkuList", api.getSkuList); // admin
 router.post("/saveSkuList", api.saveSkuList); // admin
 router.post("/deleSkuList", api.deleSkuList); // admin
 // 推荐
-router.get("/web/getAllrecommend", api.getAllrecommend);
-router.get("/getAllrecommend", api.getAllrecommend); // admin
-router.get("/web/getRecommendProduct", api.getRecommendProduct);
-router.get("/getRecommendProduct", api.getRecommendProduct); // admin
+router.get("/getRecommended", api.getRecommended);
 router.get("/cancelProdRecom", api.cancelProdRecom); // admin
-router.get("/web/getRecommendEvaluate", api.getRecommendEvaluate);
-router.get("/getRecommendEvaluate", api.getRecommendEvaluate); // admin
 router.get("/cancelEvalRecom", api.cancelEvalRecom); // admin
-router.get("/web/getRecommendArticle", api.getRecommendArticle);
-router.get("/getRecommendArticle", api.getRecommendArticle); // admin
 router.get("/cancelArticleRecom", api.cancelArticleRecom); // admin
 
 module.exports = router;

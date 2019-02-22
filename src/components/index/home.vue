@@ -84,7 +84,7 @@
 <script>
 import Carousel from "../carousel.vue";
 import ProdList from "../prod-list.vue";
-import { API, Http } from "../../service";
+import { API, Http, History } from "../../service";
 
 export default {
   name: "home",
@@ -105,28 +105,19 @@ export default {
     Http.get("web/getBanner").then(res => {
       this.images = res.data;
     });
-    Http.get("web/getRecommendProduct").then(res => {
-      for (let i = 0; i < res.data.length; i++) {
-        const element = res.data[i];
-        res.data[i].imgSrc = API.imgSrc + element.images.split(",")[0];
-      }
-      this.products = res.data;
-    });
-    Http.get("web/getRecommendEvaluate").then(res => {
-      for (let i = 0; i < res.data.length; i++) {
-        const element = res.data[i];
-        if (element.avatar) {
-          res.data[i].avatar = API.imgSrc + element.avatar;
-        }
-      }
-      this.spliceEvaluate(res.data);
-    });
-    Http.get("web/getRecommendArticle").then(res => {
-      for (let i = 0; i < res.data.length; i++) {
-        const element = res.data[i];
-        res.data[i].image = API.imgSrc + element.image;
-      }
-      this.articles = res.data;
+    Http.get("getRecommended").then(res => {
+      res.data.products.forEach(prod => {
+        prod.imgSrc = API.imgSrc + prod.images.split(",")[0];
+        this.products.push(prod);
+      });
+      res.data.articles.forEach(art => {
+        art.image = API.imgSrc + art.image;
+        this.articles.push(art);
+      });
+      res.data.evaluates.forEach(eva => {
+        eva.avatar = API.imgSrc + eva.avatar;
+      });
+      this.spliceEvaluate(res.data.evaluates);
     });
     Http.get("web/getInfos").then(res => {
       this.compInfos = res.data;
@@ -144,10 +135,10 @@ export default {
   },
   methods: {
     toProduts(catalog) {
-      this.$router.push(`/products?catalog=${catalog.id}`);
+      History(`products?catalog=${catalog.id}`);
     },
     toArticlePage(catalog) {
-      this.$router.push(`/articles/page?id=${catalog.id}`);
+      History(`articles?catalog=${catalog.id}`);
     },
     spliceEvaluate(arr) {
       if (arr.length < this.spliceNum) {

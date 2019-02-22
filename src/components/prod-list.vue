@@ -14,13 +14,14 @@
 </template>
 <script>
 import NoData from "./no-data";
+import { History } from "../service";
 export default {
   props: {
     products: Array
   },
   methods: {
     toProductPage(prod) {
-      this.$router.push(`/products/page?id=${prod.id}`);
+      History(`products/page?id=${prod.id}`);
     }
   },
   components: {

@@ -30,11 +30,11 @@
 </template>
 <script>
 import { API, Cache } from "../../service";
-import { router } from "../../service";
+import { IsLogin } from "../../service";
 
 export default {
   created() {
-    router();
+    IsLogin();
   },
   data() {
     return {

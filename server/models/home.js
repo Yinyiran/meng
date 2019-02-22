@@ -63,7 +63,6 @@ const routeList = {
     ctx.body = rows[0];
   },
   async getInfos(ctx) {
-    console.log(ctx);
     const compInfos = await db.query(
       `SELECT compInfos ,compIntro, compName, email, facebook, facebook_url, id, logo, mobile, telephone, twitter, twitter_url,name FROM user WHERE id='1'`
     );
@@ -124,7 +123,7 @@ const routeList = {
     ctx.body = rows;
   },
   async getProduct(ctx) {
-    const data = querystring.parse(ctx.request.url.split("?")[1]);
+    const data = ctx.query;
     if (data.id) {
       const [rows] = await db.query(
         `SELECT p.prod_id as id,p.prod_name as name,p.catalog_id as catalogID,p.sku_id as skuID,c.catalog_name as catalog,s.sku_name as sku,p.prod_images as images ,p.prod_intro as intro,prod_details as details ,recommend FROM products p JOIN catalog c ON p.catalog_id = c.catalog_id JOIN sku s on p.sku_id = s.sku_id WHERE p.prod_id = '${
@@ -159,7 +158,7 @@ const routeList = {
   },
 
   async getArticle(ctx) {
-    const data = querystring.parse(ctx.request.url.split("?")[1]);
+    const data = ctx.query;
     if (data.id) {
       const [rows] = await db.query(
         `SELECT article_id as id,article_title as title,article_intro as intro,article_image as image,article_details as detail,recommend,createtime FROM article WHERE article_id = '${
@@ -209,7 +208,7 @@ const routeList = {
 
   // 评价
   async getEvaluate(ctx) {
-    const data = querystring.parse(ctx.request.url.split("?")[1]);
+    const data = ctx.query;
     if (data && data.id) {
       const [rows] = await db.query(
         `SELECT evaluate,id,intro,'like',prod_id,recommend,unlike,user_avatar as avatar,user_name as name FROM evaluate WHERE prod_id = '${
@@ -256,12 +255,6 @@ const routeList = {
         }','${data.prod_id}')`
       );
     }
-    ctx.body = result[0];
-  },
-  async getAllrecommend(ctx) {
-    let result;
-
-    result = await db.query(`SELECT * FROM evaluate`);
     ctx.body = result[0];
   },
   async saveBanner(ctx) {
@@ -311,7 +304,7 @@ const routeList = {
   },
   // 图片上传
   async uploadImg(ctx) {
-    const params = querystring.parse(ctx.request.url.split("?")[1]);
+    const params = ctx.query;
     const file = ctx.request.files.file;
     let filePath = `${__dirname}/../upload/`;
     // if (!fs.existsSync(filePath)) {
@@ -427,7 +420,7 @@ const routeList = {
     ctx.body = rows;
   },
   async getAllImages(ctx) {
-    const data = querystring.parse(ctx.request.url.split("?")[1]);
+    const data = ctx.query;
     let src = path.normalize(__dirname + "/../upload/");
 
     const readFileList = dir => {
@@ -466,40 +459,45 @@ const routeList = {
       data: Allfiles.slice((data.page - 1) * data.size, data.page * data.size)
     };
   },
-  async getRecommendProduct(ctx) {
-    const [rows] = await db.query(
-      `SELECT p.prod_id as id,p.prod_name as name, p.prod_intro as intro,p.prod_images as images,s.sku_name as sku FROM products p JOIN sku s on p.sku_id = s.sku_id WHERE recommend=1 ORDER BY prod_id DESC`
-    );
-    ctx.body = rows;
-  },
-  async getRecommendEvaluate(ctx) {
-    const [rows] = await db.query(
-      `SELECT id,user_name as name, evaluate as evaluate, intro ,user_avatar as avatar FROM evaluate WHERE recommend=1 ORDER BY id DESC`
-    );
-    ctx.body = rows;
-  },
-  async getRecommendArticle(ctx) {
-    const [rows] = await db.query(
-      `SELECT article_id as id,article_title as title, article_image as image, article_intro as intro FROM article WHERE recommend=1 ORDER BY article_id DESC`
-    );
-    ctx.body = rows;
+  async getRecommended(ctx) {
+    let query = ctx.query
+    let res = {}
+    if (!query.type || query.type == "products") {
+      const [products] = await db.query(
+        `SELECT p.prod_id as id,p.prod_name as name, p.prod_intro as intro,p.prod_images as images,s.sku_name as sku FROM products p JOIN sku s on p.sku_id = s.sku_id WHERE recommend=1 ORDER BY prod_id DESC`
+      );
+      res.products = products
+    }
+    if (!query.type || query.type == "articles") {
+      const [articles] = await db.query(
+        `SELECT article_id as id,article_title as title, article_image as image, article_intro as intro FROM article WHERE recommend=1 ORDER BY article_id DESC`
+      );
+      res.articles = articles
+    }
+    if (!query.type || query.type == "evaluates") {
+      const [evaluates] = await db.query(
+        `SELECT id,user_name as name, evaluate as evaluate, intro ,user_avatar as avatar FROM evaluate WHERE recommend=1 ORDER BY id DESC`
+      );
+      res.evaluates = evaluates
+    }
+    ctx.body = !query.type ? res : res[query.type];
   },
   async cancelProdRecom(ctx) {
-    const data = querystring.parse(ctx.request.url.split("?")[1]);
+    const data = ctx.query;
     const [rows] = await db.query(
       `UPDATE products SET recommend=0 WHERE prod_id=${data.id}`
     );
     ctx.body = rows;
   },
   async cancelArticleRecom(ctx) {
-    const data = querystring.parse(ctx.request.url.split("?")[1]);
+    const data = ctx.query;
     const [rows] = await db.query(
       `UPDATE article SET recommend=0 WHERE article_id=${data.id}`
     );
     ctx.body = rows;
   },
   async cancelEvalRecom(ctx) {
-    const data = querystring.parse(ctx.request.url.split("?")[1]);
+    const data = ctx.query;
     const [rows] = await db.query(
       `UPDATE evaluate SET recommend=0 WHERE id=${data.id}`
     );

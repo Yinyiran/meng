@@ -61,7 +61,7 @@ const adminHome = {
         },
         {
           label: "推荐商品",
-          name: "product",
+          name: "products",
           render: false,
           config: {
             cols: [
@@ -89,7 +89,7 @@ const adminHome = {
         },
         {
           label: "推荐新闻",
-          name: "news",
+          name: "articles",
           render: false,
           config: {
             cols: [
@@ -116,7 +116,7 @@ const adminHome = {
         },
         {
           label: "推荐评论",
-          name: "evaluate",
+          name: "evaluates",
           render: false,
           config: {
             cols: [

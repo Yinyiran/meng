@@ -227,8 +227,8 @@ const Query = key => {
   }
 };
 
-// 路由处理
-const router = () => {
+// 是否登陆
+const IsLogin = () => {
   // 判断是否需要登录权限
   let user = Cache.get("user_info");
   if (!user) {
@@ -238,4 +238,9 @@ const router = () => {
   }
 };
 
-export { API, BannerType, Message, Http, Query, Cache, ClassifyImages, router };
+// 路由处理
+const History = url => {
+  window.history.pushState(null, null, `${location.origin}/${url}`);
+};
+
+export { API, BannerType, Message, Http, Query, Cache, ClassifyImages, IsLogin, History };
