@@ -85,7 +85,6 @@
 import Carousel from "../carousel.vue";
 import ProdList from "../prod-list.vue";
 import { API, Http, History } from "../../service";
-import Event from '../../service/Event';
 
 export default {
   name: "home",
@@ -106,7 +105,7 @@ export default {
     Http.get("web/getBanner").then(res => {
       this.images = res.data;
     });
-    Http.get("getRecommended").then(res => {
+    Http.get("web/getRecommended").then(res => {
       res.data.products.forEach(prod => {
         prod.imgSrc = API.imgSrc + prod.images.split(",")[0];
         this.products.push(prod);
@@ -137,7 +136,6 @@ export default {
   methods: {
     toProduts(catalog) {
       History(`products?catalog=${catalog.id}`);
-      Event.$emit("change_router","products")
     },
     toArticlePage(catalog) {
       History(`articles?catalog=${catalog.id}`);

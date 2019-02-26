@@ -11,7 +11,6 @@
 
 <script>
 import { API } from "../../service";
-import Event from "../../service/Event.js";
 export default {
   created() {
     if (location.pathname == "/") {
@@ -21,9 +20,6 @@ export default {
     let compIds = this.tabs.map(tab => tab.component);
     let pathname = location.pathname.replace(/\//g, "");
     if (compIds.includes(pathname)) this.componentId = pathname;
-    Event.$on("change_router", compId => {
-      this.tabSwitch(compId);
-    });
   },
   data() {
     return {
@@ -53,6 +49,14 @@ export default {
     tabSwitch(component = "home") {
       this.componentId = component;
       window.history.pushState(null, null, `${location.origin}/${component}`);
+    },
+    tabSwitch2(tab) {
+      this.componentId = tab.key;
+      window.history.pushState(
+        null,
+        null,
+        `${location.origin}/catalog/?id=${tab.catalog}`
+      );
     },
     reloadPage() {
       window.location.reload();

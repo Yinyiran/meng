@@ -1,8 +1,7 @@
 const db = require("../config/db");
 const fs = require("fs");
 const path = require("path");
-const querystring = require("querystring");
-const ImgInfo = require("image-size");
+const ImgSize = require("image-size");
 const jwt = require("jsonwebtoken");
 let token;
 
@@ -437,7 +436,7 @@ const routeList = {
         //   readFileList(`${filePath}/`);
         // } else {
         // if(i==29) continue
-        let img = ImgInfo(filePath);
+        let img = ImgSize(filePath);
         img.size = Math.ceil(fs.readFileSync(filePath).length / 1024);
         img.name = file;
         img.time = fs.statSync(filePath).ctimeMs;

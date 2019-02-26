@@ -44,6 +44,7 @@ router.get("/getSkuList", api.getSkuList); // admin
 router.post("/saveSkuList", api.saveSkuList); // admin
 router.post("/deleSkuList", api.deleSkuList); // admin
 // 推荐
+router.get("/web/getRecommended", api.getRecommended);
 router.get("/getRecommended", api.getRecommended);
 router.get("/cancelProdRecom", api.cancelProdRecom); // admin
 router.get("/cancelEvalRecom", api.cancelEvalRecom); // admin
