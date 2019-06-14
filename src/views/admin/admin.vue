@@ -48,7 +48,7 @@ export default {
         { name: "产品管理", icon: "star-off", component: "products" },
         { name: "评价管理", icon: "edit-outline", component: "evaluate" },
         { name: "图片管理", icon: "picture", component: "images" },
-        { name: "用户信息", icon: "view", component: "editInfo" },
+        { name: "企业信息", icon: "view", component: "editInfo" },
         { name: "其他设置", icon: "setting", component: "setting" }
       ],
       showlogout: false,

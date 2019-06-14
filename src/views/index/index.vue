@@ -3,9 +3,9 @@
     <header class="header">
       <span class="item" @click="reloadPage"><img class="logo" :src="logo"></span>
       <span class="item" v-for="tab in tabs" :class="{active:isActive(tab)}" :key="tab.component" @click="tabSwitch(tab.component)">{{tab.label}}</span>
-      <a class="item el-icon-setting" href="http://localhost:88/admin"></a>
+      <a class="item el-icon-setting" target="blank" href="./admin.html"></a>
     </header>
-    <component :is="componentId"></component>
+    <component :is="componentKey"></component>
   </div>
 </template>
 
@@ -13,18 +13,18 @@
 import { API } from "../../service";
 export default {
   created() {
-    if (location.pathname == "/") {
+    let pathname = location.pathname.replace(/\//g, "");
+    if (pathname == "") {
       window.history.pushState(null, null, `${location.origin}/home`);
-      this.componentId = "home";
+      this.componentKey = "home";
     }
     let compIds = this.tabs.map(tab => tab.component);
-    let pathname = location.pathname.replace(/\//g, "");
-    if (compIds.includes(pathname)) this.componentId = pathname;
+    if (compIds.includes(pathname)) this.componentKey = pathname;
   },
   data() {
     return {
       logo: API.imgSrc + "avatar.png",
-      componentId: "home",
+      componentKey: "home",
       tabs: [
         {
           label: "首页",
@@ -47,11 +47,11 @@ export default {
   },
   methods: {
     tabSwitch(component = "home") {
-      this.componentId = component;
+      this.componentKey = component;
       window.history.pushState(null, null, `${location.origin}/${component}`);
     },
     tabSwitch2(tab) {
-      this.componentId = tab.key;
+      this.componentKey = tab.key;
       window.history.pushState(
         null,
         null,
