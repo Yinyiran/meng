@@ -44,9 +44,7 @@ export default {
       indexHref: `${location.origin}/index.html`,
       menus: [
         { name: "首页管理", icon: "goods", component: "home" },
-        { name: "行业新闻", icon: "news", component: "articles" },
         { name: "产品管理", icon: "star-off", component: "products" },
-        { name: "评价管理", icon: "edit-outline", component: "evaluate" },
         { name: "图片管理", icon: "picture", component: "images" },
         { name: "企业信息", icon: "view", component: "editInfo" },
         { name: "其他设置", icon: "setting", component: "setting" }

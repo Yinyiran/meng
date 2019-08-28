@@ -35,11 +35,7 @@ export default {
           component: "products"
         },
         {
-          label: "行业新闻",
-          component: "articles"
-        },
-        {
-          label: "关于我们",
+          label: "联系我们",
           component: "about"
         }
       ]
