@@ -22,37 +22,6 @@
         </div>
       </div>
     </div>
-    <!-- 行业新闻 -->
-    <div class="content">
-      <div class="wrap">
-        <h1 class="title">行业新闻</h1>
-        <a @click="toArticlePage(article)" v-for="(article,index) in articles" :key="index" class="news">
-          <div class="img-wrap">
-            <img class="img" :src="article.image">
-          </div>
-          <div class="info">
-            <div class="news-title">{{article.title}}</div>
-            <div class="news-intro">{{article.intro}}</div>
-          </div>
-        </a>
-      </div>
-    </div>
-    <!-- 用户评价 -->
-    <div class="content">
-      <div class="wrap evaluate-wrap">
-        <h1 class="title">用户评价</h1>
-        <el-carousel :interval="40000" height="300px" trigger="click">
-          <el-carousel-item v-for="(item,index) in evaluateList" :key="index">
-            <div v-for="(eva,index) in item" :key="index" class="evaluate-item">
-              <img class="img" :src="eva.avatar">
-              <div class="user">{{eva.name}}</div>
-              <div class="intro">"{{eva.intro}}"</div>
-              <div class="detail">{{eva.evaluate}}</div>
-            </div>
-          </el-carousel-item>
-        </el-carousel>
-      </div>
-    </div>
     <!-- 公司联系方式 -->
     <div class="content comp-infos">
       <div class="wrap">
@@ -92,8 +61,6 @@ export default {
     return {
       images: [],
       products: [],
-      evaluates: [],
-      articles: [],
       catalogs: [],
       compInfos: {},
       spliceNum: 5,
@@ -104,20 +71,6 @@ export default {
   created() {
     Http.get("web/getBanner").then(res => {
       this.images = res.data;
-    });
-    Http.get("web/getRecommended").then(res => {
-      res.data.products.forEach(prod => {
-        prod.imgSrc = API.imgSrc + prod.images.split(",")[0];
-        this.products.push(prod);
-      });
-      res.data.articles.forEach(art => {
-        art.image = API.imgSrc + art.image;
-        this.articles.push(art);
-      });
-      res.data.evaluates.forEach(eva => {
-        eva.avatar = API.imgSrc + eva.avatar;
-      });
-      this.spliceEvaluate(res.data.evaluates);
     });
     Http.get("web/getInfos").then(res => {
       this.compInfos = res.data;
@@ -136,9 +89,6 @@ export default {
   methods: {
     toProduts(catalog) {
       History(`products?catalog=${catalog.id}`);
-    },
-    toArticlePage(catalog) {
-      History(`articles?catalog=${catalog.id}`);
     },
     spliceEvaluate(arr) {
       if (arr.length < this.spliceNum) {

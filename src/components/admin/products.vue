@@ -12,7 +12,6 @@
     <div class="model" v-if="isShowEvaluate">
       <div class="model-content">
         <span class="close el-icon-close" @click="isShowEvaluate = false"></span>
-        <evaluate :prod="currProd"></evaluate>
       </div>
     </div>
   </div>
@@ -20,7 +19,6 @@
 
 <script>
 import { Http, Message } from "../../service";
-import evaluate from "./evaluate.vue";
 import FormEdit from "../form-edit.vue";
 import PageTable from "../page-table.vue";
 export default {
@@ -282,7 +280,6 @@ export default {
   },
   components: {
     FormEdit,
-    evaluate,
     PageTable
   }
 };

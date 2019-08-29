@@ -76,10 +76,8 @@ export default {
   components: {
     imgCrop: () => import("../../components/img-crop.vue"),
     home: () => import("../../components/admin/home.vue"),
-    articles: () => import("../../components/admin/articles.vue"),
     products: () => import("../../components/admin/products.vue"),
     setting: () => import("../../components/admin/setting.vue"),
-    evaluate: () => import("../../components/admin/evaluate.vue"),
     editInfo: () => import("../../components/admin/editInfo.vue"),
     images: () => import("../../components/admin/images.vue")
   }

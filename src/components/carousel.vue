@@ -63,9 +63,6 @@ export default {
         case 1: // 产品
           this.$router.push(`/products/page?id=${item.prodid}`);
           break;
-        case 2: // 文章
-          this.$router.push(`/articles/page?id=${item.articleid}`);
-          break;
         case 3:
           window.location.href = item.url;
           break;

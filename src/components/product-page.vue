@@ -12,37 +12,22 @@
       <el-tab-pane label="产品介绍" name="product">
         <div v-html="product.details"></div>
       </el-tab-pane>
-      <el-tab-pane label="用户评价" name="evaluate">
-        <div class="evaluate-wrap">
-          <div v-for="(item,index) in evaluates" :key="index" class="evaluate-item">
-            <img :src="item.src" class="item-avatar">
-            <div class="item-intro">
-              <div class="intro">{{item.intro}}</div>
-              <div class="evaluate">{{item.evaluate}}</div>
-            </div>
-          </div>
-          <no-data :length="evaluates.length"></no-data>
-        </div>
-      </el-tab-pane>
     </el-tabs>
   </div>
-
 </template>
 <script>
 import Vue from "vue";
 import { Tabs, TabPane } from "element-ui";
 Vue.use(Tabs);
 Vue.use(TabPane);
-import NoData from "./no-data";
 import Carousel from "./carousel.vue";
-import { Http, Query, API } from "../service";
+import { Http, Query } from "../service";
 export default {
   data() {
     return {
       activeName: "product",
       showInfo: true,
       product: {},
-      evaluates: [],
       images: []
     };
   },
@@ -53,17 +38,9 @@ export default {
       this.product = res.data;
       this.splitImage(res.data);
     });
-
-    Http.get(`web/getEvaluate?prodID=${productID}`).then(res => {
-      res.data.map(item => {
-        return (item.src = API.imgSrc + item.user_avatar);
-      });
-      this.evaluates = res.data;
-    });
   },
   deactivated() {
     this.product = {};
-    this.evaluates = [];
     this.images = [];
   },
   methods: {
@@ -86,8 +63,7 @@ export default {
     }
   },
   components: {
-    Carousel,
-    NoData
+    Carousel
   }
 };
 </script>

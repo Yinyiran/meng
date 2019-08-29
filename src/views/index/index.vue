@@ -1,8 +1,16 @@
 <template>
   <div class="home">
     <header class="header">
-      <span class="item" @click="reloadPage"><img class="logo" :src="logo"></span>
-      <span class="item" v-for="tab in tabs" :class="{active:isActive(tab)}" :key="tab.component" @click="tabSwitch(tab.component)">{{tab.label}}</span>
+      <span class="item" @click="reloadPage">
+        <img class="logo" :src="logo" />
+      </span>
+      <span
+        class="item"
+        v-for="tab in tabs"
+        :class="{active:isActive(tab)}"
+        :key="tab.component"
+        @click="tabSwitch(tab.component)"
+      >{{tab.label}}</span>
       <a class="item el-icon-setting" target="blank" href="./admin.html"></a>
     </header>
     <component :is="componentKey"></component>
@@ -65,8 +73,6 @@ export default {
     home: () => import("../../components/index/home.vue"),
     about: () => import("../../components/index/about.vue"),
     products: () => import("../../components/index/products.vue"),
-    articles: () => import("../../components/index/articles.vue"),
-    ArticlePage: () => import("../../components/article-page.vue"),
     ProductPage: () => import("../../components/product-page.vue"),
     ErrorComp: () => import("../../components/error.vue")
   }

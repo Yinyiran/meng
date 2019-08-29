@@ -55,8 +55,6 @@ export default {
           this.curComponent = "EditCatalog";
           break;
         case "products":
-        case "articles":
-        case "evaluates":
           Http.get("getRecommended", { type: item.name }).then(res => {
             this.list = res.data;
             this.loading = false;

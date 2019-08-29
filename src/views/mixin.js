@@ -87,61 +87,6 @@ const adminHome = {
             ]
           }
         },
-        {
-          label: "推荐新闻",
-          name: "articles",
-          render: false,
-          config: {
-            cols: [
-              { label: "标题", prop: "title" },
-              { label: "简介", prop: "intro" }
-            ],
-            btns: [
-              {
-                label: "取消推荐",
-                type: "danger",
-                icon: "el-icon-star-off",
-                fn(row, index) {
-                  let params = {
-                    msg: row.title,
-                    index,
-                    id: row.id,
-                    url: "cancelArticleRecom"
-                  };
-                  that.cancelRecommend(params);
-                }
-              }
-            ]
-          }
-        },
-        {
-          label: "推荐评论",
-          name: "evaluates",
-          render: false,
-          config: {
-            cols: [
-              { label: "评论者", prop: "name", width: "100" },
-              { label: "评论", prop: "evaluate" },
-              { label: "简介", prop: "intro" }
-            ],
-            btns: [
-              {
-                label: "取消推荐",
-                type: "danger",
-                icon: "el-icon-star-off",
-                fn(row, index) {
-                  let params = {
-                    msg: row.name,
-                    index,
-                    id: row.id,
-                    url: "cancelEvalRecom"
-                  };
-                  that.cancelRecommend(params);
-                }
-              }
-            ]
-          }
-        }
       ]
     };
   }

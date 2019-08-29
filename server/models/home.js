@@ -467,18 +467,6 @@ const routeList = {
       );
       res.products = products
     }
-    if (!query.type || query.type == "articles") {
-      const [articles] = await db.query(
-        `SELECT article_id as id,article_title as title, article_image as image, article_intro as intro FROM article WHERE recommend=1 ORDER BY article_id DESC`
-      );
-      res.articles = articles
-    }
-    if (!query.type || query.type == "evaluates") {
-      const [evaluates] = await db.query(
-        `SELECT id,user_name as name, evaluate as evaluate, intro ,user_avatar as avatar FROM evaluate WHERE recommend=1 ORDER BY id DESC`
-      );
-      res.evaluates = evaluates
-    }
     ctx.body = !query.type ? res : res[query.type];
   },
   async cancelProdRecom(ctx) {
