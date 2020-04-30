@@ -1,4 +1,4 @@
-# mengmeng
+# mengweb
 
 ## Project setup
 ```
@@ -7,13 +7,18 @@ yarn install
 
 ### Compiles and hot-reloads for development
 ```
-yarn run serve
+yarn serve
 ```
 
 ### Compiles and minifies for production
 ```
-yarn run build
+yarn build
 ```
-### run server
-nodemon ./server/app.js
 
+### Lints and fixes files
+```
+yarn lint
+```
+
+### Customize configuration
+See [Configuration Reference](https://cli.vuejs.org/config/).
