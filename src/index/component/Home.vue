@@ -4,11 +4,10 @@
       <div class="crumbs-wrap">
         <span
           class="crumb-item"
-          v-for="(item,index) in crumbs"
+          v-for="(item,index) in menu"
           :class="{active:activeCrumb===item.ID}"
           :key="index"
         >{{item.Name}}</span>
-        <span>联系我们</span>
       </div>
     </div>
     <div class="banner-wrap">
@@ -17,6 +16,15 @@
           <img :src="item.img" alt />
         </el-carousel-item>
       </el-carousel>
+    </div>
+    <div class="main-title">主营产品</div>
+    <div class="crumbs-wrap">
+      <span
+        class="crumb-item"
+        v-for="(item,index) in crumbs"
+        :class="{active:activeCrumb===item.ID}"
+        :key="index"
+      >{{item.Name}}</span>
     </div>
     <div class="products">
       <div
@@ -37,15 +45,20 @@
         </template>
       </div>
     </div>
+    <div class="main-title">客户案例</div>
     <div class="article">
-      <div class="article-item" v-for="(item,index) in articles" :key="index">
-        <img :src="item.ProdImg" alt="">
-        <div class="info">{{item.ProdName}}</div>
+      <div class="arti-item" v-for="(item,index) in articles" :key="index">
+        <div class="arti-img-wrap">
+          <img class="arti-img" :src="item.ProdImg" alt />
+        </div>
+        <div class="arti-title">{{item.ProdName}}</div>
       </div>
     </div>
-    <div class="footer">电话</div>
-    <div class="footer">微信</div>
-    <div class="footer">在线客服</div>
+    <div class="footer">
+      <div class="footer-item">电话:15692390339</div>
+      <div class="footer-item">微信</div>
+      <div class="footer-item">在线客服</div>
+    </div>
   </div>
 </template>
 
@@ -70,29 +83,29 @@ export default {
       activeCrumb: 122,
       menu: [
         {
-          Name: "首页",
-          PID: 0,
-          ID: 122
-        },
-        {
-          Name: "龙头/酒标",
+          Name: "主营产品",
           PID: 0,
           ID: 123
         },
         {
-          Name: "分配器/酒矛",
+          Name: "客户案例",
           PID: 0,
           ID: 124
         },
         {
-          Name: "酒柱",
+          Name: "联系我们",
+          PID: 0,
+          ID: 124
+        },
+        {
+          Name: "关于我们",
           PID: 0,
           ID: 125
         }
       ],
       crumbs: [
         {
-          Name: "全部",
+          Name: "精选商品",
           PID: 0,
           ID: 122
         },
@@ -262,6 +275,11 @@ body {
     }
   }
 }
+.main-title {
+  text-align: center;
+  font-size: 24px;
+  margin: 30px 0;
+}
 .banner-wrap {
   position: relative;
   height: 360px;
@@ -270,6 +288,7 @@ body {
   display: flex;
   flex-wrap: wrap;
   border-top: 1px solid @border;
+  background-color: #f9f9f9;
   .prod-wrap {
     position: relative;
     width: 25%;
@@ -317,22 +336,48 @@ body {
   }
 }
 
-.article{
+.article {
   display: flex;
   margin-top: 20px;
   justify-content: center;
-  .article-item{
-    width: 200px;
+  .arti-item {
+    width: 300px;
     margin: 0 10px;
     border: 1px solid @border;
     text-align: center;
-    padding-bottom: 10px;
-    img{
-      width: 100%;
+    padding-bottom: 20px;
+    cursor: pointer;
+    &:hover {
+      .arti-img {
+        transform: scale(1.1);
+      }
+      .arti-title {
+        color: @active;
+      }
     }
+  }
+  .arti-img-wrap {
+    height: 200px;
+    overflow: hidden;
+  }
+  .arti-img {
+    transition: all 0.25s;
+    width: 100%;
+  }
+  .arti-title {
+    margin-top: 10px;
   }
 }
 
+.footer {
+  display: flex;
+  height: 200px;
+  justify-content: center;
+  align-items: center;
+  .footer-item {
+    margin: 30px;
+  }
+}
 .el-carousel {
   position: absolute;
   top: 0;
