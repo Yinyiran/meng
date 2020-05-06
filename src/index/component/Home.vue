@@ -50,8 +50,8 @@
 </template>
 
 <script>
-import "../components/element/Carousel";
-import CarouselThumb from "../components/common/CarouselThumb";
+import "../../element/Carousel";
+import CarouselThumb from "../../components/CarouselThumb";
 export default {
   name: "App",
   components: { CarouselThumb },
@@ -59,11 +59,11 @@ export default {
     return {
       sliders: [
         {
-          img: require("../assets/img/banner1.png"),
+          img: require("../../assets/img/banner1.png"),
           href: ""
         },
         {
-          img: require("../assets/img/banner2.png"),
+          img: require("../../assets/img/banner2.png"),
           href: ""
         }
       ],
@@ -116,17 +116,17 @@ export default {
         {
           ProdName: "北欧客户认可",
           ProdPrice: "200",
-          ProdImg: require("../assets/img/prod3.png")
+          ProdImg: require("../../assets/img/prod3.png")
         },
         {
           ProdName: "南非设备安装",
           ProdPrice: "200",
-          ProdImg: require("../assets/img/prod3.png")
+          ProdImg: require("../../assets/img/prod3.png")
         },
         {
           ProdName: "德国酒具",
           ProdPrice: "200",
-          ProdImg: require("../assets/img/prod3.png")
+          ProdImg: require("../../assets/img/prod3.png")
         }
       ],
       products: [
@@ -137,19 +137,19 @@ export default {
             {
               ProdName: "一加手机8",
               ProdPrice: "5000",
-              ProdImg: require("../assets/img/prod1-1.png")
+              ProdImg: require("../../assets/img/prod1-1.png")
             },
             {
               ProdName: "一加手机8",
               ProdPrice: "4500",
-              ProdImg: require("../assets/img/prod1-2.png")
+              ProdImg: require("../../assets/img/prod1-2.png")
             }
           ]
         },
         {
           ProdName: "一加旅行套装",
           ProdPrice: "200",
-          ProdImg: require("../assets/img/prod3.png")
+          ProdImg: require("../../assets/img/prod3.png")
         },
         {
           current: 0,
@@ -158,12 +158,12 @@ export default {
             {
               ProdName: "一加手机8",
               ProdPrice: "4000",
-              ProdImg: require("../assets/img/prod2-1.png")
+              ProdImg: require("../../assets/img/prod2-1.png")
             },
             {
               ProdName: "一加手机8",
               ProdPrice: "3000",
-              ProdImg: require("../assets/img/prod2-2.png")
+              ProdImg: require("../../assets/img/prod2-2.png")
             }
           ]
         },
@@ -171,7 +171,7 @@ export default {
         {
           ProdName: "一加旅行套装",
           ProdPrice: "200",
-          ProdImg: require("../assets/img/prod3.png")
+          ProdImg: require("../../assets/img/prod3.png")
         },
         {
           current: 0,
@@ -180,19 +180,19 @@ export default {
             {
               ProdName: "一加手机8",
               ProdPrice: "5000",
-              ProdImg: require("../assets/img/prod1-1.png")
+              ProdImg: require("../../assets/img/prod1-1.png")
             },
             {
               ProdName: "一加手机8",
               ProdPrice: "4500",
-              ProdImg: require("../assets/img/prod1-2.png")
+              ProdImg: require("../../assets/img/prod1-2.png")
             }
           ]
         },
         {
           ProdName: "一加旅行套装",
           ProdPrice: "200",
-          ProdImg: require("../assets/img/prod3.png")
+          ProdImg: require("../../assets/img/prod3.png")
         },
         {
           current: 0,
@@ -201,19 +201,19 @@ export default {
             {
               ProdName: "一加手机8",
               ProdPrice: "4000",
-              ProdImg: require("../assets/img/prod2-1.png")
+              ProdImg: require("../../assets/img/prod2-1.png")
             },
             {
               ProdName: "一加手机8",
               ProdPrice: "3000",
-              ProdImg: require("../assets/img/prod2-2.png")
+              ProdImg: require("../../assets/img/prod2-2.png")
             }
           ]
         },
         {
           ProdName: "一加旅行套装",
           ProdPrice: "200",
-          ProdImg: require("../assets/img/prod3.png")
+          ProdImg: require("../../assets/img/prod3.png")
         }
       ]
     };
@@ -237,7 +237,7 @@ export default {
 </script>
 
 <style lang="less">
-@import "../assets/style/color.less";
+@import "../../assets/style/color.less";
 body {
   margin: 0;
 }

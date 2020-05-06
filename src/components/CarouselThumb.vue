@@ -38,7 +38,7 @@ export default {
 </script>
 
 <style lang="less">
-@import "../../assets/style/color.less";
+@import "../assets/style/color.less";
 .carousel {
   .carousel-item {
     cursor: pointer;
