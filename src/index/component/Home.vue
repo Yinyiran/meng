@@ -63,6 +63,7 @@
 </template>
 
 <script>
+import Axios from "axios"
 import "../../element/Carousel";
 import CarouselThumb from "../../components/CarouselThumb";
 export default {
@@ -233,6 +234,9 @@ export default {
   },
   mounted() {
     // console.log(this.$refs.carousel);
+    Axios.get("/banner").then(res=>{
+      console.log(res)
+    })
   },
   methods: {
     carChange(index, prodIndex) {
