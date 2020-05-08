@@ -1,10 +1,11 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Manage from './component/MBanner.vue'
+import MBanner from './component/MBanner.vue'
 import CompInfo from './component/CompInfo.vue'
 import MArticles from './component/MArticles.vue'
 import MProducts from './component/MProducts.vue'
 import ProdType from './component/ProdType.vue'
+import MImgs from './component/MImgs.vue'
 
 Vue.use(VueRouter)
 
@@ -20,8 +21,8 @@ const routes = [
   },
   {
     path: '/banner',
-    name: 'Manage',
-    component: Manage
+    name: 'banner',
+    component: MBanner
   },
   {
     path: '/article',
@@ -32,6 +33,11 @@ const routes = [
     path: '/products',
     name: 'products',
     component: MProducts
+  },
+  {
+    path: '/imgs',
+    name: 'imgs',
+    component: MImgs
   },
   {
     path: '/prodtype',

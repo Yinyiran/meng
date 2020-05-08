@@ -1,5 +1,5 @@
 <template>
-  <div>产品类型</div>
+  <div>图片</div>
 </template>
 
 <script>

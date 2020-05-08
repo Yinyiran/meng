@@ -4,41 +4,58 @@
       <li
         class="menu-item"
         v-for="menu in menus"
+        @click="changeMenu(menu)"
         :class="{active:menu.router===active}"
         :key="menu.router"
       >{{menu.name}}</li>
     </ul>
-    <router-view />
+    <div class="content">
+      <router-view />
+    </div>
   </div>
 </template>
 <script>
 export default {
   data() {
     return {
-      active: "banner",
+      active: this.$route.name || "banner",
       menus: [
         {
-          name: "首页轮播图",
+          name: "企业信息",
+          router: "compinfo"
+        },
+        {
+          name: "首页轮播",
           router: "banner"
         },
         {
-          name: "产品列表",
-          router: "product"
+          name: "产品管理",
+          router: "products"
         },
         {
-          name: "新闻列表",
-          router: "news"
+          name: "新闻管理",
+          router: "article"
         },
         {
-          name: "企业信息",
-          router: "compInfo"
+          name: "图片中心",
+          router: "imgs"
         },
         {
           name: "产品类型",
-          router: "prodType"
+          router: "prodtype"
         }
       ]
     };
+  },
+  methods: {
+    changeMenu(item) {
+      this.$router.push(item.router);
+    }
+  },
+  watch: {
+    $route(val) {
+      this.active = val.name;
+    }
   }
 };
 </script>
@@ -68,16 +85,27 @@ li {
 }
 .menu {
   height: 100%;
-  width: 200px;
-  background-color: @active;
-  color: #ffffff;
+  flex: 0 0 140px;
+  cursor: pointer;
+  color: #bfcbd9;
+  background-color: #304156;
   .menu-item {
-    padding: 20px;
-    &.active,
+    font-size: 15px;
+    padding: 14px 24px;
+    border-bottom: 1px solid #475c77;
+    transition: 0.1s;
+    &.active {
+      color: @active;
+      background: #263445;
+    }
     &:hover {
-      background-color: #000;
-      cursor: pointer;
+      background-color: #263445;
     }
   }
+}
+.content {
+  flex: 1;
+  padding: 20px 20px 0;
+  position: relative;
 }
 </style>
