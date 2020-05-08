@@ -4,7 +4,7 @@
       <el-input v-model="form.CompName"></el-input>
     </el-form-item>
     <el-form-item label="企业Logo">
-      <upload-img :sigle="true"></upload-img>
+      <upload-file :limitNum="1" :multi="true"></upload-file>
     </el-form-item>
     <el-form-item label="手机">
       <el-input v-model="form.Mobile"></el-input>
@@ -30,9 +30,10 @@
   </el-form>
 </template>
 <script>
-import UploadImg from "../../components/UploadImg";
+import UploadFile from "../../components/UploadFile.vue";
+
 export default {
-  components: { UploadImg },
+  components: { UploadFile },
   data() {
     return {
       form: {
@@ -48,6 +49,13 @@ export default {
   },
   methods: {
     onSubmit() {
+      const formData = new FormData();
+
+      files.forEach((item, flag) => {
+        formData.append(`file`, item.file, item.file.name);
+      });
+      // 多个的情况，append多次，后端会按照file解析
+      复制代码;
       console.log("submit!");
     }
   }

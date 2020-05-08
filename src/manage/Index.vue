@@ -43,7 +43,7 @@ export default {
         {
           name: "产品类型",
           router: "prodtype"
-        }
+        } 
       ]
     };
   },

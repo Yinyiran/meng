@@ -2,7 +2,7 @@ import Vue from "vue"
 import {
   Input, Button, Form, FormItem,
   Option, Select, Carousel, CarouselItem,
-  Checkbox, Radio, Upload, Dialog
+  Checkbox, Radio, Dialog
 } from "element-ui"
 
 Vue.use(Input)
@@ -15,5 +15,4 @@ Vue.use(Carousel)
 Vue.use(CarouselItem)
 Vue.use(Checkbox)
 Vue.use(Radio)
-Vue.use(Upload)
 Vue.use(Dialog)
