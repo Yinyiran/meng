@@ -4,7 +4,7 @@
       <el-input v-model="form.CompName"></el-input>
     </el-form-item>
     <el-form-item label="企业Logo">
-      <upload-file :limitNum="1" :multi="true"></upload-file>
+      <upload-file :limitNum="10" :multi="true"></upload-file>
     </el-form-item>
     <el-form-item label="手机">
       <el-input v-model="form.Mobile"></el-input>

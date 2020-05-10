@@ -11,14 +11,15 @@
       <input
         class="upload-input"
         type="file"
-        id="upload-img"
+        ref="uploadRef"
         :accept="acceptType"
         title="点击上传文件"
         :multiple="multi"
-        @change="fileCheck"
+        @change="fileCheck()"
       />
       <i class="el-icon-plus upload-icon"></i>
     </div>
+    <button @click="upload">上传</button>
     <el-dialog :visible.sync="showPreview" width="60%" :append-to-body="true">
       <div class="preview-wrap">
         <img class="preview-img" :src="curUrl" alt />
@@ -30,6 +31,7 @@
 <script>
 import { UploadAccept } from "../service/enum";
 import { Message } from "element-ui";
+import Axios from "axios";
 
 export default {
   props: {
@@ -56,6 +58,7 @@ export default {
       dialogVisible: false,
       imageUrl: "",
       dialogImageUrl: "",
+      formData: new FormData(),
       urls: []
     };
   },
@@ -66,12 +69,35 @@ export default {
     },
     deleImg(index) {
       this.urls.splice(index, 1);
-      // let file = document.getElementById("upload-img");
-      // file.outerHTML = file.outerHTML;
+      this.$refs.uploadRef.value = "";
     },
-    fileCheck(isSelect) {
-      if (!isSelect) return;
+    // 封装获取 cookie 的方法
+    getCookie(name) {
+      var arr,
+        reg = new RegExp("(^| )" + name + "=([^;]*)(;|$)");
+      if ((arr = document.cookie.match(reg))) return unescape(arr[2]);
+      else return null;
+    },
+    upload() {
+      if (this.urls.length === 0) return;
+      this.formData.append("type", "img");
+      const config = {
+        headers: {
+          "x-csrf-token": this.getCookie("csrfToken")
+        },
+        onUploadProgress: progressEvent => {
+          var complete =
+            (((progressEvent.loaded / progressEvent.total) * 100) | 0) + "%";
+          console.log(complete);
+        }
+      };
+      Axios.post("/uploadFile", this.formData, config).then(res => {
+        console.log(res);
+      });
+    },
+    fileCheck() {
       let files = event.target.files;
+      if (files.length === 0) return;
       if (this.limitNum > this.urls.length) {
         if (
           [].some.call(files, v => Math.round(v.size / 1024) > this.limitSize)
@@ -82,8 +108,7 @@ export default {
             let url = URL.createObjectURL(file);
             const isExist = this.urls.find(item => item === url);
             if (!isExist) {
-              const formData = new FormData();
-              formData.append("file", file);
+              this.formData.append("file", file);
               this.urls.push(url);
             }
           });
@@ -97,26 +122,30 @@ export default {
 </script>
 
 <style lang="less">
-.thumb-wrap {
+.thumb-wrap,
+.input-wrap {
   vertical-align: top;
   margin-right: 5px;
   margin-bottom: 5px;
   border: 1px solid #c0ccda;
+  position: relative;
   border-radius: 6px;
-  box-sizing: border-box;
   display: inline-block;
   cursor: pointer;
   overflow: hidden;
-  position: relative;
+  width: 100px;
+  height: 100px;
+}
+.thumb-wrap {
   &:hover {
     .thumb-btn {
       opacity: 1;
     }
   }
   .thumb-img {
+    width: 100%;
+    height: 100%;
     vertical-align: top;
-    width: 100px;
-    height: 100px;
     object-fit: cover;
   }
   .thumb-btn {
@@ -139,13 +168,6 @@ export default {
   }
 }
 .input-wrap {
-  vertical-align: top;
-  display: inline-block;
-  width: 100px;
-  height: 100px;
-  position: relative;
-  border: 1px dashed #c0ccda;
-  border-radius: 6px;
   transition: 0.2s;
   &:hover {
     border-color: #409eff;
