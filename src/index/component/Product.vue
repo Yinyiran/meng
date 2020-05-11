@@ -1,15 +1,20 @@
 <template>
-  <div class="products">
-    <template v-if="product.Products">
-      <carousel-thumb :product="product"></carousel-thumb>
-      <div class="prod-intro">{{product.Intro}}</div>
-    </template>
-    <template v-else>
-      <div class="prod-item single-img">
-        <img class="prod-img" :src="product.ProdImg" />
-      </div>
-      <div class="prod-intro">{{product.ProdName}}</div>
-    </template>
+  <div class="product">
+    <div class="img-wrap">
+      <template v-if="product.Products">
+        <carousel-thumb :product="product"></carousel-thumb>
+        <div class="prod-intro">{{product.Intro}}</div>
+      </template>
+      <template v-else>
+        <div class="prod-item single-img">
+          <img class="prod-img" :src="product.ProdImg" />
+        </div>
+        <div class="prod-intro">{{product.ProdName}}</div>
+      </template>
+    </div>
+    <div class="prod-info">
+      <h3>{{product.Intro}}</h3>
+    </div>
   </div>
 </template>
 
@@ -40,5 +45,13 @@ export default {
 };
 </script>
 
-<style>
+<style lang="less">
+.product {
+  width: 1200px;
+  margin: 0 auto;
+  display: flex;
+}
+.img-wrap {
+  width: 300px;
+}
 </style>

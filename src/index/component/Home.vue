@@ -246,8 +246,7 @@ export default {
       this.$refs.carousel[prodIndex].setActiveItem(imgIndex);
     },
     openProdDetail(prod) {
-      console.log(prod);
-      window.open();
+      this.$router.push(`/product/${prod.ID}`)
     }
   }
 };

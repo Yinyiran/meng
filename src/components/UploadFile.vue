@@ -83,6 +83,7 @@ export default {
       this.formData.append("type", "img");
       const config = {
         headers: {
+          "Content-Type": "multipart/form-data",
           "x-csrf-token": this.getCookie("csrfToken")
         },
         onUploadProgress: progressEvent => {
