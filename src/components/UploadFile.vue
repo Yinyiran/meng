@@ -50,6 +50,11 @@ export default {
       default: "img"
     }
   },
+  created() {
+    Axios.get("/getFiles?type=img").then(res => {
+      console.log(res);
+    });
+  },
   data() {
     return {
       showPreview: false,
