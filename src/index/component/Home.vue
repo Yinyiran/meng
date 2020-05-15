@@ -63,9 +63,9 @@
 </template>
 
 <script>
-import Axios from "axios"
 import "../../element/Carousel";
 import CarouselThumb from "../../components/CarouselThumb";
+import { HTTP } from '../../service';
 export default {
   name: "App",
   components: { CarouselThumb },
@@ -233,8 +233,7 @@ export default {
     };
   },
   mounted() {
-    // console.log(this.$refs.carousel);
-    Axios.get("/banner").then(res=>{
+    HTTP.get("/banner").then(res=>{
       console.log(res)
     })
   },

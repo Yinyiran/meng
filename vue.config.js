@@ -1,7 +1,16 @@
 module.exports = {
   devServer: {
     port: 8888,
-    proxy: "http://127.0.0.1:7001"
+    proxy: {
+      "/api": {
+        target: 'http://127.0.0.1:7001',
+        changeOrigin: true
+      },
+      "resource": {
+        target: 'http://127.0.0.1:7001',
+        changeOrigin: true
+      }
+    }
   },
   pages: {
     index: {
@@ -13,13 +22,4 @@ module.exports = {
       title: 'manage',
     },
   },
-  // devServer: {
-  //   proxy: {
-  //     '/api': {
-  //       target: '127.0.0.1:7001',
-  //       ws: true,
-  //       changeOrigin: true
-  //     },
-  //   }
-  // }
 }

@@ -4,7 +4,7 @@
       <el-input v-model="form.CompName"></el-input>
     </el-form-item>
     <el-form-item label="企业Logo">
-      <upload-file :limitNum="10" :multi="true"></upload-file>
+      <upload-file :limitNum="10" :multi="true" ref="UpFileRef"></upload-file>
     </el-form-item>
     <el-form-item label="手机">
       <el-input v-model="form.Mobile"></el-input>
@@ -22,52 +22,50 @@
       <el-input v-model="form.Facebook"></el-input>
     </el-form-item>
     <div class="footer">
-      <el-form-item>
-        <el-button>取消</el-button>
-        <el-button type="primary" @click="onSubmit">确定修改</el-button>
-      </el-form-item>
+      <el-button size="small">取消</el-button>
+      <el-button size="small" type="primary" @click="onSubmit">确定修改</el-button>
     </div>
   </el-form>
 </template>
 <script>
-import UploadFile from "../../components/UploadFile.vue";
+  import UploadFile from "../../components/UploadFile.vue";
+  import { HTTP } from "../../service";
 
-export default {
-  components: { UploadFile },
-  data() {
-    return {
-      form: {
-        CompName: "",
-        CompLogo: "",
-        Mobile: "",
-        Telephone: "",
-        WeChat: "",
-        WeChatQR: "",
-        Facebook: ""
-      }
-    };
-  },
-  methods: {
-    onSubmit() {
-      const formData = new FormData();
-
-      files.forEach((item, flag) => {
-        formData.append(`file`, item.file, item.file.name);
+  export default {
+    components: { UploadFile },
+    data() {
+      return {
+        form: {
+          CompName: "",
+          CompLogo: "",
+          Mobile: "",
+          Telephone: "",
+          WeChat: "",
+          WeChatQR: "",
+          Facebook: ""
+        }
+      };
+    },
+    created() {
+      HTTP.get("/getCompInfo").then(res => {
+        Object.assign(this.form, res.data);
       });
-      // 多个的情况，append多次，后端会按照file解析
-      复制代码;
-      console.log("submit!");
+    },
+    methods: {
+      async onSubmit() {
+        await this.$refs.UpFileRef();
+      }
     }
-  }
-};
+  };
 </script>
 
 <style lang="less">
-.el-form-item {
-  width: 450px;
-}
-.footer {
-  margin-top: 40px;
-  text-align: center;
-}
+  .el-input.el-input--small {
+    width: 450px;
+  }
+  .footer {
+    margin-top: 40px;
+    padding-left: 200px;
+    text-align: left;
+  }
 </style>
