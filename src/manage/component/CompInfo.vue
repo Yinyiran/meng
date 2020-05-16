@@ -30,6 +30,7 @@
 <script>
   import UploadFile from "../../components/UploadFile.vue";
   import { HTTP } from "../../service";
+  import { Message } from "element-ui";
 
   export default {
     components: { UploadFile },
@@ -47,13 +48,17 @@
       };
     },
     created() {
-      HTTP.get("/getCompInfo").then(res => {
+      HTTP.get("/getCompInfo", { CompID: 10000 }).then(res => {
         Object.assign(this.form, res.data);
       });
     },
     methods: {
       async onSubmit() {
-        await this.$refs.UpFileRef();
+        this.form.CompLogo = await this.$refs.UpFileRef.upload();
+        let params = Object.assign({CompID:10000},this.form)
+        HTTP.post(`/saveCompInfo`, params).then(res => {
+          Message.success("保存成功！");
+        });
       }
     }
   };

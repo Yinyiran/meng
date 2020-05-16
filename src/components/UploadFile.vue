@@ -49,10 +49,6 @@
       };
     },
     methods: {
-      removeImg(index) {
-        this.urls.splice(index, 1);
-        this.$refs.uploadRef.value = "";
-      },
       async upload() {
         if (this.urls.length === 0) return;
         this.formData.append("type", "img");
@@ -67,7 +63,7 @@
           }
         };
         let res = await HTTP.post("/uploadFile", this.formData, config);
-        console.log(res);
+        return res.data;
       },
       fileCheck() {
         let files = event.target.files;
@@ -90,6 +86,10 @@
         } else {
           Message.warning(`图片超过最大数量（${this.limitNum}个）`);
         }
+      },
+      removeImg(index) {
+        this.urls.splice(index, 1);
+        this.$refs.uploadRef.value = "";
       }
     }
   };
