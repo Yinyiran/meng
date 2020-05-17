@@ -41,9 +41,9 @@ export default {
           router: "imgs"
         },
         {
-          name: "产品类型",
-          router: "prodtype"
-        } 
+          name: "产品分类",
+          router: "classify"
+        }
       ]
     };
   },

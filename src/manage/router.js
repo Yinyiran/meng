@@ -4,7 +4,7 @@ import MBanner from './component/MBanner.vue'
 import CompInfo from './component/CompInfo.vue'
 import MArticles from './component/MArticles.vue'
 import MProducts from './component/MProducts.vue'
-import ProdType from './component/ProdType.vue'
+import Classify from './component/Classify.vue'
 import MImgs from './component/MImgs.vue'
 
 Vue.use(VueRouter)
@@ -40,9 +40,9 @@ const routes = [
     component: MImgs
   },
   {
-    path: '/prodtype',
-    name: 'prodtype',
-    component: ProdType
+    path: '/classify',
+    name: 'classify',
+    component: Classify
   },
 ]
 

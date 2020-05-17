@@ -1,6 +1,6 @@
 <template>
   <div class="upload-file">
-    <img-item :imgs="urls" @removeImg="removeImg"></img-item>
+    <img-item :imgs="imgs" @removeImg="removeImg"></img-item>
     <div class="input-wrap">
       <input
         class="upload-input"
@@ -25,11 +25,12 @@
     props: {
       sigle: Boolean,
       multi: Boolean,
+      imgs: Array,
       limitSize: {
         type: Number,
         default: 2048
       },
-      limitNum: {
+      limit: {
         type: Number,
         default: 20
       },
@@ -44,13 +45,12 @@
         showPreview: false,
         curUrl: "",
         acceptType: UploadAccept[this.accept],
-        formData: new FormData(),
-        urls: []
+        formData: new FormData()
       };
     },
     methods: {
       async upload() {
-        if (this.urls.length === 0) return;
+        if (this.imgs.length === 0) return [];
         this.formData.append("type", "img");
         const config = {
           headers: {
@@ -68,7 +68,7 @@
       fileCheck() {
         let files = event.target.files;
         if (files.length === 0) return;
-        if (this.limitNum > this.urls.length) {
+        if (this.limit > this.imgs.length) {
           if (
             [].some.call(files, v => Math.round(v.size / 1024) > this.limitSize)
           ) {
@@ -76,19 +76,19 @@
           } else {
             files.forEach(file => {
               let url = URL.createObjectURL(file);
-              const isExist = this.urls.find(item => item === url);
+              const isExist = this.imgs.find(item => item === url);
               if (!isExist) {
                 this.formData.append("file", file);
-                this.urls.push(url);
+                this.imgs.push(url);
               }
             });
           }
         } else {
-          Message.warning(`图片超过最大数量（${this.limitNum}个）`);
+          Message.warning(`图片超过最大数量（${this.limit}个）`);
         }
       },
       removeImg(index) {
-        this.urls.splice(index, 1);
+        this.imgs.splice(index, 1);
         this.$refs.uploadRef.value = "";
       }
     }

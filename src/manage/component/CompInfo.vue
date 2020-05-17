@@ -4,7 +4,7 @@
       <el-input v-model="form.CompName"></el-input>
     </el-form-item>
     <el-form-item label="企业Logo">
-      <upload-file :limitNum="10" :multi="true" ref="UpFileRef"></upload-file>
+      <upload-file v-if="isloaded" :limit="1" :imgs="form.CompLogo" ref="UpFileRef"></upload-file>
     </el-form-item>
     <el-form-item label="手机">
       <el-input v-model="form.Mobile"></el-input>
@@ -36,9 +36,10 @@
     components: { UploadFile },
     data() {
       return {
+        isloaded: false,
         form: {
           CompName: "",
-          CompLogo: "",
+          CompLogo: [],
           Mobile: "",
           Telephone: "",
           WeChat: "",
@@ -49,13 +50,22 @@
     },
     created() {
       HTTP.get("/getCompInfo", { CompID: 10000 }).then(res => {
-        Object.assign(this.form, res.data);
+        let logo = res.data.CompLogo;
+        res.data.CompLogo = logo ? JSON.parse(logo) : [];
+        this.form = res.data;
+        this.isloaded = true;
       });
     },
     methods: {
       async onSubmit() {
         this.form.CompLogo = await this.$refs.UpFileRef.upload();
-        let params = Object.assign({CompID:10000},this.form)
+        let Obj = Object.assign({}, this.form);
+        let params = Object.assign(Obj, {
+          CompID: 10000,
+          CompLogo: this.form.CompLogo.length
+            ? JSON.stringify(this.form.CompLogo)
+            : null
+        });
         HTTP.post(`/saveCompInfo`, params).then(res => {
           Message.success("保存成功！");
         });
@@ -64,7 +74,7 @@
   };
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
   .el-input.el-input--small {
     width: 450px;
   }
