@@ -1,11 +1,16 @@
 <template>
   <div class="classify">
     <div class="classify-header">
-      <el-button size="mini" type="primary" @click="createClassify">新增</el-button>
+      <el-button size="mini" type="primary" @click="addClassify">新增</el-button>
+      <span class="sort-btns">
+        <el-button size="mini" type="primary" v-show="!isSort" @click="beginSort">排序</el-button>
+        <el-button size="mini" type="primary" v-show="isSort" @click="saveSort">保存排序</el-button>
+        <el-button size="mini" v-show="isSort" @click="cancelSort">取消排序</el-button>
+      </span>
     </div>
-    <div class="classify-list">
+    <div class="classify-list" ref="classifysRef">
       <div class="class-item" v-for="(item,index) in classifys" :key="index">
-        <i class="el-icon-rank" />
+        <i class="el-icon-rank" v-show="isSort" />
         <span class="item-name">{{item.ClassName}}</span>
         <i class="el-icon-delete" @click="delClassify(item,index)" />
         <i class="el-icon-edit" @click="editClassify(item)" />
@@ -13,12 +18,12 @@
     </div>
     <el-dialog
       :title="form.ClassID?`编辑`:'新增'+'分类'"
-      :visible.sync="showCreate"
+      :visible.sync="isCreate"
       :before-close="cancel"
       width="400px"
       :append-to-body="true"
     >
-      <el-form ref="formRef" :model="form" label-width="80px" size="small">
+      <el-form :model="form" label-width="80px" size="small">
         <el-form-item label="分类名称">
           <el-input v-model="form.ClassName"></el-input>
         </el-form-item>
@@ -34,16 +39,32 @@
 <script>
   import { HTTP } from "../../service";
   import { MessageBox, Message } from "element-ui";
+  import Sortablejs from "sortablejs";
   export default {
     data() {
       return {
         form: { ClassName: "" },
-        showCreate: false,
+        isCreate: false,
+        isSort: false,
         classifys: []
       };
     },
-    created() {
+    computed: {
+      sortIds() {
+        return this.classifys.map(item => item.ClassID);
+      }
+    },
+    mounted() {
       this.getClassList();
+      const sort = new Sortablejs(this.$refs.classifysRef, {
+        animation: 100,
+        onSort: evt => {
+          let item = this.sortIds[evt.oldIndex];
+          this.sortIds.splice(evt.newIndex, 0, item);
+          this.sortIds.splice(evt.oldIndex + 1, 1);
+          // HTTP.post("/save")
+        }
+      });
     },
     methods: {
       getClassList() {
@@ -51,17 +72,28 @@
           this.classifys = res.data;
         });
       },
-      createClassify() {
+      addClassify() {
         this.form = { ClassName: "" };
-        this.showCreate = true;
+        this.isCreate = true;
+      },
+      beginSort() {
+        this.isSort = true;
+      },
+      saveSort() {
+        HTTP.post("sortClassify", this.sortIds).then(res => {
+          console.log(res);
+        });
+      },
+      cancelSort() {
+        this.isSort = false;
       },
       cancel() {
-        this.showCreate = false;
+        this.isCreate = false;
         if (!this.form.ClassID) this.form.ClassName = "";
       },
       editClassify(item) {
         Object.assign(this.form, item);
-        this.showCreate = true;
+        this.isCreate = true;
       },
       delClassify(item, index) {
         MessageBox.confirm(`确定要删除“${item.ClassName}”么？`).then(res => {
@@ -73,13 +105,17 @@
       },
       onSubmit() {
         HTTP.post("/saveClassify", this.form).then(res => {
+          // 更新数据
           if (this.form.ClassID) {
             let classItem = this.classifys.find(
               item => item.ClassID === this.form.ClassID
             );
             classItem.ClassName = this.form.ClassName;
+          } else {
+            Object.assign(this.form, res.data);
+            this.classifys.push(this.form);
           }
-          this.showCreate = false;
+          this.isCreate = false;
         });
       }
     }
@@ -90,12 +126,15 @@
   .classify-list {
     margin-top: 20px;
   }
+  .sort-btns {
+    float: right;
+  }
   .class-item {
     background-color: #f1f1f1;
     margin: 4px 0;
     padding: 4px 10px;
     display: flex;
-    justify-content: center;
+    align-items: center;
     .item-name {
       flex: 1;
       margin: 0 6px;
