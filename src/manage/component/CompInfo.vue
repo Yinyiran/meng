@@ -51,7 +51,11 @@
     created() {
       HTTP.get("/getCompInfo", { CompID: 10000 }).then(res => {
         let logo = res.data.CompLogo;
-        res.data.CompLogo = logo ? JSON.parse(logo) : [];
+        try {
+          res.data.CompLogo = logo ? JSON.parse(logo) : [];
+        } catch (error) {
+          res.data.CompLogo = [];
+        }
         this.form = res.data;
         this.isloaded = true;
       });

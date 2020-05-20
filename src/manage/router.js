@@ -6,6 +6,7 @@ import MArticles from './component/MArticles.vue'
 import MProducts from './component/MProducts.vue'
 import Classify from './component/Classify.vue'
 import MImgs from './component/MImgs.vue'
+import Language from './component/Language.vue'
 
 Vue.use(VueRouter)
 
@@ -43,6 +44,11 @@ const routes = [
     path: '/classify',
     name: 'classify',
     component: Classify
+  },
+  {
+    path: '/language',
+    name: 'language',
+    component: Language
   },
 ]
 
