@@ -3,14 +3,11 @@
     <div class="classify-header">
       <el-button size="mini" type="primary" @click="addClassify">新增</el-button>
       <span class="sort-btns">
-        <el-button size="mini" type="primary" v-show="!isSort" @click="beginSort">排序</el-button>
-        <el-button size="mini" type="primary" v-show="isSort" @click="saveSort">保存排序</el-button>
-        <el-button size="mini" v-show="isSort" @click="cancelSort">取消排序</el-button>
+        <el-button size="mini" type="primary" @click="beginSort">排序</el-button>
       </span>
     </div>
-    <div class="classify-list" ref="classifysRef">
+    <div class="classify-list">
       <div class="class-item" v-for="(item,index) in classifys" :key="index">
-        <i class="el-icon-rank" v-show="isSort" />
         <span class="item-name">{{item.ClassName}}</span>
         <i class="el-icon-delete" @click="delClassify(item,index)" />
         <i class="el-icon-edit" @click="editClassify(item)" />
@@ -19,7 +16,7 @@
     <el-dialog
       :title="form.ClassID?`编辑`:'新增'+'分类'"
       :visible.sync="isCreate"
-      :before-close="cancel"
+      :before-close="cancelAdd"
       width="400px"
       :append-to-body="true"
     >
@@ -29,8 +26,26 @@
         </el-form-item>
       </el-form>
       <div class="footer">
-        <el-button size="small" @click="cancel">取消</el-button>
+        <el-button size="small" @click="cancelAdd">取消</el-button>
         <el-button size="small" type="primary" @click="onSubmit">保存</el-button>
+      </div>
+    </el-dialog>
+    <el-dialog
+      title="拖拽排序"
+      :visible.sync="isSort"
+      :before-close="cancelSort"
+      width="600px"
+      :append-to-body="true"
+    >
+      <div class="classify-list" ref="classifysRef" v-if="isSort">
+        <div class="class-item" v-for="(item,index) in classifys" :key="index">
+          <i class="el-icon-rank" />
+          <span class="item-name">{{item.ClassName}}</span>
+        </div>
+      </div>
+      <div class="footer">
+        <el-button size="mini" @click="cancelSort">取消</el-button>
+        <el-button size="mini" type="primary" @click="saveSort">保存</el-button>
       </div>
     </el-dialog>
   </div>
@@ -46,25 +61,12 @@
         form: { ClassName: "" },
         isCreate: false,
         isSort: false,
+        sortIds: [],
         classifys: []
       };
     },
-    computed: {
-      sortIds() {
-        return this.classifys.map(item => item.ClassID);
-      }
-    },
-    mounted() {
+    created() {
       this.getClassList();
-      const sort = new Sortablejs(this.$refs.classifysRef, {
-        animation: 100,
-        onSort: evt => {
-          let item = this.sortIds[evt.oldIndex];
-          this.sortIds.splice(evt.newIndex, 0, item);
-          this.sortIds.splice(evt.oldIndex + 1, 1);
-          // HTTP.post("/save")
-        }
-      });
     },
     methods: {
       getClassList() {
@@ -76,18 +78,30 @@
         this.form = { ClassName: "" };
         this.isCreate = true;
       },
-      beginSort() {
+      async beginSort() {
         this.isSort = true;
+        this.sortIds = this.classifys.map(item => item.ClassID);
+        await this.$nextTick();
+        new Sortablejs(this.$refs.classifysRef, {
+          animation: 100,
+          onSort: evt => {
+            let item = this.sortIds[evt.oldIndex];
+            this.sortIds.splice(evt.newIndex, 0, item);
+            this.sortIds.splice(evt.oldIndex + 1, 1);
+          }
+        });
       },
       saveSort() {
-        HTTP.post("sortClassify", this.sortIds).then(res => {
-          console.log(res);
+        HTTP.post("/sortClassify", this.sortIds).then(res => {
+          Message.success("保存成功");
+          this.isSort = false;
+          this.getClassList();
         });
       },
       cancelSort() {
         this.isSort = false;
       },
-      cancel() {
+      cancelAdd() {
         this.isCreate = false;
         if (!this.form.ClassID) this.form.ClassName = "";
       },
