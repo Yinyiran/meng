@@ -1,18 +1,19 @@
 <template>
   <div class="upload-file">
-    <img-item :imgs="imgs" @removeImg="removeImg"></img-item>
-    <div class="input-wrap">
-      <input
-        class="upload-input"
-        type="file"
-        ref="uploadRef"
-        :accept="acceptType"
-        title="点击上传文件"
-        :multiple="multi"
-        @change="fileCheck()"
-      />
-      <i class="el-icon-plus upload-icon"></i>
-    </div>
+    <img-item :imgs="imgs" @removeImg="removeImg">
+      <div class="input-wrap">
+        <input
+          class="upload-input"
+          type="file"
+          ref="uploadRef"
+          :accept="acceptType"
+          title="点击上传文件"
+          :multiple="multi"
+          @change="fileCheck()"
+        />
+        <i class="el-icon-plus upload-icon"></i>
+      </div>
+    </img-item>
   </div>
 </template>
 
@@ -23,12 +24,19 @@
 
   export default {
     props: {
-      sigle: Boolean,
-      multi: Boolean,
-      imgs: Array,
+      multi: {
+        type: Boolean,
+        default: true
+      },
+      imgs: {
+        type: Array,
+        default() {
+          return [];
+        }
+      },
       limitSize: {
         type: Number,
-        default: 2048
+        default: 5120
       },
       limit: {
         type: Number,
@@ -98,8 +106,8 @@
 <style lang="less">
   .input-wrap {
     vertical-align: top;
-    margin-right: 5px;
-    margin-bottom: 5px;
+    margin-right: 10px;
+    margin-bottom: 10px;
     border: 1px solid #c0ccda;
     position: relative;
     border-radius: 6px;
@@ -131,7 +139,8 @@
     position: absolute;
     top: 50%;
     left: 50%;
-    z-index: -1;
+    z-index: 0;
+    pointer-events: none;
     transform: translate(-50%, -50%);
   }
 </style>

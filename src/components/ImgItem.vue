@@ -7,7 +7,8 @@
         <i class="el-icon-delete" title="删除图片" @click="removeImg(index)"></i>
       </div>
     </div>
-    <el-dialog :visible.sync="showPreview" width="80%" :append-to-body="true">
+    <slot></slot>
+    <el-dialog :visible.sync="showPreview" width="80%" top="1vh" :append-to-body="true">
       <div class="preview-wrap">
         <img class="preview-img" :src="curUrl" alt />
       </div>
@@ -44,8 +45,8 @@
   }
   .thumb-wrap {
     vertical-align: top;
-    margin-right: 5px;
-    margin-bottom: 5px;
+    margin-right: 10px;
+    margin-bottom: 10px;
     border: 1px solid #c0ccda;
     position: relative;
     border-radius: 6px;

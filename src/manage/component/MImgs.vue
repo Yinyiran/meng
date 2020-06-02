@@ -1,18 +1,34 @@
 <template>
   <div class="m-imgs">
-    <img-item :imgs="imgs" @removeImg="deleImg"></img-item>
+    <div class="img-header">
+      <el-button size="mini" @click="showUpDlg=true" type="primary">上传图片</el-button>
+    </div>
+    <div class="imgs-wrap">
+      <img-item :imgs="imgs" @removeImg="deleImg"></img-item>
+    </div>
+    <el-dialog title="上传图片" :visible.sync="showUpDlg" width="80%" :append-to-body="true">
+      <upload-file ref="UpFileRef"></upload-file>
+      <div class="dialog-footer">
+        <el-button size="mini" @click="closeDlg" type="primary">取消</el-button>
+        <el-button size="mini" @click="uploadFile" type="primary">开始上传</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
+  import { Message, MessageBox } from "element-ui";
   import { ServeHost, HTTP } from "../../service";
   import ImgItem from "../../components/ImgItem";
-  import { Message, MessageBox } from "element-ui";
+  import UploadFile from "../../components/UploadFile";
   export default {
-    components: { ImgItem },
+    components: { ImgItem, UploadFile },
     mounted() {
       HTTP.get("/getFiles?type=img").then(res => {
-        this.imgPaths = res.data;
+        this.imgPaths = res.data.sort(item => {
+          let reg = /\\([^\\]+)\..+$/g // "resource\\img\\2020-05-17\\1589680887039.jpg";
+          // let name =
+        });
       });
     },
     computed: {
@@ -22,6 +38,7 @@
     },
     data() {
       return {
+        showUpDlg: false,
         imgPaths: []
       };
     },
@@ -35,14 +52,28 @@
             this.imgPaths.splice(index, 1);
           });
         });
+      },
+      closeDlg() {
+        this.showUpDlg = false;
+      },
+      async uploadFile() {
+        let res = await this.$refs.UpFileRef.upload();
+        this.imgPaths.unshift(...res);
       }
     }
   };
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
   @import "../../assets/style/color.less";
-  .m-imgs {
+  .img-header {
+    padding-bottom: 20px;
+  }
+  .imgs-wrap {
     display: flex;
+  }
+  .dialog-footer {
+    padding-top: 20px;
+    text-align: right;
   }
 </style>
