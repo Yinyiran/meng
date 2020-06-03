@@ -32,13 +32,13 @@
         <el-form-item label="是否星标">
           <el-checkbox v-model="form.ArtStar"></el-checkbox>
         </el-form-item>
+        <editor v-model="form.ArtContent"></editor>
         <div class="footer">
           <el-button size="small" @click="cancel">取消</el-button>
           <el-button size="small" type="primary" @click="saveArticle">保存</el-button>
         </div>
       </el-form>
     </el-dialog>
-    <editor></editor>
   </div>
 </template>
 
@@ -51,11 +51,7 @@
     data() {
       return {
         articles: [],
-        form: {
-          ArtTitle: "",
-          ArtIntro: "",
-          ArtStar: false
-        },
+        form: {},
         addTitle: "新建文章",
         showAdd: false
       };
@@ -74,6 +70,7 @@
         this.form = {
           ArtTitle: "",
           ArtIntro: "",
+          ArtContent: "",
           ArtStar: false
         };
         this.showAdd = true;
@@ -103,8 +100,14 @@
         });
       },
       saveArticle() {
-        const { ArtID, ArtTitle, ArtIntro, ArtStar } = this.form;
-        let param = { ArtID, ArtTitle, ArtIntro, ArtStar: ArtStar ? 1 : 0 };
+        const { ArtID, ArtTitle, ArtIntro, ArtStar, ArtContent } = this.form;
+        let param = {
+          ArtID,
+          ArtTitle,
+          ArtIntro,
+          ArtStar: ArtStar ? 1 : 0,
+          ArtContent
+        };
         HTTP.post("/saveArticle", param).then(res => {
           Message.success("保存成功！");
           this.showAdd = false;

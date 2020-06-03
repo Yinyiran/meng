@@ -1,7 +1,7 @@
 <template>
   <div class="upload-file">
     <img-item :imgs="imgs" @removeImg="removeImg">
-      <div class="input-wrap">
+      <div class="input-wrap" v-show="imgs.length<limit">
         <input
           class="upload-input"
           type="file"
@@ -21,6 +21,7 @@
   import ImgItem from "../components/ImgItem";
   import { Message } from "element-ui";
   import { UploadAccept, HTTP } from "../service";
+  import { UpLoadFile } from "../service/util";
 
   export default {
     props: {
@@ -59,18 +60,7 @@
     methods: {
       async upload() {
         if (this.imgs.length === 0) return [];
-        this.formData.append("type", "img");
-        const config = {
-          headers: {
-            "Content-Type": "multipart/form-data"
-          },
-          onUploadProgress: progressEvent => {
-            var complete =
-              (((progressEvent.loaded / progressEvent.total) * 100) | 0) + "%";
-            console.log(complete);
-          }
-        };
-        let res = await HTTP.post("/uploadFile", this.formData, config);
+        let res = await UpLoadFile(this.formData);
         return res.data;
       },
       fileCheck() {
