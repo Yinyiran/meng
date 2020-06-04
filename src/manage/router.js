@@ -1,12 +1,12 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import MBanner from './component/MBanner.vue'
-import CompInfo from './component/CompInfo.vue'
-import MArticles from './component/MArticles.vue'
-import MProducts from './component/MProducts.vue'
-import Classify from './component/Classify.vue'
-import MImgs from './component/MImgs.vue'
-import Language from './component/Language.vue'
+import MBanner from './page/MBanner.vue'
+import CompInfo from './page/CompInfo.vue'
+import MArticles from './page/MArticles.vue'
+import MProducts from './page/MProducts.vue'
+import Classify from './page/Classify.vue'
+import MImgs from './page/MImgs.vue'
+import Language from './page/Language.vue'
 
 Vue.use(VueRouter)
 
