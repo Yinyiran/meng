@@ -27,7 +27,7 @@
     },
     watch: {
       value(val) {
-        this.editContent = val;
+        this.editContent = val || "";
       }
     },
     data() {

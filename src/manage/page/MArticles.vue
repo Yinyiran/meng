@@ -78,7 +78,7 @@
   };
 </script>
 
-<style lang="less">
+<style  lang="less" scoped>
   .article {
     padding: 20px;
   }

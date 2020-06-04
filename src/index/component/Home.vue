@@ -38,11 +38,16 @@
     </div>
     <div class="main-title">客户案例</div>
     <div class="article">
-      <div class="arti-item" v-for="(item,index) in articles" :key="index">
+      <div
+        class="arti-item"
+        v-for="(item,index) in articles"
+        :key="index"
+        @click="openArtPage(item)"
+      >
         <div class="arti-img-wrap">
-          <img class="arti-img" :src="item.ProdImg" alt />
+          <img class="arti-img" :src="item.ArtCover" alt />
         </div>
-        <div class="arti-title">{{item.ProdName}}</div>
+        <div class="arti-title">{{item.ArtTitle}}</div>
       </div>
     </div>
     <div class="footer">
@@ -89,23 +94,7 @@
           }
         ],
         classify: [],
-        articles: [
-          {
-            ProdName: "北欧客户认可",
-            ProdPrice: "200",
-            ProdImg: require("../../assets/img/prod3.png")
-          },
-          {
-            ProdName: "南非设备安装",
-            ProdPrice: "200",
-            ProdImg: require("../../assets/img/prod3.png")
-          },
-          {
-            ProdName: "德国酒具",
-            ProdPrice: "200",
-            ProdImg: require("../../assets/img/prod3.png")
-          }
-        ],
+        articles: [],
         products: [
           {
             current: 0,
@@ -202,6 +191,9 @@
       HTTP.get("/getClassify").then(res => {
         this.classify = res.data;
       });
+      HTTP.get("/getArticle", { isStar: 1 }).then(res => {
+        this.articles = res.data;
+      });
     },
     methods: {
       carChange(index, prodIndex) {
@@ -212,12 +204,15 @@
       },
       openProdDetail(prod) {
         this.$router.push(`/product/${prod.ID}`);
+      },
+      openArtPage(art) {
+        this.$router.push(`/article/${art.ArtID}`);
       }
     }
   };
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
   @import "../../assets/style/color.less";
   body {
     margin: 0;

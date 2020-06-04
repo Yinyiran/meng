@@ -14,6 +14,9 @@
       <el-form-item label="是否星标">
         <el-checkbox v-model="article.ArtStar"></el-checkbox>
       </el-form-item>
+      <el-form-item label="封面图片">
+        <upload-file :limit="1" :imgs="article.ArtCover" ref="UpFileRef"></upload-file>
+      </el-form-item>
       <el-form-item label="文章内容">
         <editor v-model="article.ArtContent"></editor>
       </el-form-item>
@@ -27,10 +30,12 @@
 
 <script>
   import Editor from "../../components/Editor";
+  import UploadFile from "../../components/UploadFile";
   import { Message } from "element-ui";
+  import { HTTP } from "../../service";
   export default {
     props: { article: Object, show: Boolean },
-    components: { Editor },
+    components: { Editor, UploadFile },
     methods: {
       cancel() {
         this.$emit("update:show", false);
@@ -56,6 +61,7 @@
 
 <style lang="less">
   .new-article {
+    z-index: 1;
     background-color: #fff;
     overflow: auto;
   }
