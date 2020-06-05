@@ -48,15 +48,15 @@
                           formats blockformats fontformats | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent |
                           removeformat | link image table | preview`,
           images_upload_handler: (blobInfo, success, failure) => {
-            // let formData = new FormData();
-            // formData.append("file", blobInfo.blob(), blobInfo.filename());
-            // // HTTP.post("/uploadFile",formData);
-            // UpLoadFile(formData).then(res=>{
-            //   res.data.forEach(url=>{
-            //     success(url)
-            //   })
-            // })
-            success("/resource/img/2020-06-03/1591175209134.jpg");
+            let formData = new FormData();
+            formData.append("file", blobInfo.blob(), blobInfo.filename());
+            // HTTP.post("/uploadFile",formData);
+            UpLoadFile(formData).then(res=>{
+              res.data.forEach(url=>{
+                success(url)
+              })
+            })
+            // success("/resource/img/2020-06-03/1591175209134.jpg");
           }
           // setup: editor => {
           //   //设置自定义功能的按钮

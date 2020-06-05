@@ -36,6 +36,7 @@
       HTTP.get("/getArticles").then(res => {
         let list = res.data.forEach(item => {
           item.ArtStar = !!item.ArtStar;
+          item.ArtCover = item.ArtCover ? [item.ArtCover] : [];
           item.ArtStarText = item.ArtStar ? "是" : "否";
         });
         this.articles = res.data;
@@ -59,6 +60,7 @@
         if (param.ArtID) {
           let item = this.articles.find(item => item.ArtID === param.ArtID);
           Object.assign(item, param);
+          item.ArtCover = [item.ArtCover];
         } else {
           this.articles.unshift(param);
         }

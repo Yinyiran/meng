@@ -1,7 +1,7 @@
 <template>
   <div class="new-article m-full" v-show="show">
     <div class="art-header">
-      新建文章
+      {{title}}
       <el-button class="m-right" size="small" @click="cancel">返回</el-button>
     </div>
     <el-form ref="formRef" class="art-editor" :model="article" label-width="80px" size="small">
@@ -36,16 +36,24 @@
   export default {
     props: { article: Object, show: Boolean },
     components: { Editor, UploadFile },
+    computed: {
+      title() {
+        console.log(this.article)
+        return this.article.ArtID ? "编辑文章" : "新建文章";
+      }
+    },
     methods: {
       cancel() {
         this.$emit("update:show", false);
       },
-      saveArticle() {
+      async saveArticle() {
+        let cover = await this.$refs.UpFileRef.upload();
         const { ArtID, ArtTitle, ArtIntro, ArtStar, ArtContent } = this.article;
         let param = {
           ArtID,
           ArtTitle,
           ArtIntro,
+          ArtCover: cover.length ? cover[0] : "",
           ArtStar: ArtStar ? 1 : 0,
           ArtContent
         };
@@ -72,5 +80,9 @@
   }
   .art-editor {
     padding: 20px;
+  }
+  .footer {
+    margin-top: 40px;
+    text-align: right;
   }
 </style>
