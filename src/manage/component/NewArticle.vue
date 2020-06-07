@@ -38,7 +38,6 @@
     components: { Editor, UploadFile },
     computed: {
       title() {
-        console.log(this.article)
         return this.article.ArtID ? "编辑文章" : "新建文章";
       }
     },

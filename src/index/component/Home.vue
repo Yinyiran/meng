@@ -185,7 +185,7 @@
       };
     },
     mounted() {
-      HTTP.get("/banner").then(res => {
+      HTTP.get("/getBanner").then(res => {
         console.log(res);
       });
       HTTP.get("/getClassify").then(res => {
