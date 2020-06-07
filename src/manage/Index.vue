@@ -45,10 +45,6 @@
           {
             name: "产品分类",
             router: "classify"
-          },
-          {
-            name: "语言管理",
-            router: "language"
           }
         ]
       };

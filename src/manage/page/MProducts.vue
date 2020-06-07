@@ -15,36 +15,23 @@
         </span>
       </el-table-column>
     </el-table>
-    <el-form ref="formRef" :model="form" label-width="100px" size="small">
-      <el-form-item label="产品名称">
-        <el-input v-model="form.CompName"></el-input>
-      </el-form-item>
-      <el-form-item label="产品图片">
-        <upload-file v-if="isloaded" :imgs="form.CompLogo" ref="UpFileRef"></upload-file>
-      </el-form-item>
-      <el-form-item label="产品简介">
-        <el-input v-model="form.Mobile"></el-input>
-      </el-form-item>
-      <el-form-item label="所属分类">分类选择</el-form-item>
-      <el-form-item label="同类产品">选择产品</el-form-item>
-      <div class="footer">
-        <el-button size="small">取消</el-button>
-        <el-button size="small" type="primary" @click="onSubmit">保存</el-button>
-      </div>
-    </el-form>
+    <new-product :article="row" @saveSuccess="saveSuccess" :show.sync="showAdd"></new-product>
   </div>
 </template>
 <script>
   import UploadFile from "../../components/UploadFile.vue";
+  import NewProduct from "../component/NewProduct.vue";
   import { HTTP } from "../../service";
   import { Message } from "element-ui";
 
   export default {
-    components: { UploadFile },
+    components: { UploadFile, NewProduct },
     data() {
       return {
         isloaded: false,
         products: [],
+        row: {},
+        showAdd: false,
         form: {
           CompName: "",
           CompLogo: [],
@@ -62,7 +49,10 @@
       });
     },
     methods: {
-      addProd() {},
+      addProd() {
+        this.showAdd = true;
+      },
+      saveSuccess() {},
       async onSubmit() {
         this.form.CompLogo = await this.$refs.UpFileRef.upload();
         let Obj = Object.assign({}, this.form);

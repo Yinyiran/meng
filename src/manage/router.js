@@ -6,7 +6,6 @@ const MArticles = () => import('./page/MArticles.vue')
 const MProducts = () => import('./page/MProducts.vue')
 const Classify = () => import('./page/Classify.vue')
 const MImgs = () => import('./page/MImgs.vue')
-const Language = () => import('./page/Language.vue')
 
 Vue.use(VueRouter)
 
@@ -44,11 +43,6 @@ const routes = [
     path: '/classify',
     name: 'classify',
     component: Classify
-  },
-  {
-    path: '/language',
-    name: 'language',
-    component: Language
   },
 ]
 
