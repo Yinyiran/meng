@@ -30,41 +30,25 @@
         <el-button size="small" type="primary" @click="onSubmit">保存</el-button>
       </div>
     </el-dialog>
-    <el-dialog
-      title="拖拽排序"
-      :visible.sync="isSort"
-      :before-close="cancelSort"
-      width="600px"
-      :append-to-body="true"
-    >
-      <div class="classify-list" ref="classifysRef" v-if="isSort">
-        <div class="class-item" v-for="(item,index) in classifys" :key="index">
-          <i class="el-icon-rank" />
-          <span class="item-name">{{item.ClassName}}</span>
-        </div>
-      </div>
-      <div class="footer">
-        <el-button size="mini" @click="cancelSort">取消</el-button>
-        <el-button size="mini" type="primary" @click="saveSort">保存</el-button>
-      </div>
-    </el-dialog>
+    <sort :visible.sync="isSort" :list="sortList" />
   </div>
 </template>
 
 <script>
   import { HTTP } from "../../service";
   import { MessageBox, Message } from "element-ui";
-  import Sortablejs from "sortablejs";
+  import Sort from "../../components/Sort.vue";
   export default {
     data() {
       return {
         form: { ClassName: "" },
         isCreate: false,
         isSort: false,
-        sortIds: [],
+        sortList: [],
         classifys: []
       };
     },
+    components: { Sort },
     created() {
       this.getClassList();
     },
@@ -80,19 +64,15 @@
       },
       async beginSort() {
         this.isSort = true;
-        this.sortIds = this.classifys.map(item => item.ClassID);
-        await this.$nextTick();
-        new Sortablejs(this.$refs.classifysRef, {
-          animation: 100,
-          onSort: evt => {
-            let item = this.sortIds[evt.oldIndex];
-            this.sortIds.splice(evt.newIndex, 0, item);
-            this.sortIds.splice(evt.oldIndex + 1, 1);
-          }
+        this.sortList = this.classifys.map(item => {
+          return {
+            ID: item.ClassID,
+            Name: item.ClassName
+          };
         });
       },
       saveSort() {
-        HTTP.post("/sortClassify", this.sortIds).then(res => {
+        HTTP.post("/sortClassify", this.sortList).then(res => {
           Message.success("保存成功");
           this.isSort = false;
           this.getClassList();
