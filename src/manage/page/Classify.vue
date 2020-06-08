@@ -2,9 +2,7 @@
   <div class="classify">
     <div class="classify-header">
       <el-button size="mini" type="primary" @click="addClassify">新增</el-button>
-      <span class="sort-btns">
-        <el-button size="mini" type="primary" @click="beginSort">排序</el-button>
-      </span>
+      <el-button size="mini" class="m-right" type="primary" @click="beginSort">排序</el-button>
     </div>
     <div class="classify-list">
       <div class="class-item" v-for="(item,index) in classifys" :key="index">
@@ -30,7 +28,7 @@
         <el-button size="small" type="primary" @click="onSubmit">保存</el-button>
       </div>
     </el-dialog>
-    <sort :visible.sync="isSort" :list="sortList" />
+    <sort :visible.sync="isSort" :list="sortList" @confirmSort="saveSort" />
   </div>
 </template>
 
@@ -71,8 +69,8 @@
           };
         });
       },
-      saveSort() {
-        HTTP.post("/sortClassify", this.sortList).then(res => {
+      saveSort(list) {
+        HTTP.post("/sortClassify", list).then(res => {
           Message.success("保存成功");
           this.isSort = false;
           this.getClassList();
@@ -116,19 +114,19 @@
   };
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
   .classify-list {
     margin-top: 20px;
   }
-  .sort-btns {
-    float: right;
-  }
   .class-item {
     background-color: #f1f1f1;
-    margin: 4px 0;
-    padding: 4px 10px;
+    margin-bottom: 6px;
+    padding: 6px 10px;
     display: flex;
     align-items: center;
+    &:hover {
+      background-color: #e8e8e8;
+    }
     .item-name {
       flex: 1;
       margin: 0 6px;

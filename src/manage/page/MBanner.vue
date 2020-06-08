@@ -5,7 +5,7 @@
       <el-button size="mini" type="primary" class="m-right" @click="sortBan">排序</el-button>
     </div>
     <el-table :data="banners">
-      <el-table-column label="序号" type="index" align="center"></el-table-column>
+      <el-table-column label="序号" type="index" width="50px" align="center"></el-table-column>
       <el-table-column label="图片">
         <img class="banner-img" slot-scope="{row}" :src="row.BanImg" />
       </el-table-column>
@@ -16,8 +16,8 @@
         <el-button size="mini" type="text">删除</el-button>
       </el-table-column>
     </el-table>
-    <!-- <el-dialog
-      :title="form.ClassID?`编辑`:'新增'+'产品'"
+    <el-dialog
+      :title="form.ClassID?`编辑`:'新增'"
       :visible.sync="isCreate"
       :before-close="cancelAdd"
       width="800px"
@@ -38,7 +38,7 @@
         <el-button size="small" @click="cancelAdd">取消</el-button>
         <el-button size="small" type="primary" @click="onSubmit">保存</el-button>
       </div>
-    </el-dialog> -->
+    </el-dialog>
     <sort :visible.sync="isSort" />
   </div>
 </template>
