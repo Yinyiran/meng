@@ -33,7 +33,7 @@
       };
     },
     created() {
-      HTTP.get("/getArticles").then(res => {
+      HTTP.get("/getArticle").then(res => {
         let list = res.data.forEach(item => {
           item.ArtStar = !!item.ArtStar;
           item.ArtCover = item.ArtCover ? [item.ArtCover] : [];
