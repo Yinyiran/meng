@@ -68,33 +68,24 @@
         let files = event.target.files;
         if (files.length === 0) return;
         if (this.limit > this.imgs.length) {
-                  let promiseArr = [];
-        files.forEach(file => {
-          let p = new Promise((resolve, reject) => {
-            var reader = new FileReader();
-            reader.onload = function(event) {
-              var binary = event.target.result;
-              var md5 = MD5(binary).toString();
-              resolve(md5);
-            };
-            reader.readAsBinaryString(file);
-          });
-          promiseArr.push(p);
-        });
-
-        let arr = await Promise.all(promiseArr);
           if (
             [].some.call(files, v => Math.round(v.size / 1024) > this.limitSize)
           ) {
             Message.warning("图片大小最大支持2M");
           } else {
             files.forEach(file => {
-              let url = URL.createObjectURL(file);
-              const isExist = this.imgs.find(item => item === url);
-              if (!isExist) {
-                this.formData.append("file", file);
-                this.imgs.push(url);
-              }
+              var reader = new FileReader();
+              reader.onload = event => {
+                var binary = event.target.result;
+                file.filehash = MD5(binary).toString();
+                let url = URL.createObjectURL(file);
+                const isExist = this.imgs.find(item => item === url);
+                if (!isExist) {
+                  this.formData.append("file", file);
+                  this.imgs.push(url);
+                }
+              };
+              reader.readAsBinaryString(file);
             });
           }
         } else {
