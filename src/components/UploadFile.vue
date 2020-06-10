@@ -22,6 +22,7 @@
   import { Message } from "element-ui";
   import { UploadAccept, HTTP } from "../service";
   import { UpLoadFile } from "../service/util";
+  import { MD5 } from "crypto-js";
 
   export default {
     props: {
@@ -63,10 +64,25 @@
         let res = await UpLoadFile(this.formData);
         return res.data;
       },
-      fileCheck() {
+      async fileCheck() {
         let files = event.target.files;
         if (files.length === 0) return;
         if (this.limit > this.imgs.length) {
+                  let promiseArr = [];
+        files.forEach(file => {
+          let p = new Promise((resolve, reject) => {
+            var reader = new FileReader();
+            reader.onload = function(event) {
+              var binary = event.target.result;
+              var md5 = MD5(binary).toString();
+              resolve(md5);
+            };
+            reader.readAsBinaryString(file);
+          });
+          promiseArr.push(p);
+        });
+
+        let arr = await Promise.all(promiseArr);
           if (
             [].some.call(files, v => Math.round(v.size / 1024) > this.limitSize)
           ) {

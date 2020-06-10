@@ -19,7 +19,7 @@
       </el-table-column>
     </el-table>
     <el-dialog
-      :title="form.ClassID?`编辑`:'新增'"
+      :title="form.BanID?`编辑`:'新增'"
       :visible.sync="isCreate"
       :before-close="cancelAdd"
       width="800px"

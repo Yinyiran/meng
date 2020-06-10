@@ -10,7 +10,7 @@ export function GetCookie(name) {
   else return null;
 }
 // 上传文件
-export function xUpLoadFile(formData, type = "img") {
+export function UpLoadFile(formData, type = "img") {
   formData.append("type", type);
   const config = {
     headers: {
