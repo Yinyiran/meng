@@ -68,27 +68,31 @@
     methods: {
       async upload() {
         if (this.upImgs.length === 0) return [];
-        await this.exist();
+        let hashs = await this.exist();
+        hashs.forEach((item, index) => {
+          this.formData.append(
+            `file_${index}`,
+            `${item.filehash}_${item.filename}`
+          );
+        });
         let res = await UpLoadFile(this.formData);
-        debugger;
         return [].concat(this.imgs, res.data);
       },
 
       async exist() {
-        let promisArr = this.files.map(file => {
+        let promisArr = [].map.call(this.files, file => {
+          debugger;
           return new Promise((resolve, reject) => {
             var reader = new FileReader();
             reader.onload = event => {
               var binary = event.target.result;
-              file.filehash = MD5(binary).toString();
+              let filehash = MD5(binary).toString();
+              resolve({ filehash, filename: file.filename });
             };
             reader.readAsBinaryString(file);
           });
         });
-        let hashs = await Promise.all(promisArr);
-        hashs.forEach(hash => {
-          this.formData.append("hash", hash);
-        });
+        return Promise.all(promisArr);
       },
 
       async fileCheck() {
@@ -100,12 +104,12 @@
           ) {
             Message.warning("图片大小最大支持2M");
           } else {
-            files.forEach(file => {
+            files.forEach((file, index) => {
               let url = URL.createObjectURL(file);
               const isExist = this.upImgs.find(item => item === url);
               if (!isExist) {
                 this.files.push(file);
-                this.formData.append("file", file);
+                this.formData.append(`file_${index}`, file);
                 this.upImgs.push(url);
               }
             });
