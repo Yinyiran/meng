@@ -1,7 +1,7 @@
 <template>
   <div class="upload-file">
-    <img-item :imgs="imgs" @removeImg="removeImg">
-      <div class="input-wrap" v-show="imgs.length<limit">
+    <img-item :imgs="imgList" @removeImg="removeImg">
+      <div class="input-wrap" v-show="imgList.length<limit">
         <input
           class="upload-input"
           type="file"
@@ -54,38 +54,60 @@
       return {
         showPreview: false,
         curUrl: "",
+        files: [],
+        upImgs: [],
         acceptType: UploadAccept[this.accept],
         formData: new FormData()
       };
     },
+    computed: {
+      imgList() {
+        return [].concat(this.imgs, this.upImgs);
+      }
+    },
     methods: {
       async upload() {
-        if (this.imgs.length === 0) return [];
+        if (this.upImgs.length === 0) return [];
+        await this.exist();
         let res = await UpLoadFile(this.formData);
-        return res.data;
+        debugger;
+        return [].concat(this.imgs, res.data);
       },
+
+      async exist() {
+        let promisArr = this.files.map(file => {
+          return new Promise((resolve, reject) => {
+            var reader = new FileReader();
+            reader.onload = event => {
+              var binary = event.target.result;
+              file.filehash = MD5(binary).toString();
+            };
+            reader.readAsBinaryString(file);
+          });
+        });
+        let hashs = await Promise.all(promisArr);
+        hashs.forEach(hash => {
+          this.formData.append("hash", hash);
+        });
+      },
+
       async fileCheck() {
         let files = event.target.files;
         if (files.length === 0) return;
-        if (this.limit > this.imgs.length) {
+        if (this.limit > this.imgList.length) {
           if (
             [].some.call(files, v => Math.round(v.size / 1024) > this.limitSize)
           ) {
             Message.warning("图片大小最大支持2M");
           } else {
             files.forEach(file => {
-              var reader = new FileReader();
-              reader.onload = event => {
-                var binary = event.target.result;
-                file.filehash = MD5(binary).toString();
-                let url = URL.createObjectURL(file);
-                const isExist = this.imgs.find(item => item === url);
-                if (!isExist) {
-                  this.formData.append("file", file);
-                  this.imgs.push(url);
-                }
-              };
-              reader.readAsBinaryString(file);
+              let url = URL.createObjectURL(file);
+              const isExist = this.upImgs.find(item => item === url);
+              if (!isExist) {
+                this.files.push(file);
+                this.formData.append("file", file);
+                this.upImgs.push(url);
+              }
             });
           }
         } else {
@@ -93,7 +115,7 @@
         }
       },
       removeImg(index) {
-        this.imgs.splice(index, 1);
+        this.imgList.splice(index, 1);
         this.$refs.uploadRef.value = "";
       }
     }
