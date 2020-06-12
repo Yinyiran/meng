@@ -70,6 +70,8 @@
             ? JSON.stringify(this.form.CompLogo)
             : null
         });
+        console.log(params);
+        return;
         HTTP.post(`/saveCompInfo`, params).then(res => {
           Message.success("保存成功！");
         });

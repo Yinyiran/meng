@@ -56,8 +56,7 @@
         curUrl: "",
         files: [],
         upImgs: [],
-        acceptType: UploadAccept[this.accept],
-        formData: new FormData()
+        acceptType: UploadAccept[this.accept]
       };
     },
     computed: {
@@ -68,28 +67,35 @@
     methods: {
       async upload() {
         if (this.upImgs.length === 0) return [];
-        let hashs = await this.exist();
-        hashs.forEach((item, index) => {
-          this.formData.append(
-            `file_${index}`,
-            `${item.filehash}_${item.filename}`
-          );
+        await this.getFileHash();
+        let hashs = this.files.map(item => item.filehash);
+        debugger;
+        let existFiles = await HTTP.post("/fileExist", hashs);
+        let formData = new FormData();
+        this.files.forEach((item, index) => {
+          let existpath = existFiles[item.filehash];
+          if (existpath) {
+            this.imgs.push(existpath);
+          } else {
+            formData.append(`file_${index}`, item.file);
+            formData.append(`file_${index}`, `${item.filehash}`);
+          }
         });
-        let res = await UpLoadFile(this.formData);
+        let res = await UpLoadFile(formData);
+        this.upImgs = [];
         return [].concat(this.imgs, res.data);
       },
 
-      async exist() {
-        let promisArr = [].map.call(this.files, file => {
-          debugger;
+      async getFileHash() {
+        let promisArr = [].map.call(this.files, item => {
           return new Promise((resolve, reject) => {
             var reader = new FileReader();
             reader.onload = event => {
               var binary = event.target.result;
-              let filehash = MD5(binary).toString();
-              resolve({ filehash, filename: file.filename });
+              item.filehash = MD5(binary).toString();
+              resolve();
             };
-            reader.readAsBinaryString(file);
+            reader.readAsBinaryString(item.file);
           });
         });
         return Promise.all(promisArr);
@@ -108,8 +114,7 @@
               let url = URL.createObjectURL(file);
               const isExist = this.upImgs.find(item => item === url);
               if (!isExist) {
-                this.files.push(file);
-                this.formData.append(`file_${index}`, file);
+                this.files.push({ file, filehash: "" });
                 this.upImgs.push(url);
               }
             });
