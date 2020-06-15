@@ -55,35 +55,35 @@
         showPreview: false,
         curUrl: "",
         files: [],
-        upImgs: [],
-        acceptType: UploadAccept[this.accept]
+        imgList: [],
+        acceptType: UploadAccept[this.accept] || ""
       };
     },
-    computed: {
-      imgList() {
-        return [].concat(this.imgs, this.upImgs);
+    watch: {
+      imgs(val) {
+        this.imgList = val;
       }
     },
     methods: {
       async upload() {
-        if (this.upImgs.length === 0) return [];
+        if (this.files.length === 0) return this.imgs;
         await this.getFileHash();
         let hashs = this.files.map(item => item.filehash);
-        debugger;
-        let existFiles = await HTTP.post("/fileExist", hashs);
+        let { data } = await HTTP.post("/fileExist", hashs);
         let formData = new FormData();
         this.files.forEach((item, index) => {
-          let existpath = existFiles[item.filehash];
+          let existpath = data[item.filehash];
           if (existpath) {
-            this.imgs.push(existpath);
+            this.imgList.push(existpath);
           } else {
             formData.append(`file_${index}`, item.file);
             formData.append(`file_${index}`, `${item.filehash}`);
           }
         });
-        let res = await UpLoadFile(formData);
-        this.upImgs = [];
-        return [].concat(this.imgs, res.data);
+        if(this.files.length){
+          let res = await UpLoadFile(formData);
+          return [].concat(this.imgs, res.data);
+        }
       },
 
       async getFileHash() {
@@ -103,8 +103,12 @@
 
       async fileCheck() {
         let files = event.target.files;
-        if (files.length === 0) return;
-        if (this.limit > this.imgList.length) {
+        if (files.length === 0) {
+          this.$refs.uploadRef.value = "";
+          return;
+        }
+        let imgLen = this.imgList.length + files.length;
+        if (imgLen <= this.limit) {
           if (
             [].some.call(files, v => Math.round(v.size / 1024) > this.limitSize)
           ) {
@@ -112,10 +116,10 @@
           } else {
             files.forEach((file, index) => {
               let url = URL.createObjectURL(file);
-              const isExist = this.upImgs.find(item => item === url);
+              const isExist = this.imgList.find(item => item === url);
               if (!isExist) {
                 this.files.push({ file, filehash: "" });
-                this.upImgs.push(url);
+                this.imgList.push(url);
               }
             });
           }
@@ -123,7 +127,8 @@
           Message.warning(`图片超过最大数量（${this.limit}个）`);
         }
       },
-      removeImg(index) {
+      removeImg(src) {
+        let index = this.imgList.indexOf(src);
         this.imgList.splice(index, 1);
         this.$refs.uploadRef.value = "";
       }

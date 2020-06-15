@@ -4,7 +4,7 @@
       <img class="thumb-img" :src="src" />
       <div class="thumb-btn">
         <i class="el-icon-circle-plus-outline" title="大图预览" @click="previewImg(src)"></i>
-        <i class="el-icon-delete" title="删除图片" @click="removeImg(index)"></i>
+        <i class="el-icon-delete" title="删除图片" @click="removeImg(src)"></i>
       </div>
     </div>
     <slot></slot>
@@ -32,8 +32,8 @@
         this.showPreview = true;
         this.curUrl = src;
       },
-      removeImg(index) {
-        this.$emit("removeImg", index);
+      removeImg(src) {
+        this.$emit("removeImg", src);
       }
     }
   };
