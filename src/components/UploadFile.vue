@@ -61,7 +61,7 @@
     },
     watch: {
       imgs(val) {
-        this.imgList = val;
+        this.imgList = [].concat(val);
       }
     },
     methods: {
@@ -71,18 +71,21 @@
         let hashs = this.files.map(item => item.filehash);
         let { data } = await HTTP.post("/fileExist", hashs);
         let formData = new FormData();
+        let existFiles = [];
         this.files.forEach((item, index) => {
           let existpath = data[item.filehash];
           if (existpath) {
-            this.imgList.push(existpath);
+            existFiles.push(existpath);
           } else {
             formData.append(`file_${index}`, item.file);
             formData.append(`file_${index}`, `${item.filehash}`);
           }
         });
-        if(this.files.length){
+        if (this.files.length !== existFiles.length) {
           let res = await UpLoadFile(formData);
-          return [].concat(this.imgs, res.data);
+          return [].concat(this.imgs, existFiles, res.data);
+        } else {
+          return [].concat(this.imgs, existFiles);
         }
       },
 
@@ -128,9 +131,14 @@
         }
       },
       removeImg(src) {
-        let index = this.imgList.indexOf(src);
-        this.imgList.splice(index, 1);
-        this.$refs.uploadRef.value = "";
+        let imgIndex = this.imgs.indexOf(src);
+        if (imgIndex > -1) {
+          this.imgs.splice(imgIndex, 1);
+        } else {
+          let index = this.imgList.indexOf(src);
+          this.imgList.splice(index, 1);
+          this.$refs.uploadRef.value = "";
+        }
       }
     }
   };

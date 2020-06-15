@@ -1,11 +1,13 @@
 <template>
   <div class="img-item">
-    <div class="thumb-wrap" v-for="(src,index) in imgs" :key="index">
-      <img class="thumb-img" :src="src" />
+    <div class="thumb-wrap" v-for="(item,index) in imgs" :key="index">
+      <img class="thumb-img" :src="item" />
       <div class="thumb-btn">
-        <i class="el-icon-circle-plus-outline" title="大图预览" @click="previewImg(src)"></i>
-        <i class="el-icon-delete" title="删除图片" @click="removeImg(src)"></i>
+        <i class="el-icon-circle-plus-outline" title="大图预览" @click="previewImg(item)"></i>
+        <i class="el-icon-delete" title="删除图片" @click="removeImg(item)"></i>
       </div>
+      <div class="img-name m-ellipsis" v-if="item.name">{{item.name}}</div>
+      <!-- {{item.name}} -->
     </div>
     <slot></slot>
     <el-dialog :visible.sync="showPreview" width="80%" top="1vh" :append-to-body="true">
@@ -17,6 +19,7 @@
 </template>
 
 <script>
+  import { ServeHost } from "../service";
   export default {
     props: {
       imgs: Array
@@ -42,6 +45,7 @@
 <style lang="less">
   .img-item {
     display: inline-block;
+    position: relative;
   }
   .thumb-wrap {
     vertical-align: top;
@@ -55,6 +59,9 @@
     height: 100px;
     &:hover {
       .thumb-btn {
+        opacity: 1;
+      }
+      .img-name {
         opacity: 1;
       }
     }
@@ -81,6 +88,19 @@
         margin: 0 5px;
         cursor: pointer;
       }
+    }
+    .img-name {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 30px;
+      opacity: 0;
+      background-color: rgba(0, 0, 0, 0.1);
+      line-height: 30px;
+      text-align: center;
+      color: #fff;
+      padding: 0 10px;
     }
   }
   .preview-wrap {

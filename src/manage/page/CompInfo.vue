@@ -65,12 +65,8 @@
         let Obj = Object.assign({}, this.form);
         let params = Object.assign(Obj, {
           CompID: 10000,
-          CompLogo: this.form.CompLogo.length
-            ? JSON.stringify(this.form.CompLogo)
-            : null
+          CompLogo: JSON.stringify(this.form.CompLogo)
         });
-        console.log(params);
-        return;
         HTTP.post(`/saveCompInfo`, params).then(res => {
           Message.success("保存成功！");
         });

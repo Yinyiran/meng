@@ -4,7 +4,7 @@
       <el-button size="mini" @click="showUpDlg=true" type="primary">上传图片</el-button>
     </div>
     <div class="imgs-wrap">
-      <img-item :imgs="imgs" @removeImg="deleImg"></img-item>
+      <img-item :imgs="imgPaths" @removeImg="deleImg"></img-item>
     </div>
     <el-dialog title="上传图片" :visible.sync="showUpDlg" width="80%" :append-to-body="true">
       <upload-file ref="UpFileRef"></upload-file>
@@ -25,16 +25,13 @@
     components: { ImgItem, UploadFile },
     mounted() {
       HTTP.get("/getFiles?type=img").then(res => {
-        this.imgPaths = res.data.sort(item => {
-          let reg = /\\([^\\]+)\..+$/g // "resource\\img\\2020-05-17\\1589680887039.jpg";
-          // let name =
-        });
+        this.imgPaths = res.data;
+        // .sort((a, b) => {
+        //   let reg = /\/([^\/]+)\..+$/g; // "resource/img/2020-05-17/1589680887039.jpg";
+        //   item.match(reg);
+        //   return RegExp.$1;
+        // });
       });
-    },
-    computed: {
-      imgs() {
-        return this.imgPaths.map(src => `${ServeHost}/${src}`);
-      }
     },
     data() {
       return {
@@ -43,11 +40,9 @@
       };
     },
     methods: {
-      deleImg(index) {
+      deleImg(src) {
         MessageBox.confirm("确定要删除这个图片么？", "提示").then(() => {
-          let path = HTTP.post("/deleteFile", {
-            data: this.imgPaths[index]
-          }).then(res => {
+          let path = HTTP.post("/deleteFile", { FilePath: src }).then(res => {
             Message.success("删除成功");
             this.imgPaths.splice(index, 1);
           });
