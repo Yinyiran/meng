@@ -25,12 +25,15 @@
     components: { ImgItem, UploadFile },
     mounted() {
       HTTP.get("/getFiles?type=img").then(res => {
+        res.data.sort((a, b) => {
+          let reg = /\/([^\/]+)\..+$/g; // "resource/img/2020-05-17/1589680887039.jpg";
+          a.match(reg);
+          let aname = RegExp.$1;
+          b.match(reg);
+          let bname = RegExp.$1;
+          return Number(bname) - Number(aname);
+        });
         this.imgPaths = res.data;
-        // .sort((a, b) => {
-        //   let reg = /\/([^\/]+)\..+$/g; // "resource/img/2020-05-17/1589680887039.jpg";
-        //   item.match(reg);
-        //   return RegExp.$1;
-        // });
       });
     },
     data() {
@@ -44,6 +47,7 @@
         MessageBox.confirm("确定要删除这个图片么？", "提示").then(() => {
           let path = HTTP.post("/deleteFile", { FilePath: src }).then(res => {
             Message.success("删除成功");
+            let index = this.imgPaths.indexOf(src);
             this.imgPaths.splice(index, 1);
           });
         });

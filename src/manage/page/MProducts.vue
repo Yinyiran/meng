@@ -67,7 +67,9 @@
         });
       },
       editProd() {},
-      delProd() {}
+      delProd(row,index) {
+        // HTTP.post("/delete")
+      }
     }
   };
 </script>
