@@ -7,7 +7,7 @@
       <img-item :imgs="imgPaths" @removeImg="deleImg"></img-item>
     </div>
     <el-dialog title="上传图片" :visible.sync="showUpDlg" width="80%" :append-to-body="true">
-      <upload-file ref="UpFileRef"></upload-file>
+      <upload-file :imgs="[]" ref="UpFileRef"></upload-file>
       <div class="dialog-footer">
         <el-button size="mini" @click="closeDlg" type="primary">取消</el-button>
         <el-button size="mini" @click="uploadFile" type="primary">开始上传</el-button>
@@ -58,6 +58,8 @@
       async uploadFile() {
         let res = await this.$refs.UpFileRef.upload();
         this.imgPaths.unshift(...res);
+        Message.success("上传成功!");
+        this.showUpDlg = false;
       }
     }
   };

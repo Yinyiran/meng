@@ -76,7 +76,6 @@
         this.isCreate = true;
       },
       saveSuccess(val) {
-        console.log(val)
         val.BanTypeText = BanType[val.BanType];
         if (val.BanID) {
           Object.assign(this.form, val);

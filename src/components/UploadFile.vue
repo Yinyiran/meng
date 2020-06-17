@@ -69,7 +69,7 @@
         let hashs = this.files.map(item => item.filehash);
         let { data } = await HTTP.post("/fileExist", hashs);
         let formData = new FormData();
-        let existFiles = [];
+        let upFile = [];
         this.files.forEach((item, index) => {
           let existpath = data[item.filehash];
           if (existpath) {
@@ -78,15 +78,16 @@
           } else {
             formData.append(`file_${index}`, item.file);
             formData.append(`file_${index}`, `${item.filehash}`);
+            upFile.push(item);
           }
         });
-        if (this.files.length !== existFiles.length) {
+        let uplen = upFile.length;
+        if (uplen) {
           let res = await UpLoadFile(formData);
-          return [].concat(this.imgs, existFiles, res.data);
-        } else {
-          upload;
-          return [].concat(this.imgs, existFiles);
+          this.imgList = this.imgList.filter(url => !url.startsWith("blob:"));
+          this.imgList.push(...res.data);
         }
+        return this.imgList;
       },
 
       async getFileHash() {
@@ -131,14 +132,13 @@
         }
       },
       removeImg(src) {
-        let imgIndex = this.imgs.indexOf(src);
-        if (imgIndex > -1) {
-          this.imgs.splice(imgIndex, 1);
-        } else {
-          let index = this.imgList.indexOf(src);
-          this.imgList.splice(index, 1);
-          this.$refs.uploadRef.value = "";
-        }
+        let index = this.imgList.indexOf(src);
+        this.imgList.splice(index, 1);
+        // 删除缓存的图片
+        let upindex = this.files.findIndex(item => (item.url = src));
+        if (upindex > -1) this.files.splice(-1);
+        this.$refs.uploadRef.value = "";
+        // }
       }
     }
   };

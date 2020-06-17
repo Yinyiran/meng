@@ -3,10 +3,10 @@
     <div class="thumb-wrap" v-for="(item,index) in imgs" :key="index">
       <img class="thumb-img" :src="item" />
       <div class="thumb-btn">
-        <i class="el-icon-circle-plus-outline" title="大图预览" @click="previewImg(item)"></i>
+        <i class="el-icon-view" title="大图预览" @click="previewImg(item)"></i>
         <i class="el-icon-delete" title="删除图片" @click="removeImg(item)"></i>
       </div>
-      <div class="img-name m-ellipsis" v-if="item.name">{{item.name}}</div>
+      <!-- <div class="img-name m-ellipsis" v-if="item.name">{{item.name}}</div> -->
       <!-- {{item.name}} -->
     </div>
     <slot></slot>
