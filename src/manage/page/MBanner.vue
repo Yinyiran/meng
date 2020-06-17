@@ -6,11 +6,11 @@
     </div>
     <el-table :data="banners">
       <el-table-column label="序号" type="index" width="50px" align="center"></el-table-column>
+      <el-table-column label="类型" prop="BanTypeText" width="80px" align="center"></el-table-column>
       <el-table-column label="轮播名称" prop="BanName"></el-table-column>
       <el-table-column label="图片">
         <img class="banner-img" slot-scope="{row}" :src="row.BanImg" />
       </el-table-column>
-      <el-table-column label="类型" prop="BanType" width="50px" align="center"></el-table-column>
       <el-table-column label="操作" width="100px" align="center">
         <span slot-scope="{row,$index}">
           <el-button size="mini" type="text" @click="editBan(row)">编辑</el-button>
@@ -24,7 +24,7 @@
 </template>
 
 <script>
-  import { HTTP } from "../../service";
+  import { HTTP, BanType } from "../../service";
   import { ServeHost } from "../../service/util";
   import NewBanner from "../component/NewBanner";
   import Sort from "../../components/Sort";
@@ -35,6 +35,7 @@
       HTTP.get("/getBanner").then(res => {
         res.data.forEach(item => {
           item.BanImg = [item.BanImg];
+          item.BanTypeText = BanType[item.BanType];
         });
         this.banners = res.data;
       });
@@ -76,8 +77,14 @@
       },
       saveSuccess(val) {
         console.log(val)
-        this.banners.push(val);
-        this.isCreate = false
+        val.BanTypeText = BanType[val.BanType];
+        if (val.BanID) {
+          Object.assign(this.form, val);
+        } else {
+          this.banners.push(val);
+        }
+
+        this.isCreate = false;
       }
     }
   };

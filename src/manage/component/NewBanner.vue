@@ -13,10 +13,10 @@
       <el-form-item label="轮播类型">
         <el-select v-model="form.BanType" placeholder="请选择类型" @change="changeType">
           <el-option
-            v-for="item in typeOptions"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
+            v-for="(label,value) in typeOptions"
+            :key="value"
+            :label="label"
+            :value="Number(value)"
           ></el-option>
         </el-select>
       </el-form-item>
@@ -31,7 +31,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="图片">
-        <upload-file :imgs="form.BanImg" ref="UpFileRef"></upload-file>
+        <upload-file limit="1" :imgs="form.BanImg" ref="UpFileRef"></upload-file>
       </el-form-item>
     </el-form>
     <div class="footer">
@@ -43,7 +43,7 @@
 
 <script>
   import UploadFile from "../../components/UploadFile";
-  import { HTTP } from "../../service";
+  import { HTTP, BanType } from "../../service/";
   import { Message } from "element-ui";
   export default {
     props: {
@@ -59,10 +59,7 @@
     created() {},
     data() {
       return {
-        typeOptions: [
-          { label: "产品", value: 1 },
-          { label: "新闻", value: 2 }
-        ],
+        typeOptions: BanType,
         targOptions: [],
         cacheOptions: {}
       };
@@ -100,11 +97,20 @@
       },
       async saveBan() {
         let img = await this.$refs.UpFileRef.upload();
-        let { BanName, BanTargID, BanType } = this.form;
-        let params = { BanImg: img[0], BanName, BanTargID, BanType };
+        let { BanName, BanTargID, BanType, BanID } = this.form;
+        let params = {
+          BanImg: img[0],
+          BanName,
+          BanID,
+          BanTargID,
+          BanType: Number(BanType)
+        };
         HTTP.post("/saveBanner", params).then(res => {
           Message.success("保存成功");
-          let Obj = Object.assign({ BanID: res.data.insertId }, params);
+          let Obj = Object.assign(params, {
+            BanID: BanID || res.data.insertId,
+            BanImg: img
+          });
           this.$emit("saveSuccess", Obj);
         });
       }

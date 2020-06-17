@@ -21,7 +21,7 @@
   import ImgItem from "../components/ImgItem";
   import { Message } from "element-ui";
   import { UploadAccept, HTTP } from "../service";
-  import { UpLoadFile } from "../service/util";
+  import { UpLoadFile, TypeOf } from "../service/util";
   import { MD5 } from "crypto-js";
 
   export default {
@@ -30,19 +30,14 @@
         type: Boolean,
         default: true
       },
-      imgs: {
-        type: Array,
-        default() {
-          return [];
-        }
-      },
+      imgs: [Array, String],
       limitSize: {
         type: Number,
         default: 5120
       },
       limit: {
-        type: Number,
-        default: 20
+        type: String,
+        default: "20"
       },
       accept: {
         type: String,
@@ -58,6 +53,9 @@
         imgList: [],
         acceptType: UploadAccept[this.accept] || ""
       };
+    },
+    created() {
+      this.imgList = [].concat(this.imgs);
     },
     watch: {
       imgs(val) {
@@ -75,7 +73,8 @@
         this.files.forEach((item, index) => {
           let existpath = data[item.filehash];
           if (existpath) {
-            existFiles.push(existpath);
+            let index = this.imgList.indexOf(item.url);
+            this.imgList.splice(index, 1, existpath);
           } else {
             formData.append(`file_${index}`, item.file);
             formData.append(`file_${index}`, `${item.filehash}`);
@@ -85,6 +84,7 @@
           let res = await UpLoadFile(formData);
           return [].concat(this.imgs, existFiles, res.data);
         } else {
+          upload;
           return [].concat(this.imgs, existFiles);
         }
       },
@@ -121,7 +121,7 @@
               let url = URL.createObjectURL(file);
               const isExist = this.imgList.find(item => item === url);
               if (!isExist) {
-                this.files.push({ file, filehash: "" });
+                this.files.push({ file, filehash: "", url });
                 this.imgList.push(url);
               }
             });

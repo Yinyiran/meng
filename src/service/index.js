@@ -1,4 +1,4 @@
 export { ServeHost, GetCookie } from "./util"
-export { UploadAccept } from "./enum"
+export { UploadAccept, BanType } from "./enum"
 import HTTP from "./data"
 export { HTTP }

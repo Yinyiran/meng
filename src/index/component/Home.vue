@@ -12,8 +12,8 @@
     </div>
     <div class="banner-wrap">
       <el-carousel indicator-position="none" :autoplay="false">
-        <el-carousel-item v-for="item in sliders" :key="item.img">
-          <img :src="item.img" alt />
+        <el-carousel-item v-for="item in sliders" :key="item.BanID">
+          <img :src="item.BanImg" alt />
         </el-carousel-item>
       </el-carousel>
     </div>
@@ -67,16 +67,7 @@
     components: { ProductImg },
     data() {
       return {
-        sliders: [
-          {
-            img: require("../../assets/img/banner1.png"),
-            href: ""
-          },
-          {
-            img: require("../../assets/img/banner2.png"),
-            href: ""
-          }
-        ],
+        sliders: [],
         activeCrumb: 0,
         activeClass: 0,
         menu: [
@@ -186,7 +177,7 @@
     },
     mounted() {
       HTTP.get("/getBanner").then(res => {
-        console.log(res);
+        this.sliders = res.data;
       });
       HTTP.get("/getClassify").then(res => {
         this.classify = res.data;
