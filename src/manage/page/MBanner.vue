@@ -19,7 +19,7 @@
       </el-table-column>
     </el-table>
     <new-banner :visible.sync="isCreate" :form="form" @saveSuccess="saveSuccess"></new-banner>
-    <sort :visible.sync="isSort" />
+    <sort :visible.sync="isSort" :list="sortList" @confirmSort="saveSort" />
   </div>
 </template>
 
@@ -32,13 +32,7 @@
   export default {
     components: { Sort, NewBanner },
     created() {
-      HTTP.get("/getBanner").then(res => {
-        res.data.forEach(item => {
-          item.BanImg = [item.BanImg];
-          item.BanTypeText = BanType[item.BanType];
-        });
-        this.banners = res.data;
-      });
+      this.getBanner();
     },
     data() {
       return {
@@ -48,7 +42,26 @@
         isSort: false
       };
     },
+    computed: {
+      sortList() {
+        return this.banners.map(item => {
+          return {
+            ID: item.BanID,
+            Name: item.BanName
+          };
+        });
+      }
+    },
     methods: {
+      getBanner() {
+        HTTP.get("/getBanner").then(res => {
+          res.data.forEach(item => {
+            item.BanImg = [item.BanImg];
+            item.BanTypeText = BanType[item.BanType];
+          });
+          this.banners = res.data;
+        });
+      },
       sortBan() {
         this.isSort = true;
       },
@@ -84,6 +97,13 @@
         }
 
         this.isCreate = false;
+      },
+      saveSort(list) {
+        HTTP.post("/sortBanner", list).then(res => {
+          Message.success("保存成功");
+          this.isSort = false;
+          this.getBanner();
+        });
       }
     }
   };
