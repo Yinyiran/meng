@@ -55,14 +55,27 @@
       };
     },
     created() {
-      this.imgList = [].concat(this.imgs);
+      this.getImgs(this.imgs);
     },
     watch: {
       imgs(val) {
-        this.imgList = [].concat(val);
+        this.getImgs(val);
       }
     },
     methods: {
+      getImgs(val) {
+        switch (TypeOf(val)) {
+          case "undefined":
+            this.imgList = [];
+            break;
+          case "string":
+            this.imgList = [val];
+            break;
+          default:
+            this.imgList = [].concat(val);
+            break;
+        }
+      },
       async upload() {
         if (this.files.length === 0) return this.imgs;
         await this.getFileHash();

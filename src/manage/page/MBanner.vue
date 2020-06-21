@@ -56,7 +56,6 @@
       getBanner() {
         HTTP.get("/getBanner").then(res => {
           res.data.forEach(item => {
-            item.BanImg = [item.BanImg];
             item.BanTypeText = BanType[item.BanType];
           });
           this.banners = res.data;
@@ -89,13 +88,13 @@
         this.isCreate = true;
       },
       saveSuccess(val) {
+        val.ArtStarText = val.ArtStar ? "是" : "否";
         val.BanTypeText = BanType[val.BanType];
         if (val.BanID) {
           Object.assign(this.form, val);
         } else {
           this.banners.push(val);
         }
-
         this.isCreate = false;
       },
       saveSort(list) {

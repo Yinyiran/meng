@@ -26,12 +26,12 @@ export function UpLoadFile(formData, type = "img") {
 }
 
 // 用户信息
-// export user 
+// export user
 
 // 类型判断
 export function TypeOf(obj) {
   let typeStr = Object.prototype.toString.call(obj)
   let reg = /^\[object\s(.+)\]$/;
   reg.exec(typeStr)
-  return RegExp.$1;
-} 
+  return RegExp.$1.toLowerCase();
+}

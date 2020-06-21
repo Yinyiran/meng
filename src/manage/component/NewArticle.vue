@@ -15,7 +15,7 @@
         <el-checkbox v-model="article.ArtStar"></el-checkbox>
       </el-form-item>
       <el-form-item label="封面图片">
-        <upload-file :limit="1" :imgs="article.ArtCover" ref="UpFileRef"></upload-file>
+        <upload-file limit="1" :imgs="article.ArtCover" ref="UpFileRef"></upload-file>
       </el-form-item>
       <el-form-item label="文章内容">
         <editor v-model="article.ArtContent"></editor>
@@ -58,7 +58,6 @@
         };
         HTTP.post("/saveArticle", param).then(res => {
           Message.success("保存成功！");
-          param.ArtStarText = param.ArtStar ? "是" : "否";
           this.$emit("saveSuccess", param);
         });
       }

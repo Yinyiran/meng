@@ -6,8 +6,7 @@
     <el-table :data="products">
       <el-table-column label="产品名" prop="ProdName"></el-table-column>
       <el-table-column label="所属分类" prop="Classify"></el-table-column>
-      <el-table-column label="属性" prop="Property"></el-table-column>
-      <el-table-column label="图片" prop="ProdImg"></el-table-column>
+      <el-table-column label="所属分类" prop="Classify"></el-table-column>
       <el-table-column label="操作">
         <span slot-scope="{row,$index}">
           <el-button size="mini" type="text" @click="editProd(row)">编辑</el-button>
@@ -15,14 +14,14 @@
         </span>
       </el-table-column>
     </el-table>
-    <new-product :article="row" @saveSuccess="saveSuccess" :show.sync="showAdd"></new-product>
+    <new-product :product="form" @saveSuccess="saveSuccess" :show.sync="showAdd"></new-product>
   </div>
 </template>
 <script>
   import UploadFile from "../../components/UploadFile.vue";
   import NewProduct from "../component/NewProduct.vue";
   import { HTTP } from "../../service";
-  import { Message } from "element-ui";
+  import { Message, MessageBox } from "element-ui";
 
   export default {
     components: { UploadFile, NewProduct },
@@ -52,7 +51,17 @@
       addProd() {
         this.showAdd = true;
       },
-      saveSuccess() {},
+      saveSuccess(param) {
+        param.ProdStarText = param.ProdStar ? "是" : "否";
+        // param.BanTypeText = BanType[param.BanType];
+        if (param.ProdID) {
+          Object.assign(this.form, param);
+        } else {
+          this.products.push(param);
+        }
+        this.showAdd = false;
+      },
+
       async onSubmit() {
         this.form.CompLogo = await this.$refs.UpFileRef.upload();
         let Obj = Object.assign({}, this.form);
@@ -66,9 +75,19 @@
           Message.success("保存成功！");
         });
       },
-      editProd() {},
-      delProd(row,index) {
-        // HTTP.post("/delete")
+      editProd(row) {
+        this.form = row;
+        this.showAdd = true;
+      },
+      delProd(row, index) {
+        MessageBox.confirm(`确定要删除产品${row.ProdName}么？`, "提示").then(
+          () => {
+            let path = HTTP.post("/delProducts", { ID: row.ProdID }).then(res => {
+              Message.success("删除成功");
+              this.products.splice(index, 1);
+            });
+          }
+        );
       }
     }
   };

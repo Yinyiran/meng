@@ -1,36 +1,37 @@
 <template>
-  <div class="new-article m-full" v-show="show">
+  <div class="new-product m-full" v-show="show">
     <div class="art-header">
       {{title}}
       <el-button class="m-right" size="small" @click="cancel">返回</el-button>
     </div>
-    <el-form ref="formRef" class="art-editor" :model="article" label-width="80px" size="small">
+    <el-form ref="formRef" class="art-editor" :model="product" label-width="80px" size="small">
       <el-form-item label="产品名称">
-        <el-input v-model="article.ArtTitle"></el-input>
+        <el-input v-model="product.ProdName"></el-input>
       </el-form-item>
       <el-form-item label="产品简介">
-        <el-input type="textarea" v-model="article.ArtIntro"></el-input>
+        <el-input type="textarea" v-model="product.ProdIntro"></el-input>
       </el-form-item>
       <el-form-item label="是否星标">
-        <el-checkbox v-model="article.ArtStar"></el-checkbox>
+        <el-checkbox v-model="product.ProdStar"></el-checkbox>
       </el-form-item>
       <el-form-item label="封面图片">
-        <upload-file :imgs="article.ArtCover" ref="UpFileRef"></upload-file>
+        <upload-file :imgs="product.ProdImg" ref="UpFileRef"></upload-file>
       </el-form-item>
       <el-form-item label="产品属性">
         <div class="prop-wrap">
-          <div class="prop-item" v-for="(item,index) in propList" :key="index">
-            <el-input class="prop-input" v-model="item.key" placeholder></el-input>：
+          <div class="prop-item" v-for="(item,index) in prodProps" :key="index">
+            <el-input class="prop-input" v-model="item.key" placeholder></el-input>
+            <span class="prop-separator">:</span>
             <el-input class="prop-input" v-model="item.value"></el-input>
-            <i class="el-icon-remove-outline add-prop-btn" @click="deleProp(index)"></i>
+            <i class="el-icon-remove-outline dele-prop-btn" @click="deleProp(index)"></i>
           </div>
           <div class="prop-item">
-            <el-button size="mini" type="text" @click="addProp">添加属性</el-button>
+            <span class="add-prop-btn" @click="addProp">添加属性</span>
           </div>
         </div>
       </el-form-item>
       <el-form-item label="所属分类">
-        <el-select v-model="article.Classify" placeholder="请选择所属分类" clearable>
+        <el-select v-model="product.Classify" placeholder="请选择所属分类" clearable>
           <el-option
             v-for="item in classifys"
             :key="item.ClassID"
@@ -41,7 +42,7 @@
       </el-form-item>
       <!-- <el-form-item label="同类产品">选择产品</el-form-item> -->
       <el-form-item label="内容描述">
-        <editor v-model="article.ArtContent"></editor>
+        <editor v-model="product.ProdContent"></editor>
       </el-form-item>
       <div class="footer">
         <el-button size="small" @click="cancel">取消</el-button>
@@ -57,11 +58,11 @@
   import { Message } from "element-ui";
   import { HTTP } from "../../service";
   export default {
-    props: { article: Object, show: Boolean },
+    props: { product: Object, show: Boolean },
     components: { Editor, UploadFile },
     computed: {
       title() {
-        return this.article.ArtID ? "编辑" : "新建" + "产品";
+        return this.product.ProdID ? "编辑" : "新建" + "产品";
       }
     },
     created() {
@@ -70,7 +71,7 @@
     data() {
       return {
         classifys: [],
-        propList: []
+        prodProps: []
       };
     },
     methods: {
@@ -80,28 +81,41 @@
         });
       },
       addProp() {
-        this.propList.push({ key: "", value: "" });
+        this.prodProps.push({ key: "", value: "" });
       },
       deleProp(index) {
-        this.propList.splice(index, 1);
+        this.prodProps.splice(index, 1);
       },
       cancel() {
         this.$emit("update:show", false);
       },
       async saveArticle() {
         let cover = await this.$refs.UpFileRef.upload();
-        const { ArtID, ArtTitle, ArtIntro, ArtStar, ArtContent } = this.article;
+        // ProdID
+        // ProdName
+        // Classify
+        // ProdIntro
+        // Property
+        // ProdImg
+        const {
+          ProdID,
+          ProdName,
+          ProdIntro,
+          ProdStar,
+          ProdContent,
+          Property
+        } = this.product;
         let param = {
-          ArtID,
-          ArtTitle,
-          ArtIntro,
-          ArtCover: cover.length ? cover[0] : "",
-          ArtStar: ArtStar ? 1 : 0,
-          ArtContent
+          ProdID,
+          ProdName,
+          ProdIntro,
+          ProdImg: cover.length ? cover[0] : [],
+          ProdStar: ProdStar ? 1 : 0,
+          Property: this.prodProps.length ? JSON.stringify(this.prodProps) : "",
+          ProdContent
         };
-        HTTP.post("/saveArticle", param).then(res => {
+        HTTP.post("/saveProduct", param).then(res => {
           Message.success("保存成功！");
-          param.ArtStarText = param.ArtStar ? "是" : "否";
           this.$emit("saveSuccess", param);
         });
       }
@@ -110,7 +124,8 @@
 </script>
 
 <style lang="less">
-  .new-article {
+  @import url("../../assets/style/color.less");
+  .new-product {
     z-index: 1;
     background-color: #fff;
     overflow: auto;
@@ -126,15 +141,24 @@
   .prop-wrap {
     display: inline-block;
     width: 300px;
-    .add-prop-btn {
+    .prop-item {
+      vertical-align: middle;
+      margin-bottom: 5px;
+    }
+    .dele-prop-btn {
       margin-left: 10px;
       font-size: 18px;
       cursor: pointer;
       vertical-align: middle;
     }
-    .prop-item {
+    .add-prop-btn {
+      cursor: pointer;
       vertical-align: middle;
-      margin-top: 5px;
+      color: @active;
+    }
+    .prop-separator {
+      vertical-align: middle;
+      padding: 0 10px;
     }
   }
   .prop-input {
