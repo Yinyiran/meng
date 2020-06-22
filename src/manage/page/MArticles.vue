@@ -36,7 +36,7 @@
       HTTP.get("/getArticle").then(res => {
         let list = res.data.forEach(item => {
           item.ArtStar = !!item.ArtStar;
-          item.ArtCover = item.ArtCover ? [item.ArtCover] : [];
+          item.ArtCover = item.ArtCover.split(",");
           item.ArtStarText = item.ArtStar ? "是" : "否";
         });
         this.articles = res.data;

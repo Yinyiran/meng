@@ -51,11 +51,7 @@
     created() {
       HTTP.get("/getCompInfo", { CompID: 10000 }).then(res => {
         let logo = res.data.CompLogo;
-        try {
-          res.data.CompLogo = logo ? JSON.parse(logo) : [];
-        } catch (error) {
-          res.data.CompLogo = [];
-        }
+        res.data.CompLogo.split(",");
         this.form = res.data;
       });
     },
@@ -65,7 +61,7 @@
         let Obj = Object.assign({}, this.form);
         let params = Object.assign(Obj, {
           CompID: 10000,
-          CompLogo: JSON.stringify(this.form.CompLogo)
+          CompLogo: this.form.CompLogo.toString()
         });
         HTTP.post(`/saveCompInfo`, params).then(res => {
           Message.success("保存成功！");

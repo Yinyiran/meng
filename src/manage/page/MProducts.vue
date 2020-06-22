@@ -6,7 +6,7 @@
     <el-table :data="products">
       <el-table-column label="产品名" prop="ProdName"></el-table-column>
       <el-table-column label="所属分类" prop="Classify"></el-table-column>
-      <el-table-column label="所属分类" prop="Classify"></el-table-column>
+      <el-table-column label="是否星标" prop="ProdStarText"></el-table-column>
       <el-table-column label="操作">
         <span slot-scope="{row,$index}">
           <el-button size="mini" type="text" @click="editProd(row)">编辑</el-button>
@@ -30,19 +30,16 @@
         products: [],
         row: {},
         showAdd: false,
-        form: {
-          ProdName: "",
-          ProdIntro: "",
-          Classify: "",
-          ProdStar: 0,
-          ProdContent: "",
-          ProdImg: "",
-          Property: ""
-        }
+        form: {}
       };
     },
     created() {
       HTTP.get("/getProducts").then(res => {
+        res.data.forEach(item => {
+          item.ProdStar = !!item.ProdStar;
+          item.ProdImg = item.ProdImg.split(",");
+          item.ProdStarText = item.ProdStar ? "是" : "否";
+        });
         this.products = res.data;
       });
     },
@@ -52,7 +49,7 @@
           ProdName: "",
           ProdIntro: "",
           Classify: "",
-          ProdStar: 0,
+          ProdStar: true,
           ProdContent: "",
           ProdImg: "",
           Property: ""
@@ -68,20 +65,6 @@
           this.products.push(param);
         }
         this.showAdd = false;
-      },
-
-      async onSubmit() {
-        this.form.CompLogo = await this.$refs.UpFileRef.upload();
-        let Obj = Object.assign({}, this.form);
-        let params = Object.assign(Obj, {
-          CompID: 10000,
-          CompLogo: this.form.CompLogo.length
-            ? JSON.stringify(this.form.CompLogo)
-            : null
-        });
-        HTTP.post(`/saveProduct`, params).then(res => {
-          Message.success("保存成功！");
-        });
       },
       editProd(row) {
         this.form = row;

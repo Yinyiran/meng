@@ -90,26 +90,15 @@
         this.$emit("update:show", false);
       },
       async saveArticle() {
-        let cover = await this.$refs.UpFileRef.upload();
-        const {
-          ProdID,
-          ProdName,
-          ProdIntro,
-          ProdStar,
-          Classify,
-          ProdContent,
-          Property
-        } = this.product;
-        let param = {
-          ProdID,
-          ProdName,
-          ProdIntro,
-          Classify,
-          ProdImg: cover.length ? cover[0] : [],
-          ProdStar: ProdStar ? 1 : 0,
-          Property: this.prodProps.length ? JSON.stringify(this.prodProps) : "",
-          ProdContent
-        };
+        this.product.ProdImg = await this.$refs.UpFileRef.upload();
+        let param = Object.assign({}, this.product);
+        param.ProdImg = this.product.ProdImg.toString();
+        param.ProdStar = ProdStar ? 1 : 0;
+        let property = {};
+        this.prodProps.forEach(item => {
+          property[item.key] = item.value;
+        });
+        param.Property = JSON.stringify(property);
         HTTP.post("/saveProduct", param).then(res => {
           Message.success("保存成功！");
           this.$emit("saveSuccess", param);

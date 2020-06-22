@@ -97,14 +97,9 @@
       },
       async saveBan() {
         let img = await this.$refs.UpFileRef.upload();
-        let { BanName, BanTargID, BanType, BanID } = this.form;
-        let params = {
-          BanImg: img[0],
-          BanName,
-          BanID,
-          BanTargID,
-          BanType: Number(BanType)
-        };
+        let params = Object.assign({}, this.form);
+        params.BanImg = img.toString();
+        params.BanType = Number(BanType);
         HTTP.post("/saveBanner", params).then(res => {
           Message.success("保存成功");
           let Obj = Object.assign(params, {

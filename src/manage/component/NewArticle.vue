@@ -47,15 +47,9 @@
       },
       async saveArticle() {
         let cover = await this.$refs.UpFileRef.upload();
-        const { ArtID, ArtTitle, ArtIntro, ArtStar, ArtContent } = this.article;
-        let param = {
-          ArtID,
-          ArtTitle,
-          ArtIntro,
-          ArtCover: cover.length ? cover[0] : "",
-          ArtStar: ArtStar ? 1 : 0,
-          ArtContent
-        };
+        let param = Object.assign({}, this.article);
+        param.ArtCover = cover.toString();
+        param.ArtStar = ArtStar ? 1 : 0;
         HTTP.post("/saveArticle", param).then(res => {
           Message.success("保存成功！");
           this.$emit("saveSuccess", param);
