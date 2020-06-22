@@ -91,17 +91,12 @@
       },
       async saveArticle() {
         let cover = await this.$refs.UpFileRef.upload();
-        // ProdID
-        // ProdName
-        // Classify
-        // ProdIntro
-        // Property
-        // ProdImg
         const {
           ProdID,
           ProdName,
           ProdIntro,
           ProdStar,
+          Classify,
           ProdContent,
           Property
         } = this.product;
@@ -109,6 +104,7 @@
           ProdID,
           ProdName,
           ProdIntro,
+          Classify,
           ProdImg: cover.length ? cover[0] : [],
           ProdStar: ProdStar ? 1 : 0,
           Property: this.prodProps.length ? JSON.stringify(this.prodProps) : "",

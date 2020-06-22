@@ -69,7 +69,7 @@
             this.imgList = [];
             break;
           case "string":
-            this.imgList = [val];
+            this.imgList = val ? [val] : [];
             break;
           default:
             this.imgList = [].concat(val);

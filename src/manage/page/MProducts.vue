@@ -22,7 +22,6 @@
   import NewProduct from "../component/NewProduct.vue";
   import { HTTP } from "../../service";
   import { Message, MessageBox } from "element-ui";
-
   export default {
     components: { UploadFile, NewProduct },
     data() {
@@ -32,13 +31,13 @@
         row: {},
         showAdd: false,
         form: {
-          CompName: "",
-          CompLogo: [],
-          Mobile: "",
-          Telephone: "",
-          WeChat: "",
-          WeChatQR: "",
-          Facebook: ""
+          ProdName: "",
+          ProdIntro: "",
+          Classify: "",
+          ProdStar: 0,
+          ProdContent: "",
+          ProdImg: "",
+          Property: ""
         }
       };
     },
@@ -49,6 +48,15 @@
     },
     methods: {
       addProd() {
+        this.form = {
+          ProdName: "",
+          ProdIntro: "",
+          Classify: "",
+          ProdStar: 0,
+          ProdContent: "",
+          ProdImg: "",
+          Property: ""
+        };
         this.showAdd = true;
       },
       saveSuccess(param) {
