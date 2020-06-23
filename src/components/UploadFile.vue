@@ -49,7 +49,7 @@
       return {
         showPreview: false,
         curUrl: "",
-        files: [],
+        localfiles: [],
         imgList: [],
         acceptType: UploadAccept[this.accept] || ""
       };
@@ -60,6 +60,7 @@
     watch: {
       imgs(val) {
         this.getImgs(val);
+        this.localfiles = [];
       }
     },
     methods: {
@@ -71,19 +72,21 @@
           case "string":
             this.imgList = val ? [val] : [];
             break;
-          default:
+          case "array":
             this.imgList = [].concat(val);
             break;
+          default:
+            console.error("图片展示组件传入的格式不正确", val);
         }
       },
       async upload() {
-        if (this.files.length === 0) return this.imgs;
+        if (this.localfiles.length === 0) return this.imgList;
         await this.getFileHash();
-        let hashs = this.files.map(item => item.filehash);
+        let hashs = this.localfiles.map(item => item.filehash);
         let { data } = await HTTP.post("/fileExist", hashs);
         let formData = new FormData();
         let upFile = [];
-        this.files.forEach((item, index) => {
+        this.localfiles.forEach((item, index) => {
           let existpath = data[item.filehash];
           if (existpath) {
             let index = this.imgList.indexOf(item.url);
@@ -104,7 +107,7 @@
       },
 
       async getFileHash() {
-        let promisArr = [].map.call(this.files, item => {
+        let promisArr = [].map.call(this.localfiles, item => {
           return new Promise((resolve, reject) => {
             var reader = new FileReader();
             reader.onload = event => {
@@ -135,7 +138,7 @@
               let url = URL.createObjectURL(file);
               const isExist = this.imgList.find(item => item === url);
               if (!isExist) {
-                this.files.push({ file, filehash: "", url });
+                this.localfiles.push({ file, filehash: "", url });
                 this.imgList.push(url);
               }
             });
@@ -147,11 +150,12 @@
       removeImg(src) {
         let index = this.imgList.indexOf(src);
         this.imgList.splice(index, 1);
-        // 删除缓存的图片
-        let upindex = this.files.findIndex(item => (item.url = src));
-        if (upindex > -1) this.files.splice(-1);
+        this.removeUpFile(src); // 删除缓存的图片
+      },
+      removeUpFile(src) {
+        let upindex = this.localfiles.findIndex(item => (item.url = src));
+        if (upindex > -1) this.localfiles.splice(-1);
         this.$refs.uploadRef.value = "";
-        // }
       }
     }
   };

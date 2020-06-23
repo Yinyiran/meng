@@ -47,7 +47,7 @@
   import { Message } from "element-ui";
   export default {
     props: {
-      form: Object,
+      banner: Object,
       visible: Boolean
     },
     components: { UploadFile },
@@ -61,11 +61,13 @@
       return {
         typeOptions: BanType,
         targOptions: [],
+        form: {},
         cacheOptions: {}
       };
     },
     watch: {
       visible(val) {
+        this.form = Object.assign({}, this.banner);
         if (val) this.getTargList();
       }
     },
@@ -97,13 +99,22 @@
       },
       async saveBan() {
         let img = await this.$refs.UpFileRef.upload();
+        // let { BanName, BanTargID, BanType, BanID } = this.form;
+        // let params = {
+        //   BanImg: img[0],
+        //   BanName,
+        //   BanID,
+        //   BanTargID,
+        //   BanType: Number(BanType)
+        // };
         let params = Object.assign({}, this.form);
         params.BanImg = img.toString();
-        params.BanType = Number(BanType);
+        params.BanType = Number(this.form.BanType);
+        delete params.BanTypeText;
         HTTP.post("/saveBanner", params).then(res => {
           Message.success("保存成功");
           let Obj = Object.assign(params, {
-            BanID: BanID || res.data.insertId,
+            BanID: this.form.BanID || res.data.insertId,
             BanImg: img
           });
           this.$emit("saveSuccess", Obj);

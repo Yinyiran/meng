@@ -57,7 +57,10 @@
       },
       async uploadFile() {
         let res = await this.$refs.UpFileRef.upload();
-        this.imgPaths.unshift(...res);
+        res.forEach(img => {
+          let exist = this.imgPaths.includes(img);
+          if (!exist) this.imgPaths.unshift(img);
+        });
         Message.success("上传成功!");
         this.showUpDlg = false;
       }

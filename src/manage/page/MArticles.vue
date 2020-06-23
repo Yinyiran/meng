@@ -57,13 +57,9 @@
         this.showAdd = true;
       },
       saveSuccess(param) {
-        if (param.ArtID) {
-          let item = this.articles.find(item => item.ArtID === param.ArtID);
-          Object.assign(item, param);
-          item.ArtCover = [item.ArtCover];
-        } else {
-          this.articles.unshift(param);
-        }
+        let item = this.articles.find(item => item.ArtID === param.ArtID);
+        if (item) Object.assign(item, param);
+        else this.articles.unshift(param);
         this.showAdd = false;
       },
       delArticle(row, index) {

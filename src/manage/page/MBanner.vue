@@ -18,7 +18,7 @@
         </span>
       </el-table-column>
     </el-table>
-    <new-banner :visible.sync="isCreate" :form="form" @saveSuccess="saveSuccess"></new-banner>
+    <new-banner :visible.sync="isCreate" :banner="form" @saveSuccess="saveSuccess"></new-banner>
     <sort :visible.sync="isSort" :list="sortList" @confirmSort="saveSort" />
   </div>
 </template>
@@ -88,13 +88,10 @@
         this.isCreate = true;
       },
       saveSuccess(val) {
-        val.ArtStarText = val.ArtStar ? "是" : "否";
         val.BanTypeText = BanType[val.BanType];
-        if (val.BanID) {
-          Object.assign(this.form, val);
-        } else {
-          this.banners.push(val);
-        }
+        let ban = this.banners.find(bn => bn.BanID === val.BanID);
+        if (ban) Object.assign(ban, val);
+        else this.banners.push(val);
         this.isCreate = false;
       },
       saveSort(list) {

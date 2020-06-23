@@ -14,7 +14,7 @@
         </span>
       </el-table-column>
     </el-table>
-    <new-product :product="form" @saveSuccess="saveSuccess" :show.sync="showAdd"></new-product>
+    <new-product :product="form" @saveSuccess="saveSuccess" :visible.sync="showAdd"></new-product>
   </div>
 </template>
 <script>
@@ -49,21 +49,18 @@
           ProdName: "",
           ProdIntro: "",
           Classify: "",
-          ProdStar: true,
+          ProdStar: false,
           ProdContent: "",
           ProdImg: "",
-          Property: ""
+          Property: "{}"
         };
         this.showAdd = true;
       },
       saveSuccess(param) {
         param.ProdStarText = param.ProdStar ? "是" : "否";
-        // param.BanTypeText = BanType[param.BanType];
-        if (param.ProdID) {
-          Object.assign(this.form, param);
-        } else {
-          this.products.push(param);
-        }
+        let prod = this.products.find(item => item.ProdID === param.ProdID);
+        if (prod) Object.assign(prod, param);
+        else this.products.unshift(param);
         this.showAdd = false;
       },
       editProd(row) {

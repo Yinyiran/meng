@@ -1,5 +1,5 @@
 <template>
-  <div class="new-product m-full" v-show="show">
+  <div class="new-product m-full" v-show="visible">
     <div class="art-header">
       {{title}}
       <el-button class="m-right" size="small" @click="cancel">返回</el-button>
@@ -58,7 +58,7 @@
   import { Message } from "element-ui";
   import { HTTP } from "../../service";
   export default {
-    props: { product: Object, show: Boolean },
+    props: { product: Object, visible: Boolean },
     components: { Editor, UploadFile },
     computed: {
       title() {
@@ -74,6 +74,17 @@
         prodProps: []
       };
     },
+    watch: {
+      visible(val) {
+        if (val) {
+          this.prodProps = [];
+          let propObj = JSON.parse(this.product.Property);
+          for (const key in propObj) {
+            this.prodProps.push({ key, value: propObj[key] });
+          }
+        }
+      }
+    },
     methods: {
       getClassList() {
         HTTP.get("/getClassify").then(res => {
@@ -87,13 +98,19 @@
         this.prodProps.splice(index, 1);
       },
       cancel() {
-        this.$emit("update:show", false);
+        this.$emit("update:visible", false);
       },
       async saveArticle() {
         this.product.ProdImg = await this.$refs.UpFileRef.upload();
-        let param = Object.assign({}, this.product);
-        param.ProdImg = this.product.ProdImg.toString();
-        param.ProdStar = ProdStar ? 1 : 0;
+        let param = {
+          ProdID: this.product.ProdID,
+          ProdName: this.product.ProdName,
+          ProdIntro: this.product.ProdIntro,
+          Classify: this.product.Classify,
+          ProdContent: this.product.ProdContent,
+          ProdImg: this.product.ProdImg.toString(),
+          ProdStar: this.product.ProdStar ? 1 : 0
+        };
         let property = {};
         this.prodProps.forEach(item => {
           property[item.key] = item.value;
@@ -101,6 +118,8 @@
         param.Property = JSON.stringify(property);
         HTTP.post("/saveProduct", param).then(res => {
           Message.success("保存成功！");
+          if (!param.ProdID) param.ProdID = res.data.insertId; // 新建添加ArtID
+          param.ProdImg = this.product.ProdImg;
           this.$emit("saveSuccess", param);
         });
       }

@@ -47,11 +47,20 @@
       },
       async saveArticle() {
         let cover = await this.$refs.UpFileRef.upload();
-        let param = Object.assign({}, this.article);
-        param.ArtCover = cover.toString();
-        param.ArtStar = ArtStar ? 1 : 0;
+        const { ArtID, ArtTitle, ArtIntro, ArtStar, ArtContent } = this.article;
+        let param = {
+          ArtID,
+          ArtTitle,
+          ArtIntro,
+          ArtCover: cover.toString(),
+          ArtStar: ArtStar ? 1 : 0,
+          ArtContent
+        };
         HTTP.post("/saveArticle", param).then(res => {
           Message.success("保存成功！");
+          if (!param.ArtID) param.ArtID = res.data.insertId; // 新建添加ArtID
+          param.ArtCover = cover;
+          param.ArtStarText = param.ArtStar ? "是" : "否";
           this.$emit("saveSuccess", param);
         });
       }

@@ -6,8 +6,6 @@
         <i class="el-icon-view" title="大图预览" @click="previewImg(item)"></i>
         <i class="el-icon-delete" title="删除图片" @click="removeImg(item)"></i>
       </div>
-      <!-- <div class="img-name m-ellipsis" v-if="item.name">{{item.name}}</div> -->
-      <!-- {{item.name}} -->
     </div>
     <slot></slot>
     <el-dialog :visible.sync="showPreview" width="80%" top="1vh" :append-to-body="true">
