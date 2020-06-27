@@ -86,93 +86,7 @@
         ],
         classify: [],
         articles: [],
-        products: [
-          {
-            current: 0,
-            Intro: "OnePlus 8 Pro",
-            Products: [
-              {
-                ProdName: "一加手机8",
-                ProdPrice: "5000",
-                ProdImg: require("../../assets/img/prod1-1.png")
-              },
-              {
-                ProdName: "一加手机8",
-                ProdPrice: "4500",
-                ProdImg: require("../../assets/img/prod1-2.png")
-              }
-            ]
-          },
-          {
-            ProdName: "一加旅行套装",
-            ProdPrice: "200",
-            ProdImg: require("../../assets/img/prod3.png")
-          },
-          {
-            current: 0,
-            Intro: "OnePlus 8 Pro",
-            Products: [
-              {
-                ProdName: "一加手机8",
-                ProdPrice: "4000",
-                ProdImg: require("../../assets/img/prod2-1.png")
-              },
-              {
-                ProdName: "一加手机8",
-                ProdPrice: "3000",
-                ProdImg: require("../../assets/img/prod2-2.png")
-              }
-            ]
-          },
-
-          {
-            ProdName: "一加旅行套装",
-            ProdPrice: "200",
-            ProdImg: require("../../assets/img/prod3.png")
-          },
-          {
-            current: 0,
-            Intro: "OnePlus 8 Pro",
-            Products: [
-              {
-                ProdName: "一加手机8",
-                ProdPrice: "5000",
-                ProdImg: require("../../assets/img/prod1-1.png")
-              },
-              {
-                ProdName: "一加手机8",
-                ProdPrice: "4500",
-                ProdImg: require("../../assets/img/prod1-2.png")
-              }
-            ]
-          },
-          {
-            ProdName: "一加旅行套装",
-            ProdPrice: "200",
-            ProdImg: require("../../assets/img/prod3.png")
-          },
-          {
-            current: 0,
-            Intro: "OnePlus 8 Pro",
-            Products: [
-              {
-                ProdName: "一加手机8",
-                ProdPrice: "4000",
-                ProdImg: require("../../assets/img/prod2-1.png")
-              },
-              {
-                ProdName: "一加手机8",
-                ProdPrice: "3000",
-                ProdImg: require("../../assets/img/prod2-2.png")
-              }
-            ]
-          },
-          {
-            ProdName: "一加旅行套装",
-            ProdPrice: "200",
-            ProdImg: require("../../assets/img/prod3.png")
-          }
-        ]
+        products: []
       };
     },
     mounted() {
@@ -183,6 +97,9 @@
         this.classify = res.data;
       });
       HTTP.get("/getArticle", { isStar: 1 }).then(res => {
+        this.articles = res.data;
+      });
+      HTTP.get("/getProducts", { isStar: 1 }).then(res => {
         this.articles = res.data;
       });
     },
