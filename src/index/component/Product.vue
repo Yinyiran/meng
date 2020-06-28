@@ -1,33 +1,36 @@
 <template>
   <div class="product">
-    <product-img class="product-img" :prod="product" size="50px" />
-    <h3>{{product.Intro}}</h3>
-    <div class="product-info"></div>
+    <div class="product-info">
+      <product-img class="product-img" :prod="prod" size="50px" />
+      <div class="product-intro">
+        <div>
+          产品名称：
+          <span>{{prod.ProdName}}</span>
+        </div>
+        <p v-for="(val,key) in prod.Property" :key="key">{{key}} : {{val}}</p>
+        <p>{{prod.ProdIntro}}</p>
+      </div>
+    </div>
+    <div class="product-content" v-html="prod.ProdContent"></div>
   </div>
 </template>
 
 <script>
   import ProductImg from "../../components/ProductImg.vue";
+  import { HTTP } from "../../service";
   export default {
     components: { ProductImg },
+    activated() {
+      HTTP.get("/getProduct", { ProdID: this.$route.params.id }).then(res => {
+        let prod = res.data;
+        prod.ProdImg = prod.ProdImg.split(",");
+        prod.Property = JSON.parse(prod.Property);
+        this.prod = prod;
+      });
+    },
     data() {
       return {
-        product: {
-          current: 0,
-          Intro: "OnePlus 8 Pro",
-          Products: [
-            {
-              ProdName: "一加手机8",
-              ProdPrice: "5000",
-              ProdImg: require("../../assets/img/prod1-1.png")
-            },
-            {
-              ProdName: "一加手机8",
-              ProdPrice: "4500",
-              ProdImg: require("../../assets/img/prod1-2.png")
-            }
-          ]
-        }
+        prod: {}
       };
     }
   };
@@ -35,12 +38,17 @@
 
 <style lang="less" scoped>
   .product {
+    margin: 0 auto;
+    width: 900px;
+  }
+  .product-info {
     display: flex;
   }
   .product-img {
     flex: 0 0 400px;
   }
-  .product-info {
+  .product-intro {
+    padding-left: 20px;
     flex: 1;
   }
 </style>

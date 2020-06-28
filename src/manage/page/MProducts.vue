@@ -34,10 +34,9 @@
       };
     },
     created() {
-      HTTP.get("/getProducts").then(res => {
+      HTTP.get("/getProdList").then(res => {
         res.data.forEach(item => {
           item.ProdStar = !!item.ProdStar;
-          item.ProdImg = item.ProdImg.split(",");
           item.ProdStarText = item.ProdStar ? "是" : "否";
         });
         this.products = res.data;

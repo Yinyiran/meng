@@ -26,6 +26,7 @@
         :key="index"
       >{{item.ClassName}}</span>
     </div>
+    <!-- 产品 -->
     <div class="products">
       <div
         class="prod-wrap"
@@ -99,8 +100,11 @@
       HTTP.get("/getArticle", { isStar: 1 }).then(res => {
         this.articles = res.data;
       });
-      HTTP.get("/getProducts", { isStar: 1 }).then(res => {
-        this.articles = res.data;
+      HTTP.get("/getProdList", { ProdStar: 1 }).then(res => {
+        res.data.forEach(item => {
+          item.ProdImg = item.ProdImg.split(",");
+        });
+        this.products = res.data;
       });
     },
     methods: {
@@ -111,7 +115,7 @@
         this.$refs.carousel[prodIndex].setActiveItem(imgIndex);
       },
       openProdDetail(prod) {
-        this.$router.push(`/product/${prod.ID}`);
+        this.$router.push(`/product/${prod.ProdID}`);
       },
       openArtPage(art) {
         this.$router.push(`/article/${art.ArtID}`);

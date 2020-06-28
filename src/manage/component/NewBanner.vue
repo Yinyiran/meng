@@ -81,7 +81,7 @@
         if (this.cacheOptions[typeNum]) {
           this.targOptions = this.cacheOptions[typeNum];
         } else {
-          let url = typeNum == 1 ? "/getProducts" : "/getArticle";
+          let url = typeNum == 1 ? "/getProdList" : "/getArticle";
           HTTP.get(url).then(res => {
             this.targOptions = res.data.map(item => {
               if (typeNum === 1) {

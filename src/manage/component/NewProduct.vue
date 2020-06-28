@@ -4,18 +4,18 @@
       {{title}}
       <el-button class="m-right" size="small" @click="cancel">返回</el-button>
     </div>
-    <el-form ref="formRef" class="art-editor" :model="product" label-width="80px" size="small">
+    <el-form ref="formRef" class="art-editor" :model="row" label-width="80px" size="small">
       <el-form-item label="产品名称">
-        <el-input v-model="product.ProdName"></el-input>
+        <el-input v-model="row.ProdName"></el-input>
       </el-form-item>
       <el-form-item label="产品简介">
-        <el-input type="textarea" v-model="product.ProdIntro"></el-input>
+        <el-input type="textarea" v-model="row.ProdIntro"></el-input>
       </el-form-item>
       <el-form-item label="是否星标">
-        <el-checkbox v-model="product.ProdStar"></el-checkbox>
+        <el-checkbox v-model="row.ProdStar"></el-checkbox>
       </el-form-item>
       <el-form-item label="封面图片">
-        <upload-file :imgs="product.ProdImg" ref="UpFileRef"></upload-file>
+        <upload-file :imgs="row.ProdImg" ref="UpFileRef"></upload-file>
       </el-form-item>
       <el-form-item label="产品属性">
         <div class="prop-wrap">
@@ -31,7 +31,7 @@
         </div>
       </el-form-item>
       <el-form-item label="所属分类">
-        <el-select v-model="product.Classify" placeholder="请选择所属分类" clearable>
+        <el-select v-model="row.Classify" placeholder="请选择所属分类" clearable>
           <el-option
             v-for="item in classifys"
             :key="item.ClassID"
@@ -42,7 +42,7 @@
       </el-form-item>
       <!-- <el-form-item label="同类产品">选择产品</el-form-item> -->
       <el-form-item label="内容描述">
-        <editor v-model="product.ProdContent"></editor>
+        <editor v-model="row.ProdContent"></editor>
       </el-form-item>
       <div class="footer">
         <el-button size="small" @click="cancel">取消</el-button>
@@ -70,6 +70,7 @@
     },
     data() {
       return {
+        row: {},
         classifys: [],
         prodProps: []
       };
@@ -77,11 +78,17 @@
     watch: {
       visible(val) {
         if (val) {
-          this.prodProps = [];
-          let propObj = JSON.parse(this.product.Property);
-          for (const key in propObj) {
-            this.prodProps.push({ key, value: propObj[key] });
-          }
+          HTTP.get("/getProduct", { ProdID: this.product.ProdID }).then(res => {
+             res.data.ProdImg =  res.data.ProdImg.split(",");
+            this.row = res.data;
+            this.prodProps = [];
+            let propObj = JSON.parse(this.row.Property);
+            for (const key in propObj) {
+              this.prodProps.push({ key, value: propObj[key] });
+            }
+          });
+        } else {
+          this.row = {};
         }
       }
     },
@@ -101,15 +108,15 @@
         this.$emit("update:visible", false);
       },
       async saveArticle() {
-        this.product.ProdImg = await this.$refs.UpFileRef.upload();
+        this.row.ProdImg = await this.$refs.UpFileRef.upload();
         let param = {
-          ProdID: this.product.ProdID,
-          ProdName: this.product.ProdName,
-          ProdIntro: this.product.ProdIntro,
-          Classify: this.product.Classify,
-          ProdContent: this.product.ProdContent,
-          ProdImg: this.product.ProdImg.toString(),
-          ProdStar: this.product.ProdStar ? 1 : 0
+          ProdID: this.row.ProdID,
+          ProdName: this.row.ProdName,
+          ProdIntro: this.row.ProdIntro,
+          Classify: this.row.Classify,
+          ProdContent: this.row.ProdContent,
+          ProdImg: this.row.ProdImg.toString(),
+          ProdStar: this.row.ProdStar ? 1 : 0
         };
         let property = {};
         this.prodProps.forEach(item => {
@@ -119,7 +126,7 @@
         HTTP.post("/saveProduct", param).then(res => {
           Message.success("保存成功！");
           if (!param.ProdID) param.ProdID = res.data.insertId; // 新建添加ArtID
-          param.ProdImg = this.product.ProdImg;
+          param.ProdImg = this.row.ProdImg;
           this.$emit("saveSuccess", param);
         });
       }
