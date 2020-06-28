@@ -6,14 +6,15 @@
           class="crumb-item"
           v-for="(item,index) in menu"
           :class="{active:activeCrumb===index}"
-          :key="index"
+          :key="item.key"
+          @click="menuClick(item.key)"
         >{{item.Name}}</span>
       </div>
     </div>
     <div class="banner-wrap">
       <el-carousel indicator-position="none" :autoplay="false">
         <el-carousel-item v-for="item in sliders" :key="item.BanID">
-          <img :src="item.BanImg" alt />
+          <img :src="item.BanImg" @click="openDetail(item)" />
         </el-carousel-item>
       </el-carousel>
     </div>
@@ -32,7 +33,7 @@
         class="prod-wrap"
         v-for="(prod,index) in products"
         :key="index"
-        @click="openProdDetail(prod)"
+        @click="openProdPage(prod.ProdID)"
       >
         <product-img :prod="prod" :info="true" />
       </div>
@@ -43,7 +44,7 @@
         class="arti-item"
         v-for="(item,index) in articles"
         :key="index"
-        @click="openArtPage(item)"
+        @click="openArtPage(item.ArtID)"
       >
         <div class="arti-img-wrap">
           <img class="arti-img" :src="item.ArtCover" alt />
@@ -71,18 +72,23 @@
         sliders: [],
         activeCrumb: 0,
         activeClass: 0,
+        AboutID: 0,
         menu: [
           {
-            Name: "主营产品"
+            Name: "主营产品",
+            key: "product"
           },
           {
-            Name: "客户案例"
+            Name: "客户案例",
+            key: "artcle"
           },
           {
-            Name: "联系我们"
+            Name: "联系我们",
+            key: "contact"
           },
           {
-            Name: "关于我们"
+            Name: "关于我们",
+            key: "about"
           }
         ],
         classify: [],
@@ -106,6 +112,9 @@
         });
         this.products = res.data;
       });
+      HTTP.get("/getCompInfo", { CompID: 10000 }).then(res => {
+        this.AboutID = res.data.AboutID;
+      });
     },
     methods: {
       carChange(index, prodIndex) {
@@ -114,11 +123,25 @@
       miniChange(imgIndex, prodIndex) {
         this.$refs.carousel[prodIndex].setActiveItem(imgIndex);
       },
-      openProdDetail(prod) {
-        this.$router.push(`/product/${prod.ProdID}`);
+      openDetail(item) {
+        if (item.BanType === 1) this.openProdPage(item.BanTargID);
+        else this.openArtPage(item.BanTargID);
       },
-      openArtPage(art) {
-        this.$router.push(`/article/${art.ArtID}`);
+      openProdPage(prodId) {
+        this.$router.push(`/product/${prodId}`);
+      },
+      openArtPage(artId) {
+        this.$router.push(`/article/${artId}`);
+      },
+      menuClick(key) {
+        switch (key) {
+          case "about":
+            this.openArtPage(this.AboutID);
+            break;
+
+          default:
+            break;
+        }
       }
     }
   };

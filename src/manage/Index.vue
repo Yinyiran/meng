@@ -45,6 +45,10 @@
           {
             name: "产品分类",
             router: "classify"
+          },
+          {
+            name: "关于我们",
+            router: "about"
           }
         ]
       };

@@ -5,9 +5,9 @@
     </div>
     <el-table :data="products">
       <el-table-column label="产品名" prop="ProdName"></el-table-column>
-      <el-table-column label="所属分类" prop="Classify"></el-table-column>
-      <el-table-column label="是否星标" prop="ProdStarText"></el-table-column>
-      <el-table-column label="操作">
+      <el-table-column label="所属分类" prop="Classify" width="150px"></el-table-column>
+      <el-table-column label="星标" prop="ProdStarText" width="50px" align="center"></el-table-column>
+      <el-table-column label="操作" width="100px" align="center">
         <span slot-scope="{row,$index}">
           <el-button size="mini" type="text" @click="editProd(row)">编辑</el-button>
           <el-button size="mini" type="text" @click="delProd(row,$index)">删除</el-button>
