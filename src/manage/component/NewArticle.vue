@@ -32,7 +32,7 @@
   import Editor from "../../components/Editor";
   import UploadFile from "../../components/UploadFile";
   import { Message } from "element-ui";
-  import { HTTP } from "../../service";
+  import { Data } from "../../service";
   export default {
     props: { article: Object, show: Boolean },
     components: { Editor, UploadFile },
@@ -56,7 +56,7 @@
           ArtStar: ArtStar ? 1 : 0,
           ArtContent
         };
-        HTTP.post("/saveArticle", param).then(res => {
+        Data.post("/saveArticle", param).then(res => {
           Message.success("保存成功！");
           if (!param.ArtID) param.ArtID = res.data.insertId; // 新建添加ArtID
           param.ArtCover = cover;

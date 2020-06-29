@@ -56,7 +56,7 @@
   import Editor from "../../components/Editor";
   import UploadFile from "../../components/UploadFile";
   import { Message } from "element-ui";
-  import { HTTP } from "../../service";
+  import { Data } from "../../service";
   export default {
     props: { product: Object, visible: Boolean },
     components: { Editor, UploadFile },
@@ -78,7 +78,7 @@
     watch: {
       visible(val) {
         if (val) {
-          HTTP.get("/getProduct", { ProdID: this.product.ProdID }).then(res => {
+          Data.get("/getProduct", { ProdID: this.product.ProdID }).then(res => {
              res.data.ProdImg =  res.data.ProdImg.split(",");
             this.row = res.data;
             this.prodProps = [];
@@ -94,7 +94,7 @@
     },
     methods: {
       getClassList() {
-        HTTP.get("/getClassify").then(res => {
+        Data.get("/getClassify").then(res => {
           this.classifys = res.data;
         });
       },
@@ -123,7 +123,7 @@
           property[item.key] = item.value;
         });
         param.Property = JSON.stringify(property);
-        HTTP.post("/saveProduct", param).then(res => {
+        Data.post("/saveProduct", param).then(res => {
           Message.success("保存成功！");
           if (!param.ProdID) param.ProdID = res.data.insertId; // 新建添加ArtID
           param.ProdImg = this.row.ProdImg;

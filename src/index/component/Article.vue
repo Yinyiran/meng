@@ -7,7 +7,7 @@
 </template>
 
 <script>
-  import { HTTP } from "../../service";
+  import { Data } from "../../service";
   export default {
     data() {
       return {
@@ -19,7 +19,8 @@
     },
     methods: {
       getArticle() {
-        HTTP.get("/getArticle", { id: this.$route.params.id }).then(res => {
+        this.article = {}; // 清除上次数据
+        Data.get("/getArticle", { id: this.$route.params.id }).then(res => {
           this.article = res.data[0];
         });
       }
@@ -32,7 +33,7 @@
     width: 1000px;
     margin: 0 auto;
   }
-  .intro{
+  .intro {
     color: #888;
     font-size: 12px;
   }

@@ -13,7 +13,7 @@
 </template>
 
 <script>
-  import { HTTP } from "../../service";
+  import { Data } from "../../service";
   import { Message } from "element-ui";
   export default {
     data() {
@@ -28,12 +28,12 @@
     },
     methods: {
       getCompInfo() {
-        HTTP.get("/getCompInfo", { CompID: 10000 }).then(res => {
+        Data.get("/getCompInfo", { CompID: 10000 }).then(res => {
           this.targetID = res.data.AboutID;
         });
       },
       getArtList() {
-        HTTP.get("/getArticle").then(res => {
+        Data.get("/getArticle").then(res => {
           this.targOptions = res.data.map(item => {
             return { label: item.ArtTitle, value: item.ArtID };
           });
@@ -44,7 +44,7 @@
           CompID: 10000,
           AboutID: this.targetID
         };
-        HTTP.post(`/saveCompInfo`, param).then(res => {
+        Data.post(`/saveCompInfo`, param).then(res => {
           Message.success("保存成功！");
         });
       }

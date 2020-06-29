@@ -43,7 +43,7 @@
 
 <script>
   import UploadFile from "../../components/UploadFile";
-  import { HTTP, BanType } from "../../service/";
+  import { Data, BanType } from "../../service/";
   import { Message } from "element-ui";
   export default {
     props: {
@@ -56,7 +56,6 @@
         return this.form.BanType == 1 ? "链接的产品" : "链接的新闻";
       }
     },
-    created() {},
     data() {
       return {
         typeOptions: BanType,
@@ -82,7 +81,7 @@
           this.targOptions = this.cacheOptions[typeNum];
         } else {
           let url = typeNum == 1 ? "/getProdList" : "/getArticle";
-          HTTP.get(url).then(res => {
+          Data.get(url).then(res => {
             this.targOptions = res.data.map(item => {
               if (typeNum === 1) {
                 return { label: item.ProdName, value: item.ProdID };
@@ -111,7 +110,7 @@
         params.BanImg = img.toString();
         params.BanType = Number(this.form.BanType);
         delete params.BanTypeText;
-        HTTP.post("/saveBanner", params).then(res => {
+        Data.post("/saveBanner", params).then(res => {
           Message.success("保存成功");
           let Obj = Object.assign(params, {
             BanID: this.form.BanID || res.data.insertId,

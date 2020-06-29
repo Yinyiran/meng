@@ -18,13 +18,13 @@
 
 <script>
   import { Message, MessageBox } from "element-ui";
-  import { ServeHost, HTTP } from "../../service";
   import ImgItem from "../../components/ImgItem";
   import UploadFile from "../../components/UploadFile";
+  import { Data } from "../../service";
   export default {
     components: { ImgItem, UploadFile },
     mounted() {
-      HTTP.get("/getFiles?type=img").then(res => {
+      Data.get("/getFiles?type=img").then(res => {
         res.data.sort((a, b) => {
           let reg = /\/([^\/]+)\..+$/g; // "resource/img/2020-05-17/1589680887039.jpg";
           a.match(reg);
@@ -45,7 +45,7 @@
     methods: {
       deleImg(src) {
         MessageBox.confirm("确定要删除这个图片么？", "提示").then(() => {
-          let path = HTTP.post("/deleteFile", { FilePath: src }).then(res => {
+          let path = Data.post("/deleteFile", { FilePath: src }).then(res => {
             Message.success("删除成功");
             let index = this.imgPaths.indexOf(src);
             this.imgPaths.splice(index, 1);

@@ -17,11 +17,12 @@
 
 <script>
   import ProductImg from "../../components/ProductImg.vue";
-  import { HTTP } from "../../service";
+  import { Data } from "../../service";
   export default {
     components: { ProductImg },
     activated() {
-      HTTP.get("/getProduct", { ProdID: this.$route.params.id }).then(res => {
+      this.prod = {}; // 清除上次数据
+      Data.get("/getProduct", { ProdID: this.$route.params.id }).then(res => {
         let prod = res.data;
         prod.ProdImg = prod.ProdImg.split(",");
         prod.Property = JSON.parse(prod.Property);

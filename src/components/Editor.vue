@@ -5,7 +5,7 @@
 <script>
   import Tinymce from "@tinymce/tinymce-vue";
   import { ServeHost, UpLoadFile } from "../service/util";
-  import { HTTP } from "../service";
+  import { Data } from "../service";
   export default {
     props: {
       value: {
@@ -50,7 +50,7 @@
           images_upload_handler: (blobInfo, success, failure) => {
             let formData = new FormData();
             formData.append("file", blobInfo.blob(), blobInfo.filename());
-            // HTTP.post("/uploadFile",formData);
+            // Data.post("/uploadFile",formData);
             UpLoadFile(formData).then(res=>{
               res.data.forEach(url=>{
                 success(url)

@@ -1,4 +1,4 @@
-import HTTP from "./data"
+import Data from "./data"
 
 export const ServeHost = "//127.0.0.1:7001"
 
@@ -22,7 +22,7 @@ export function UpLoadFile(formData, type = "img") {
     //   console.log(complete);
     // }
   };
-  return HTTP.post("/uploadFile", formData, config);
+  return Data.post("/uploadFile", formData, config);
 }
 
 // 用户信息

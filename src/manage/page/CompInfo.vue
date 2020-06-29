@@ -29,7 +29,7 @@
 </template>
 <script>
   import UploadFile from "../../components/UploadFile.vue";
-  import { HTTP } from "../../service";
+  import { Data } from "../../service";
   import { Message } from "element-ui";
 
   export default {
@@ -49,7 +49,7 @@
       };
     },
     created() {
-      HTTP.get("/getCompInfo", { CompID: 10000 }).then(res => {
+      Data.get("/getCompInfo", { CompID: 10000 }).then(res => {
         let logo = res.data.CompLogo;
         res.data.CompLogo.split(",");
         this.form = res.data;
@@ -63,7 +63,7 @@
           CompID: 10000,
           CompLogo: this.form.CompLogo.toString()
         });
-        HTTP.post(`/saveCompInfo`, params).then(res => {
+        Data.post(`/saveCompInfo`, params).then(res => {
           Message.success("保存成功！");
         });
       }

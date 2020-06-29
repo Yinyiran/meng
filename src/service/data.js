@@ -1,7 +1,7 @@
 import Axios from "axios"
 import { GetCookie } from "./util"
 
-const HTTP = {
+const Data = {
   get(url, params, config) {
     return Axios.get(`/api${url}`, { params }, config)
   },
@@ -14,4 +14,4 @@ const HTTP = {
     return Axios.post(`/api${url}`, body, config)
   }
 }
-export default HTTP;
+export default Data;

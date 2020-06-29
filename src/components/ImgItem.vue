@@ -17,7 +17,6 @@
 </template>
 
 <script>
-  import { ServeHost } from "../service";
   export default {
     props: {
       imgs: Array

@@ -33,7 +33,7 @@
 </template>
 
 <script>
-  import { HTTP } from "../../service";
+  import { Data } from "../../service";
   import { MessageBox, Message } from "element-ui";
   import Sort from "../../components/Sort.vue";
   export default {
@@ -52,7 +52,7 @@
     },
     methods: {
       getClassList() {
-        HTTP.get("/getClassify").then(res => {
+        Data.get("/getClassify").then(res => {
           this.classifys = res.data;
         });
       },
@@ -70,7 +70,7 @@
         });
       },
       saveSort(list) {
-        HTTP.post("/sortClassify", list).then(res => {
+        Data.post("/sortClassify", list).then(res => {
           Message.success("保存成功");
           this.isSort = false;
           this.getClassList();
@@ -89,14 +89,14 @@
       },
       delClassify(item, index) {
         MessageBox.confirm(`确定要删除“${item.ClassName}”么？`).then(res => {
-          HTTP.post("/delClassify", { ClassID: item.ClassID }).then(res => {
+          Data.post("/delClassify", { ClassID: item.ClassID }).then(res => {
             Message.success("删除成功");
             this.classifys.splice(index, 1);
           });
         });
       },
       onSubmit() {
-        HTTP.post("/saveClassify", this.form).then(res => {
+        Data.post("/saveClassify", this.form).then(res => {
           // 更新数据
           if (this.form.ClassID) {
             let classItem = this.classifys.find(

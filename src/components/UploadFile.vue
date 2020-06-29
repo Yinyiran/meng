@@ -20,7 +20,7 @@
 <script>
   import ImgItem from "../components/ImgItem";
   import { Message } from "element-ui";
-  import { UploadAccept, HTTP } from "../service";
+  import { UploadAccept, Data } from "../service";
   import { UpLoadFile, TypeOf } from "../service/util";
   import { MD5 } from "crypto-js";
 
@@ -54,17 +54,17 @@
         acceptType: UploadAccept[this.accept] || ""
       };
     },
-    created() {
-      this.getImgs(this.imgs);
-    },
     watch: {
-      imgs(val) {
-        this.getImgs(val);
-        this.localfiles = [];
+      imgs: {
+        handler(val) {
+          this.getImgs(val);
+        },
+        immediate: true
       }
     },
     methods: {
       getImgs(val) {
+        this.localfiles = [];
         switch (TypeOf(val)) {
           case "undefined":
             this.imgList = [];
@@ -83,7 +83,7 @@
         if (this.localfiles.length === 0) return this.imgList;
         await this.getFileHash();
         let hashs = this.localfiles.map(item => item.filehash);
-        let { data } = await HTTP.post("/fileExist", hashs);
+        let { data } = await Data.post("/fileExist", hashs);
         let formData = new FormData();
         let upFile = [];
         this.localfiles.forEach((item, index) => {

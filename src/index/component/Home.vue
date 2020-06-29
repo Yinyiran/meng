@@ -1,27 +1,17 @@
 <template>
   <div id="app">
-    <div class="header">
-      <div class="classify-wrap">
-        <span
-          class="crumb-item"
-          v-for="(item,index) in menu"
-          :class="{active:activeCrumb===index}"
-          :key="item.key"
-          @click="menuClick(item.key)"
-        >{{item.Name}}</span>
-      </div>
-    </div>
     <div class="banner-wrap">
       <el-carousel indicator-position="none" :autoplay="false">
         <el-carousel-item v-for="item in sliders" :key="item.BanID">
-          <img :src="item.BanImg" @click="openDetail(item)" />
+          <div class="img-wrap">
+            <img :src="item.BanImg" @click="openDetail(item)" />
+          </div>
         </el-carousel-item>
       </el-carousel>
     </div>
-    <div class="main-title">主营产品</div>
-    <div class="classify-wrap">
+    <div class="menu-wrap">
       <span
-        class="crumb-item"
+        class="menu-item"
         v-for="(item,index) in classify"
         :class="{active:activeClass===index}"
         :key="index"
@@ -38,7 +28,6 @@
         <product-img :prod="prod" :info="true" />
       </div>
     </div>
-    <div class="main-title">客户案例</div>
     <div class="article">
       <div
         class="arti-item"
@@ -63,57 +52,36 @@
 <script>
   import "../../element/Carousel";
   import ProductImg from "../../components/ProductImg";
-  import { HTTP } from "../../service";
+  import { Data } from "../../service";
   export default {
     name: "App",
     components: { ProductImg },
     data() {
       return {
         sliders: [],
-        activeCrumb: 0,
         activeClass: 0,
         AboutID: 0,
-        menu: [
-          {
-            Name: "主营产品",
-            key: "product"
-          },
-          {
-            Name: "客户案例",
-            key: "artcle"
-          },
-          {
-            Name: "联系我们",
-            key: "contact"
-          },
-          {
-            Name: "关于我们",
-            key: "about"
-          }
-        ],
+
         classify: [],
         articles: [],
         products: []
       };
     },
     mounted() {
-      HTTP.get("/getBanner").then(res => {
+      Data.get("/getBanner").then(res => {
         this.sliders = res.data;
       });
-      HTTP.get("/getClassify").then(res => {
+      Data.get("/getClassify").then(res => {
         this.classify = res.data;
       });
-      HTTP.get("/getArticle", { isStar: 1 }).then(res => {
+      Data.get("/getArticle", { isStar: 1 }).then(res => {
         this.articles = res.data;
       });
-      HTTP.get("/getProdList", { ProdStar: 1 }).then(res => {
+      Data.get("/getProdList", { ProdStar: 1 }).then(res => {
         res.data.forEach(item => {
           item.ProdImg = item.ProdImg.split(",");
         });
         this.products = res.data;
-      });
-      HTTP.get("/getCompInfo", { CompID: 10000 }).then(res => {
-        this.AboutID = res.data.AboutID;
       });
     },
     methods: {
@@ -132,16 +100,6 @@
       },
       openArtPage(artId) {
         this.$router.push(`/article/${artId}`);
-      },
-      menuClick(key) {
-        switch (key) {
-          case "about":
-            this.openArtPage(this.AboutID);
-            break;
-
-          default:
-            break;
-        }
       }
     }
   };
@@ -149,22 +107,18 @@
 
 <style lang="less" scoped>
   @import "../../assets/style/color.less";
-  body {
-    margin: 0;
+
+  .main-title {
+    text-align: center;
+    font-size: 24px;
+    margin: 30px 0;
   }
-  #app {
-    font-family: Avenir, Helvetica, Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    color: #2c3e50;
-    position: relative;
-  }
-  .classify-wrap {
-    border-bottom: 1px solid @border;
+  .menu-wrap {
     display: flex;
     justify-content: center;
+    font-size: 14px;
     padding: 20px;
-    .crumb-item {
+    .menu-item {
       margin: 0 10px;
       cursor: pointer;
       &:hover,
@@ -173,20 +127,32 @@
       }
     }
   }
-  .main-title {
-    text-align: center;
-    font-size: 24px;
-    margin: 30px 0;
-  }
   .banner-wrap {
     position: relative;
     height: 360px;
+    .img-wrap {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #fff;
+    }
   }
   .products {
     display: flex;
     flex-wrap: wrap;
     border-top: 1px solid @border;
     background-color: #f9f9f9;
+    position: relative;
+    &::after {
+      position: absolute;
+      content: "";
+      height: 0;
+      bottom: 0;
+      width: 100%;
+      border-top: 1px solid #dfdfdf;
+    }
     .prod-wrap {
       position: relative;
       width: 25%;

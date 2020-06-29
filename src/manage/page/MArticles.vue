@@ -19,7 +19,7 @@
 </template>
 
 <script>
-  import { HTTP } from "../../service";
+  import { Data } from "../../service";
   import { MessageBox, Message } from "element-ui";
   import NewArticle from "../component/NewArticle.vue";
   export default {
@@ -33,7 +33,7 @@
       };
     },
     created() {
-      HTTP.get("/getArticle").then(res => {
+      Data.get("/getArticle").then(res => {
         let list = res.data.forEach(item => {
           item.ArtStar = !!item.ArtStar;
           item.ArtCover = item.ArtCover.split(",");
@@ -65,7 +65,7 @@
       delArticle(row, index) {
         MessageBox.confirm("确定要删除这条新闻么？", { type: "warning" }).then(
           res => {
-            HTTP.post("/delArticle", { ArtID: row.ArtID }).then(res => {
+            Data.post("/delArticle", { ArtID: row.ArtID }).then(res => {
               Message.success("删除成功！");
               this.articles.splice(index, 1);
             });

@@ -20,7 +20,7 @@
 <script>
   import UploadFile from "../../components/UploadFile.vue";
   import NewProduct from "../component/NewProduct.vue";
-  import { HTTP } from "../../service";
+  import { Data } from "../../service";
   import { Message, MessageBox } from "element-ui";
   export default {
     components: { UploadFile, NewProduct },
@@ -34,7 +34,7 @@
       };
     },
     created() {
-      HTTP.get("/getProdList").then(res => {
+      Data.get("/getProdList").then(res => {
         res.data.forEach(item => {
           item.ProdStar = !!item.ProdStar;
           item.ProdStarText = item.ProdStar ? "是" : "否";
@@ -69,7 +69,7 @@
       delProd(row, index) {
         MessageBox.confirm(`确定要删除产品${row.ProdName}么？`, "提示").then(
           () => {
-            let path = HTTP.post("/delProducts", { ID: row.ProdID }).then(res => {
+            let path = Data.post("/delProducts", { ID: row.ProdID }).then(res => {
               Message.success("删除成功");
               this.products.splice(index, 1);
             });

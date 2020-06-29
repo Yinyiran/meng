@@ -24,8 +24,7 @@
 </template>
 
 <script>
-  import { HTTP, BanType } from "../../service";
-  import { ServeHost } from "../../service/util";
+  import { Data, BanType } from "../../service";
   import NewBanner from "../component/NewBanner";
   import Sort from "../../components/Sort";
   import { Message, MessageBox } from "element-ui";
@@ -54,7 +53,7 @@
     },
     methods: {
       getBanner() {
-        HTTP.get("/getBanner").then(res => {
+        Data.get("/getBanner").then(res => {
           res.data.forEach(item => {
             item.BanTypeText = BanType[item.BanType];
           });
@@ -71,7 +70,7 @@
       deleBan(row, index) {
         MessageBox.confirm("确定要删除这个轮播图么？", { type: "warning" }).then(
           res => {
-            HTTP.post("/delBanner", { id: row.BanID }).then(res => {
+            Data.post("/delBanner", { id: row.BanID }).then(res => {
               this.banners.splice(index, 1);
               Message.success("删除成功");
             });
@@ -95,7 +94,7 @@
         this.isCreate = false;
       },
       saveSort(list) {
-        HTTP.post("/sortBanner", list).then(res => {
+        Data.post("/sortBanner", list).then(res => {
           Message.success("保存成功");
           this.isSort = false;
           this.getBanner();
