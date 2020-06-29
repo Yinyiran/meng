@@ -36,5 +36,6 @@
   .intro {
     color: #888;
     font-size: 12px;
+    padding-bottom: 20px ;
   }
 </style>

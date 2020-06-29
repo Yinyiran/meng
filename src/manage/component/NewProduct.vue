@@ -77,9 +77,9 @@
     },
     watch: {
       visible(val) {
-        if (val) {
+        if (val && this.product.ProdID) {
           Data.get("/getProduct", { ProdID: this.product.ProdID }).then(res => {
-             res.data.ProdImg =  res.data.ProdImg.split(",");
+            res.data.ProdImg = res.data.ProdImg.split(",");
             this.row = res.data;
             this.prodProps = [];
             let propObj = JSON.parse(this.row.Property);
@@ -89,6 +89,7 @@
           });
         } else {
           this.row = {};
+          this.prodProps = [];
         }
       }
     },

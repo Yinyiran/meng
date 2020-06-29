@@ -1,10 +1,10 @@
 <template>
   <div id="app">
     <div class="banner-wrap">
-      <el-carousel indicator-position="none" :autoplay="false">
+      <el-carousel indicator-position="none" :autoplay="false" height="360px">
         <el-carousel-item v-for="item in sliders" :key="item.BanID">
           <div class="img-wrap">
-            <img :src="item.BanImg" @click="openDetail(item)" />
+            <img class="banner-img" :src="item.BanImg" @click="openDetail(item)" />
           </div>
         </el-carousel-item>
       </el-carousel>
@@ -61,7 +61,6 @@
         sliders: [],
         activeClass: 0,
         AboutID: 0,
-
         classify: [],
         articles: [],
         products: []
@@ -73,6 +72,7 @@
       });
       Data.get("/getClassify").then(res => {
         this.classify = res.data;
+        this.classify.unshift({ ClassID: 0, ClassName: "全部" });
       });
       Data.get("/getArticle", { isStar: 1 }).then(res => {
         this.articles = res.data;
@@ -116,7 +116,7 @@
   .menu-wrap {
     display: flex;
     justify-content: center;
-    font-size: 14px;
+    font-size: 16px;
     padding: 20px;
     .menu-item {
       margin: 0 10px;
@@ -137,6 +137,11 @@
       right: 0;
       bottom: 0;
       background-color: #fff;
+    }
+    .banner-img {
+      width: 100%;
+
+      object-fit: contain;
     }
   }
   .products {
