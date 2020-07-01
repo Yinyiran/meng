@@ -31,42 +31,50 @@
       <div class="form-wrap">
         <el-form-item label="公共属性">
           <div class="prop-wrap">
+            <div class="prop-item">
+              <span class="add-prop-btn" @click="addProp">添加属性</span>
+            </div>
             <div class="prop-item" v-for="(item,index) in prodProps" :key="index">
               <el-input class="prop-input" v-model="item.key" placeholder></el-input>
               <span class="prop-separator">:</span>
               <el-input class="prop-input" v-model="item.value"></el-input>
               <i class="el-icon-remove-outline dele-prop-btn" @click="deleProp(index)"></i>
             </div>
-            <div class="prop-item">
-              <span class="add-prop-btn" @click="addProp">添加属性</span>
-            </div>
           </div>
         </el-form-item>
       </div>
-      <div class="sku-item">
+      <!-- 添加SKU -->
+      <div class="sku-wrap">
+        <span class="add-prop-btn" @click="addSku">新增Sku</span>
+      </div>
+      <div class="sku-item" v-for="(sku,index) in skuList" :key="index">
         <div class="form-wrap">
           <el-form-item label="SKU名称">
-            <el-input v-model="row.ProdName"></el-input>
+            <el-input v-model="sku.ProdName"></el-input>
+          </el-form-item>
+          <el-form-item label="是否首位">
+            <el-radio v-model="skuIndex" :label="index">{{skuIndex === index?"是":"否"}}</el-radio>
           </el-form-item>
         </div>
         <div class="form-wrap">
-          <el-form-item label="SKU图片">
-            <upload-file :imgs="row.ProdImg" size="50px" ref="UpFileRef"></upload-file>
-          </el-form-item>
           <el-form-item label="SKU属性">
             <div class="prop-wrap">
-              <div class="prop-item" v-for="(item,index) in prodProps" :key="index">
+              <div class="prop-item" v-for="(item,i) in sku.Props" :key="i">
                 <el-input class="prop-input" v-model="item.key" placeholder></el-input>
                 <span class="prop-separator">:</span>
                 <el-input class="prop-input" v-model="item.value"></el-input>
-                <i class="el-icon-remove-outline dele-prop-btn" @click="deleProp(index)"></i>
+                <i class="el-icon-remove-outline dele-prop-btn" @click="deleSkuProp(sku,i)"></i>
               </div>
               <div class="prop-item">
-                <span class="add-prop-btn" @click="addProp">添加属性</span>
+                <span class="add-prop-btn" @click="addSkuProp(sku)">添加sku属性</span>
               </div>
             </div>
           </el-form-item>
+          <el-form-item label="SKU图片">
+            <upload-file :imgs="sku.ProdImg" size="50px" ref="UpFileRef"></upload-file>
+          </el-form-item>
         </div>
+        <i class="el-icon-close" v-show="skuList.length>1" @click="deleSku(sku,index)"></i>
       </div>
       <el-form-item label="内容描述">
         <editor v-model="row.ProdContent"></editor>
@@ -99,11 +107,13 @@
       return {
         row: {},
         classifys: [],
-        prodProps: [],
+        prodProps: [{ key: "", value: "" }],
+        skuIndex: 0,
         skuList: [
           {
-            imgs: [],
-            props: []
+            ProdName: "",
+            ProdImg: [],
+            Props: [{ key: "", value: "" }]
           }
         ]
       };
@@ -114,7 +124,7 @@
           Data.get("/getProduct", { ProdID: this.product.ProdID }).then(res => {
             res.data.ProdImg = res.data.ProdImg.split(",");
             this.row = res.data;
-            this.prodProps = [];
+            this.prodProps = [{ key: "", value: "" }];
             let propObj = JSON.parse(this.row.Property);
             for (const key in propObj) {
               this.prodProps.push({ key, value: propObj[key] });
@@ -122,7 +132,7 @@
           });
         } else {
           this.row = {};
-          this.prodProps = [];
+          this.prodProps = [{ key: "", value: "" }];
         }
       }
     },
@@ -137,6 +147,22 @@
       },
       deleProp(index) {
         this.prodProps.splice(index, 1);
+      },
+      addSku() {
+        this.skuList.push({
+          imgs: [],
+          Props: [{}]
+        });
+      },
+      deleSku(sku, index) {
+        this.skuList.splice(index, 1);
+        if (this.skuIndex === index) this.skuIndex = 0;
+      },
+      addSkuProp(sku) {
+        sku.Props.push({ key: "", value: "" });
+      },
+      deleSkuProp(sku, index) {
+        sku.Props.splice(index, 1);
       },
       cancel() {
         this.$emit("update:visible", false);
@@ -154,8 +180,10 @@
         };
         let property = {};
         this.prodProps.forEach(item => {
-          property[item.key] = item.value;
+          if (item.key) property[item.key] = item.value;
         });
+        console.log(property);
+        return;
         param.Property = JSON.stringify(property);
         Data.post("/saveProduct", param).then(res => {
           Message.success("保存成功！");
@@ -183,6 +211,18 @@
   .art-editor {
     padding: 20px;
   }
+  .sku-item {
+    position: relative;
+    padding-top: 20px;
+    background-color: #f5f5f5;
+    margin-bottom: 10px;
+    .el-icon-close {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      cursor: pointer;
+    }
+  }
   .form-wrap {
     display: flex;
     .el-form-item {
@@ -192,6 +232,11 @@
       }
     }
   }
+  .sku-wrap {
+    border-top: 1px solid #e8e8e8;
+    padding: 10px 10px;
+    font-size: 14px;
+  }
   .prop-wrap {
     display: inline-block;
     width: 300px;
@@ -199,21 +244,23 @@
       vertical-align: middle;
       margin-bottom: 5px;
     }
+
     .dele-prop-btn {
       margin-left: 10px;
       font-size: 18px;
       cursor: pointer;
       vertical-align: middle;
     }
-    .add-prop-btn {
-      cursor: pointer;
-      vertical-align: middle;
-      color: @active;
-    }
+
     .prop-separator {
       vertical-align: middle;
       padding: 0 10px;
     }
+  }
+  .add-prop-btn {
+    cursor: pointer;
+    vertical-align: middle;
+    color: @active;
   }
   .prop-input {
     width: 120px;
