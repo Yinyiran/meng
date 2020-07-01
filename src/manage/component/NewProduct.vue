@@ -4,43 +4,70 @@
       {{title}}
       <el-button class="m-right" size="small" @click="cancel">返回</el-button>
     </div>
-    <el-form ref="formRef" class="art-editor" :model="row" label-width="80px" size="small">
-      <el-form-item label="产品名称">
-        <el-input v-model="row.ProdName"></el-input>
-      </el-form-item>
-      <el-form-item label="产品简介">
-        <el-input type="textarea" v-model="row.ProdIntro"></el-input>
-      </el-form-item>
-      <el-form-item label="是否星标">
-        <el-checkbox v-model="row.ProdStar"></el-checkbox>
-      </el-form-item>
-      <el-form-item label="封面图片">
-        <upload-file :imgs="row.ProdImg" ref="UpFileRef"></upload-file>
-      </el-form-item>
-      <el-form-item label="产品属性">
-        <div class="prop-wrap">
-          <div class="prop-item" v-for="(item,index) in prodProps" :key="index">
-            <el-input class="prop-input" v-model="item.key" placeholder></el-input>
-            <span class="prop-separator">:</span>
-            <el-input class="prop-input" v-model="item.value"></el-input>
-            <i class="el-icon-remove-outline dele-prop-btn" @click="deleProp(index)"></i>
+    <el-form ref="formRef" class="art-editor" :model="row" label-width="80px" size="mini">
+      <div class="form-wrap">
+        <el-form-item label="产品名称">
+          <el-input v-model="row.ProdName"></el-input>
+        </el-form-item>
+        <el-form-item label="是否星标">
+          <el-checkbox v-model="row.ProdStar"></el-checkbox>
+        </el-form-item>
+      </div>
+      <div class="form-wrap">
+        <el-form-item label="产品简介">
+          <el-input type="textarea" v-model="row.ProdIntro"></el-input>
+        </el-form-item>
+        <el-form-item label="所属分类">
+          <el-select v-model="row.Classify" placeholder="请选择所属分类" clearable>
+            <el-option
+              v-for="item in classifys"
+              :key="item.ClassID"
+              :label="item.ClassName"
+              :value="item.ClassID"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+      </div>
+      <div class="form-wrap">
+        <el-form-item label="公共属性">
+          <div class="prop-wrap">
+            <div class="prop-item" v-for="(item,index) in prodProps" :key="index">
+              <el-input class="prop-input" v-model="item.key" placeholder></el-input>
+              <span class="prop-separator">:</span>
+              <el-input class="prop-input" v-model="item.value"></el-input>
+              <i class="el-icon-remove-outline dele-prop-btn" @click="deleProp(index)"></i>
+            </div>
+            <div class="prop-item">
+              <span class="add-prop-btn" @click="addProp">添加属性</span>
+            </div>
           </div>
-          <div class="prop-item">
-            <span class="add-prop-btn" @click="addProp">添加属性</span>
-          </div>
+        </el-form-item>
+      </div>
+      <div class="sku-item">
+        <div class="form-wrap">
+          <el-form-item label="SKU名称">
+            <el-input v-model="row.ProdName"></el-input>
+          </el-form-item>
         </div>
-      </el-form-item>
-      <el-form-item label="所属分类">
-        <el-select v-model="row.Classify" placeholder="请选择所属分类" clearable>
-          <el-option
-            v-for="item in classifys"
-            :key="item.ClassID"
-            :label="item.ClassName"
-            :value="item.ClassID"
-          ></el-option>
-        </el-select>
-      </el-form-item>
-      <!-- <el-form-item label="同类产品">选择产品</el-form-item> -->
+        <div class="form-wrap">
+          <el-form-item label="SKU图片">
+            <upload-file :imgs="row.ProdImg" size="50px" ref="UpFileRef"></upload-file>
+          </el-form-item>
+          <el-form-item label="SKU属性">
+            <div class="prop-wrap">
+              <div class="prop-item" v-for="(item,index) in prodProps" :key="index">
+                <el-input class="prop-input" v-model="item.key" placeholder></el-input>
+                <span class="prop-separator">:</span>
+                <el-input class="prop-input" v-model="item.value"></el-input>
+                <i class="el-icon-remove-outline dele-prop-btn" @click="deleProp(index)"></i>
+              </div>
+              <div class="prop-item">
+                <span class="add-prop-btn" @click="addProp">添加属性</span>
+              </div>
+            </div>
+          </el-form-item>
+        </div>
+      </div>
       <el-form-item label="内容描述">
         <editor v-model="row.ProdContent"></editor>
       </el-form-item>
@@ -72,7 +99,13 @@
       return {
         row: {},
         classifys: [],
-        prodProps: []
+        prodProps: [],
+        skuList: [
+          {
+            imgs: [],
+            props: []
+          }
+        ]
       };
     },
     watch: {
@@ -149,6 +182,15 @@
   }
   .art-editor {
     padding: 20px;
+  }
+  .form-wrap {
+    display: flex;
+    .el-form-item {
+      width: 50%;
+      &:nth-child(2) {
+        margin-left: 20px;
+      }
+    }
   }
   .prop-wrap {
     display: inline-block;

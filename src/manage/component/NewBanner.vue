@@ -6,7 +6,7 @@
     width="800px"
     :append-to-body="true"
   >
-    <el-form :model="form" label-width="100px" size="small">
+    <el-form :model="form" label-width="100px" size="mini">
       <el-form-item label="轮播名称">
         <el-input v-model="form.BanName"></el-input>
       </el-form-item>

@@ -18,7 +18,7 @@
         @click="miniChange(mindex)"
       />
     </div>
-    <div class="prod-intro" v-if="info">{{prod.Intro}}</div>
+    <div class="prod-intro" v-if="info">{{prod.ProdIntro}}</div>
     <!-- <template v-else>
       <div class="prod-item">
         <img class="prod-img" :src="prod.ProdImg" />

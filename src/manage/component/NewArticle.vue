@@ -4,7 +4,7 @@
       {{title}}
       <el-button class="m-right" size="small" @click="cancel">返回</el-button>
     </div>
-    <el-form ref="formRef" class="art-editor" :model="article" label-width="80px" size="small">
+    <el-form ref="formRef" class="art-editor" :model="article" label-width="80px" size="mini">
       <el-form-item label="标题">
         <el-input v-model="article.ArtTitle"></el-input>
       </el-form-item>
@@ -68,7 +68,7 @@
   };
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
   .new-article {
     z-index: 1;
     background-color: #fff;

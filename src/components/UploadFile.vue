@@ -1,7 +1,7 @@
 <template>
   <div class="upload-file">
-    <img-item :imgs="imgList" @removeImg="removeImg">
-      <div class="input-wrap" v-show="imgList.length<limit">
+    <img-item :imgs="imgList" @removeImg="removeImg" :size="size">
+      <div class="input-wrap" v-show="imgList.length<limit" :style="{width:size,height:size}">
         <input
           class="upload-input"
           type="file"
@@ -29,6 +29,10 @@
       multi: {
         type: Boolean,
         default: true
+      },
+      size: {
+        type: String,
+        default: "100px"
       },
       imgs: [Array, String],
       limitSize: {
@@ -171,10 +175,6 @@
     border-radius: 6px;
     display: inline-block;
     overflow: hidden;
-    width: 100px;
-    height: 100px;
-  }
-  .input-wrap {
     transition: 0.2s;
     &:hover {
       border-color: #409eff;
