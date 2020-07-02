@@ -50,7 +50,7 @@
       <div class="sku-item" v-for="(sku,index) in skuList" :key="index">
         <div class="form-wrap">
           <el-form-item label="SKU名称">
-            <el-input v-model="sku.ProdName"></el-input>
+            <el-input v-model="sku.SkuName"></el-input>
           </el-form-item>
           <el-form-item label="是否首位">
             <el-radio v-model="skuIndex" :label="index">{{skuIndex === index?"是":"否"}}</el-radio>
@@ -71,7 +71,7 @@
             </div>
           </el-form-item>
           <el-form-item label="SKU图片">
-            <upload-file :imgs="sku.ProdImg" size="50px" ref="UpFileRef"></upload-file>
+            <upload-file :imgs="sku.SkuImgs" size="50px" ref="UpFileRef"></upload-file>
           </el-form-item>
         </div>
         <i class="el-icon-close" v-show="skuList.length>1" @click="deleSku(sku,index)"></i>
@@ -111,8 +111,8 @@
         skuIndex: 0,
         skuList: [
           {
-            ProdName: "",
-            ProdImg: [],
+            SkuName: "",
+            SkuImgs: [],
             Props: [{ key: "", value: "" }]
           }
         ]
@@ -150,8 +150,9 @@
       },
       addSku() {
         this.skuList.push({
-          imgs: [],
-          Props: [{}]
+          SkuName: "",
+          SkuImgs: [],
+          Props: [{ key: "", value: "" }]
         });
       },
       deleSku(sku, index) {
@@ -168,29 +169,42 @@
         this.$emit("update:visible", false);
       },
       async saveArticle() {
-        this.row.ProdImg = await this.$refs.UpFileRef.upload();
+        let refs = this.$refs.UpFileRef;
+        for (let i = 0; i < this.skuList.length; i++) {
+          const sku = this.skuList[i];
+          sku.SkuImgs = await refs[i].upload();
+          sku.Property = this.getStrKeyVal(sku.Props);
+          sku.isMain = this.skuIndex === i ? 1 : 0;
+        }
+        let skuParmas = this.skuList.map(item => {
+          const { SkuName, SkuImgs, Property, isMain } = item;
+          return { SkuName, SkuImgs, Property, isMain };
+        });
         let param = {
           ProdID: this.row.ProdID,
           ProdName: this.row.ProdName,
           ProdIntro: this.row.ProdIntro,
           Classify: this.row.Classify,
           ProdContent: this.row.ProdContent,
-          ProdImg: this.row.ProdImg.toString(),
-          ProdStar: this.row.ProdStar ? 1 : 0
+          ProdStar: this.row.ProdStar ? 1 : 0,
+          Property: this.getStrKeyVal(this.prodProps),
+          SkuList: skuParmas
         };
-        let property = {};
-        this.prodProps.forEach(item => {
-          if (item.key) property[item.key] = item.value;
-        });
-        console.log(property);
+        console.log(param);
         return;
-        param.Property = JSON.stringify(property);
         Data.post("/saveProduct", param).then(res => {
           Message.success("保存成功！");
           if (!param.ProdID) param.ProdID = res.data.insertId; // 新建添加ArtID
           param.ProdImg = this.row.ProdImg;
           this.$emit("saveSuccess", param);
         });
+      },
+      getStrKeyVal(list) {
+        let property = {};
+        list.forEach(item => {
+          if (item.key) property[item.key] = item.value;
+        });
+        return JSON.stringify(property);
       }
     }
   };
