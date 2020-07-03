@@ -124,7 +124,7 @@
           Data.get("/getProduct", { ProdID: this.product.ProdID }).then(res => {
             res.data.ProdImg = res.data.ProdImg.split(",");
             this.row = res.data;
-            this.prodProps = [{ key: "", value: "" }];
+            this.prodProps = [];
             let propObj = JSON.parse(this.row.Property);
             for (const key in propObj) {
               this.prodProps.push({ key, value: propObj[key] });
@@ -140,6 +140,7 @@
       getClassList() {
         Data.get("/getClassify").then(res => {
           this.classifys = res.data;
+          // this.skuList = res.data.SkuList;
         });
       },
       addProp() {
@@ -177,8 +178,8 @@
           sku.isMain = this.skuIndex === i ? 1 : 0;
         }
         let skuParmas = this.skuList.map(item => {
-          const { SkuName, SkuImgs, Property, isMain } = item;
-          return { SkuName, SkuImgs, Property, isMain };
+          const { SkuName, SkuImgs, Property, isMain, SkuID } = item;
+          return { SkuName, SkuImgs, Property, isMain, SkuID };
         });
         let param = {
           ProdID: this.row.ProdID,

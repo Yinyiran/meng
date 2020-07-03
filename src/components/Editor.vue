@@ -35,7 +35,7 @@
         editContent: this.value,
         ApiKey: "kbv4la3hq4ypkqzsoxoip3y28xqv5ld9ntu099hzgcj0mxrp",
         editConfig: {
-          height: 500,
+          height: 300,
           language: "zh_CN",
           plugins: [
             "advlist autolink lists link image charmap print preview anchor",
