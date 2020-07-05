@@ -71,7 +71,7 @@
             </div>
           </el-form-item>
           <el-form-item label="SKU图片">
-            <upload-file :imgs="sku.SkuImgs" size="50px" ref="UpFileRef"></upload-file>
+            <upload-file :imgs="sku.SkuImg" size="50px" ref="UpFileRef"></upload-file>
           </el-form-item>
         </div>
         <i class="el-icon-close" v-show="skuList.length>1" @click="deleSku(sku,index)"></i>
@@ -112,7 +112,7 @@
         skuList: [
           {
             SkuName: "",
-            SkuImgs: [],
+            SkuImg: [],
             Props: [{ key: "", value: "" }]
           }
         ]
@@ -152,7 +152,7 @@
       addSku() {
         this.skuList.push({
           SkuName: "",
-          SkuImgs: [],
+          SkuImg: [],
           Props: [{ key: "", value: "" }]
         });
       },
@@ -173,13 +173,13 @@
         let refs = this.$refs.UpFileRef;
         for (let i = 0; i < this.skuList.length; i++) {
           const sku = this.skuList[i];
-          sku.SkuImgs = await refs[i].upload();
-          sku.Property = this.getStrKeyVal(sku.Props);
-          sku.isMain = this.skuIndex === i ? 1 : 0;
+          sku.SkuImg = await refs[i].upload();
+          sku.SkuProps = this.getStrKeyVal(sku.Props);
+          sku.IsMain = this.skuIndex === i ? 1 : 0;
         }
         let skuParmas = this.skuList.map(item => {
-          const { SkuName, SkuImgs, Property, isMain, SkuID } = item;
-          return { SkuName, SkuImgs, Property, isMain, SkuID };
+          const { SkuName, SkuImg, SkuProps, IsMain, SkuID } = item;
+          return { SkuName, SkuImg:SkuImg.toString(), SkuProps:SkuProps.toString(), IsMain, SkuID };
         });
         let param = {
           ProdID: this.row.ProdID,
@@ -191,8 +191,6 @@
           Property: this.getStrKeyVal(this.prodProps),
           SkuList: skuParmas
         };
-        console.log(param);
-        return;
         Data.post("/saveProduct", param).then(res => {
           Message.success("保存成功！");
           if (!param.ProdID) param.ProdID = res.data.insertId; // 新建添加ArtID
