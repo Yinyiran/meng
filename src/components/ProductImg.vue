@@ -11,9 +11,9 @@
       <img
         class="img-mini"
         :style="{width:size,height:size}"
-        v-for="(item,mindex) in prod.Products"
+        v-for="(item,mindex) in prod.SkuList"
         :key="mindex"
-        :src="item.ProdImg"
+        :src="item.SkuImg"
         :class="{active:prod.current === mindex}"
         @click="miniChange(mindex)"
       />
@@ -34,19 +34,6 @@
       prod: Object,
       info: Boolean,
       size: String
-    },
-    data() {
-      return {
-        Classify: 1001,
-        ProdContent: "<p>啊发违法为傲文法文</p>",
-        ProdID: 10009,
-        ProdImg:
-          "resource/img/2020-06-23/1592881861988.jpg,resource/img/2020-06-23/1592881893637.png",
-        ProdIntro: "傲文法",
-        ProdName: "爱蜂窝",
-        ProdStar: 1,
-        Property: `{"wef":"wef傲文法"}`
-      };
     },
     methods: {
       carChange(index) {

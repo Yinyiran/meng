@@ -34,7 +34,7 @@
             <div class="prop-item">
               <span class="add-prop-btn" @click="addProp">添加属性</span>
             </div>
-            <div class="prop-item" v-for="(item,index) in prodProps" :key="index">
+            <div class="prop-item" v-for="(item,index) in row.Property" :key="index">
               <el-input class="prop-input" v-model="item.key" placeholder></el-input>
               <span class="prop-separator">:</span>
               <el-input class="prop-input" v-model="item.value"></el-input>
@@ -47,7 +47,7 @@
       <div class="sku-wrap">
         <span class="add-prop-btn" @click="addSku">新增Sku</span>
       </div>
-      <div class="sku-item" v-for="(sku,index) in skuList" :key="index">
+      <div class="sku-item" v-for="(sku,index) in row.SkuList" :key="index">
         <div class="form-wrap">
           <el-form-item label="SKU名称">
             <el-input v-model="sku.SkuName"></el-input>
@@ -59,7 +59,7 @@
         <div class="form-wrap">
           <el-form-item label="SKU属性">
             <div class="prop-wrap">
-              <div class="prop-item" v-for="(item,i) in sku.Props" :key="i">
+              <div class="prop-item" v-for="(item,i) in sku.SkuProps" :key="i">
                 <el-input class="prop-input" v-model="item.key" placeholder></el-input>
                 <span class="prop-separator">:</span>
                 <el-input class="prop-input" v-model="item.value"></el-input>
@@ -74,7 +74,7 @@
             <upload-file :imgs="sku.SkuImg" size="50px" ref="UpFileRef"></upload-file>
           </el-form-item>
         </div>
-        <i class="el-icon-close" v-show="skuList.length>1" @click="deleSku(sku,index)"></i>
+        <i class="el-icon-close" v-show="row.SkuList.length>1" @click="deleSku(sku,index)"></i>
       </div>
       <el-form-item label="内容描述">
         <editor v-model="row.ProdContent"></editor>
@@ -106,33 +106,36 @@
     data() {
       return {
         row: {},
+        defalutRow: {
+          Property: [{ key: "", value: "" }],
+          SkuList: [
+            {
+              SkuName: "",
+              SkuImg: [],
+              SkuProps: [{ key: "", value: "" }]
+            }
+          ]
+        },
         classifys: [],
-        prodProps: [{ key: "", value: "" }],
-        skuIndex: 0,
-        skuList: [
-          {
-            SkuName: "",
-            SkuImg: [],
-            Props: [{ key: "", value: "" }]
-          }
-        ]
+        skuIndex: 0
       };
     },
     watch: {
       visible(val) {
         if (val && this.product.ProdID) {
           Data.get("/getProduct", { ProdID: this.product.ProdID }).then(res => {
-            res.data.ProdImg = res.data.ProdImg.split(",");
+            res.data.Property = this.formatProps(res.data.Property);
+            res.data.ProdStar = !!res.data.ProdStar;
+            res.data.SkuList.forEach((sku, index) => {
+              sku.SkuProps = this.formatProps(sku.SkuProps);
+              sku.SkuImg = sku.SkuImg.split(",");
+              if (sku.IsMain) this.skuIndex = index;
+            });
             this.row = res.data;
-            this.prodProps = [];
-            let propObj = JSON.parse(this.row.Property);
-            for (const key in propObj) {
-              this.prodProps.push({ key, value: propObj[key] });
-            }
           });
         } else {
-          this.row = {};
-          this.prodProps = [{ key: "", value: "" }];
+          // 新建
+          this.row = JSON.parse(JSON.stringify(this.defalutRow));
         }
       }
     },
@@ -140,47 +143,56 @@
       getClassList() {
         Data.get("/getClassify").then(res => {
           this.classifys = res.data;
-          // this.skuList = res.data.SkuList;
         });
       },
+      formatProps(props) {
+        let propArr = [];
+        let propObj = JSON.parse(props);
+        for (const key in propObj) {
+          propArr.push({ key, value: propObj[key] });
+        }
+        return propArr;
+      },
       addProp() {
-        this.prodProps.push({ key: "", value: "" });
+        this.row.Property.push({ key: "", value: "" });
       },
       deleProp(index) {
-        this.prodProps.splice(index, 1);
+        this.row.Property.splice(index, 1);
       },
       addSku() {
-        this.skuList.push({
+        this.row.SkuList.push({
           SkuName: "",
           SkuImg: [],
-          Props: [{ key: "", value: "" }]
+          SkuProps: [{ key: "", value: "" }]
         });
       },
       deleSku(sku, index) {
-        this.skuList.splice(index, 1);
+        this.row.SkuList.splice(index, 1);
         if (this.skuIndex === index) this.skuIndex = 0;
       },
       addSkuProp(sku) {
-        sku.Props.push({ key: "", value: "" });
+        sku.SkuProps.push({ key: "", value: "" });
       },
       deleSkuProp(sku, index) {
-        sku.Props.splice(index, 1);
+        sku.SkuProps.splice(index, 1);
       },
       cancel() {
         this.$emit("update:visible", false);
       },
       async saveArticle() {
         let refs = this.$refs.UpFileRef;
-        for (let i = 0; i < this.skuList.length; i++) {
-          const sku = this.skuList[i];
-          sku.SkuImg = await refs[i].upload();
-          sku.SkuProps = this.getStrKeyVal(sku.Props);
-          sku.IsMain = this.skuIndex === i ? 1 : 0;
+        let skuParmas = [];
+        for (let i = 0; i < this.row.SkuList.length; i++) {
+          const sku = this.row.SkuList[i];
+          let skuObj = {};
+          let skuImgArr = await refs[i].upload();
+          skuObj.SkuImg = skuImgArr.toString();
+          skuObj.SkuID = sku.SkuID;
+          skuObj.SkuName = sku.SkuName;
+          skuObj.IsMain = this.skuIndex === i ? 1 : 0;
+          skuObj.SkuProps = this.getStrKeyVal(sku.SkuProps);
+          skuParmas.push(skuObj);
         }
-        let skuParmas = this.skuList.map(item => {
-          const { SkuName, SkuImg, SkuProps, IsMain, SkuID } = item;
-          return { SkuName, SkuImg:SkuImg.toString(), SkuProps:SkuProps.toString(), IsMain, SkuID };
-        });
         let param = {
           ProdID: this.row.ProdID,
           ProdName: this.row.ProdName,
@@ -188,13 +200,12 @@
           Classify: this.row.Classify,
           ProdContent: this.row.ProdContent,
           ProdStar: this.row.ProdStar ? 1 : 0,
-          Property: this.getStrKeyVal(this.prodProps),
+          Property: this.getStrKeyVal(this.row.Property),
           SkuList: skuParmas
         };
         Data.post("/saveProduct", param).then(res => {
           Message.success("保存成功！");
           if (!param.ProdID) param.ProdID = res.data.insertId; // 新建添加ArtID
-          param.ProdImg = this.row.ProdImg;
           this.$emit("saveSuccess", param);
         });
       },

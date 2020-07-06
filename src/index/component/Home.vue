@@ -79,7 +79,9 @@
       });
       Data.get("/getProdList", { ProdStar: 1 }).then(res => {
         res.data.forEach(item => {
-          item.ProdImg = item.ProdImg.split(",");
+          item.SkuList.forEach(sku => {
+            sku.SkuImg = sku.SkuImg.split(",");
+          });
         });
         this.products = res.data;
       });

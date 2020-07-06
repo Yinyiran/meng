@@ -24,7 +24,6 @@
       this.prod = {}; // 清除上次数据
       Data.get("/getProduct", { ProdID: this.$route.params.id }).then(res => {
         let prod = res.data;
-        prod.ProdImg = prod.ProdImg.split(",");
         prod.Property = JSON.parse(prod.Property);
         this.prod = prod;
       });
