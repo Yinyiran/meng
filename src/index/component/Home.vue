@@ -23,9 +23,9 @@
         class="prod-wrap"
         v-for="(prod,index) in products"
         :key="index"
-        @click="openProdPage(prod.ProdID)"
+        @click="openProdPage(prod.ProdID,index)"
       >
-        <product-img :prod="prod" :info="true" />
+        <product-img :imgData="prod.imgData" :info="true" />
       </div>
     </div>
     <div class="article">
@@ -78,10 +78,16 @@
         this.articles = res.data;
       });
       Data.get("/getProdList", { ProdStar: 1 }).then(res => {
-        res.data.forEach(item => {
-          item.SkuList.forEach(sku => {
+        res.data.forEach(prod => {
+          prod.SkuList.forEach(sku => {
             sku.SkuImg = sku.SkuImg.split(",");
           });
+          let imgs = prod.SkuList.map(item => item.SkuImg[0]);
+          prod.imgData = {
+            imgs: imgs,
+            title: prod.ProdName,
+            curIndex: 0
+          };
         });
         this.products = res.data;
       });
@@ -94,11 +100,11 @@
         this.$refs.carousel[prodIndex].setActiveItem(imgIndex);
       },
       openDetail(item) {
-        if (item.BanType === 1) this.openProdPage(item.BanTargID);
+        if (item.BanType === 1) this.openProdPage(item.BanTargID, 0);
         else this.openArtPage(item.BanTargID);
       },
-      openProdPage(prodId) {
-        this.$router.push(`/product/${prodId}`);
+      openProdPage(prodId, index) {
+        this.$router.push(`/product/${prodId}-${index}`);
       },
       openArtPage(artId) {
         this.$router.push(`/article/${artId}`);

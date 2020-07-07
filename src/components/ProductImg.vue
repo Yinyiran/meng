@@ -1,43 +1,45 @@
 <template>
   <div class="product-img">
-    <div class="carousel-item">
-      <el-carousel ref="carousel" @change="carChange" indicator-position="none" :autoplay="false">
-        <el-carousel-item v-for="img in prod.ProdImg" :key="img">
-          <img width="100%" :src="img" alt />
-        </el-carousel-item>
-      </el-carousel>
-    </div>
-    <div class="img-wrap" @click.stop>
-      <img
-        class="img-mini"
-        :style="{width:size,height:size}"
-        v-for="(item,mindex) in prod.SkuList"
-        :key="mindex"
-        :src="item.SkuImg"
-        :class="{active:prod.current === mindex}"
-        @click="miniChange(mindex)"
-      />
-    </div>
-    <div class="prod-intro" v-if="info">{{prod.ProdIntro}}</div>
-    <!-- <template v-else>
-      <div class="prod-item">
-        <img class="prod-img" :src="prod.ProdImg" />
+    <template v-if="imgData.imgs.length>1">
+      <div class="carousel-item">
+        <el-carousel ref="carousel" @change="carChange" indicator-position="none" :autoplay="false">
+          <el-carousel-item v-for="(img,index) in imgData.imgs" :key="index">
+            <img width="100%" :src="img" alt />
+          </el-carousel-item>
+        </el-carousel>
       </div>
-      <div class="prod-intro" v-if="info">{{prod.ProdName}}</div>
-    </template>-->
+      <div class="img-wrap" @click.stop>
+        <img
+          class="img-mini"
+          :style="{width:size,height:size}"
+          v-for="(src,index) in imgData.imgs"
+          :key="index"
+          :src="src"
+          :class="{active:imgData.curIndex === index}"
+          @click="miniChange(index)"
+        />
+      </div>
+      <div class="prod-intro" v-if="info">{{imgData.title}}</div>
+    </template>
+    <template v-else>
+      <div class="prod-item">
+        <img class="prod-img" :src="imgData.imgs" />
+      </div>
+      <div class="prod-intro" v-if="info">{{imgData.title}}</div>
+    </template>
   </div>
 </template>
 
 <script>
   export default {
     props: {
-      prod: Object,
+      imgData: Object,
       info: Boolean,
       size: String
     },
     methods: {
       carChange(index) {
-        this.prod.current = index;
+        this.imgData.curIndex = index;
       },
       miniChange(imgIndex) {
         this.$refs.carousel.setActiveItem(imgIndex);

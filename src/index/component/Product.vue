@@ -1,7 +1,7 @@
 <template>
   <div class="product">
     <div class="info-wrap">
-      <product-img class="product-img" :prod="prod" size="50px" />
+      <product-img class="product-img" :imgData="prod.imgData" size="50px" v-if="prod.imgData" />
       <div class="intro-wrap">
         <div class="product-name">{{prod.ProdName}}</div>
         <p class="prodcut-intro">{{prod.ProdIntro}}</p>
@@ -21,15 +21,27 @@
   export default {
     components: { ProductImg },
     activated() {
-      this.prod = {}; // 清除上次数据
-      Data.get("/getProduct", { ProdID: this.$route.params.id }).then(res => {
+      this.prod = {};
+      let [prodId, curSku] = this.$route.params.id.split("-");
+      this.curSku = curSku;
+      Data.get("/getProduct", { ProdID: prodId }).then(res => {
         let prod = res.data;
         prod.Property = JSON.parse(prod.Property);
+        prod.SkuList.forEach(sku => {
+          sku.SkuImg = sku.SkuImg.split(",");
+        });
+        prod.imgData = {
+          imgs: prod.SkuList[0].SkuImg,
+          title: prod.ProdName,
+          curIndex: 0
+        };
         this.prod = prod;
       });
     },
     data() {
       return {
+        loading: true,
+        curSku: 0,
         prod: {}
       };
     }
