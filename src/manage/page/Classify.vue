@@ -1,11 +1,12 @@
 <template>
   <div class="classify">
     <div class="classify-header">
-      <el-button size="mini" type="primary" @click="addClassify">新增</el-button>
-      <el-button size="mini" class="m-right" type="primary" @click="beginSort">排序</el-button>
+      <i class="el-icon-plus" @click="addClassify"></i>
+      <i class="el-icon-sort" @click="beginSort"></i>
     </div>
     <div class="classify-list">
       <div class="class-item" v-for="(item,index) in classifys" :key="index">
+        <img :src="item.ClassImg" alt />
         <span class="item-name">{{item.ClassName}}</span>
         <i class="el-icon-delete" @click="delClassify(item,index)" />
         <i class="el-icon-edit" @click="editClassify(item)" />
@@ -28,7 +29,12 @@
         <el-button size="small" type="primary" @click="onSubmit">保存</el-button>
       </div>
     </el-dialog>
-    <sort :visible.sync="isSort" :list="sortList" @confirmSort="saveSort" />
+    <sort :visible.sync="isSort" :list="sortList" @confirmSort="saveSort" title="编辑分类">
+      <template v-slot:default="{data}">
+        <i class="el-icon-delete" @click="delClassify(data.item,data.index)" />
+        <i class="el-icon-edit" @click="editClassify(data.item)" />
+      </template>
+    </sort>
   </div>
 </template>
 
@@ -88,8 +94,8 @@
         this.isCreate = true;
       },
       delClassify(item, index) {
-        MessageBox.confirm(`确定要删除“${item.ClassName}”么？`).then(res => {
-          Data.post("/delClassify", { ClassID: item.ClassID }).then(res => {
+        MessageBox.confirm(`确定要删除“${item.Name}”么？`).then(res => {
+          Data.post("/delClassify", { ClassID: item.ID }).then(res => {
             Message.success("删除成功");
             this.classifys.splice(index, 1);
           });

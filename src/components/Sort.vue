@@ -1,6 +1,6 @@
 <template>
   <el-dialog
-    title="拖拽排序"
+    :title="title"
     :visible.sync="svisible"
     :before-close="cancelSort"
     width="600px"
@@ -10,6 +10,7 @@
       <div class="class-item" v-for="(item,index) in sortList" :key="index">
         <i class="el-icon-rank" />
         <span class="item-name">{{item.Name}}</span>
+        <slot :data="{item,index}"></slot>
       </div>
     </div>
     <div class="footer">
@@ -25,7 +26,11 @@
   export default {
     props: {
       visible: Boolean,
-      list: Array
+      list: Array,
+      title: {
+        type: String,
+        default: "拖拽排序"
+      }
     },
 
     computed: {
@@ -53,7 +58,7 @@
         this.$emit("update:visible", false);
       },
       saveSort() {
-        console.log(this.sortList)
+        console.log(this.sortList);
         let sortIds = this.sortList.map(item => item.ID);
         this.$emit("confirmSort", sortIds);
       }
