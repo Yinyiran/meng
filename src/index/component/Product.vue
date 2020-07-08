@@ -31,7 +31,7 @@
           sku.SkuImg = sku.SkuImg.split(",");
         });
         prod.imgData = {
-          imgs: prod.SkuList[0].SkuImg,
+          imgs: prod.SkuList[this.curSku].SkuImg,
           title: prod.ProdName,
           curIndex: 0
         };

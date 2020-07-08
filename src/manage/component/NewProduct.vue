@@ -135,7 +135,8 @@
           });
         } else {
           // 新建
-          this.row = JSON.parse(JSON.stringify(this.defalutRow));
+          let defaultRow = JSON.parse(JSON.stringify(this.defalutRow));
+          this.row = Object.assign({}, this.product, defaultRow);
         }
       }
     },
@@ -143,6 +144,11 @@
       getClassList() {
         Data.get("/getClassify").then(res => {
           this.classifys = res.data;
+          this.classifys.unshift({
+            ClassID: 0,
+            ClassImg: "",
+            ClassName: "全部"
+          });
         });
       },
       formatProps(props) {

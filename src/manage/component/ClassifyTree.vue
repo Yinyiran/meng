@@ -9,8 +9,8 @@
         class="class-item"
         v-for="(item,index) in classifys"
         :key="index"
-        :class="{active:curIndex===index}"
-        @click="change(item,index)"
+        :class="{active:value===item.ClassID}"
+        @click="change(item)"
       >
         <img class="item-img" :src="item.ClassImg" alt />
         <span class="item-name">{{item.ClassName}}</span>
@@ -32,7 +32,7 @@
           <el-input v-model="form.ClassName"></el-input>
         </el-form-item>
         <el-form-item label="分类图片">
-          <upload-file :imgs="form.ClassImg" size="50px" ref="UpFileRef"></upload-file>
+          <upload-file :imgs="form.ClassImg" size="50px" limit="1" ref="UpFileRef"></upload-file>
         </el-form-item>
       </el-form>
       <div class="footer">
@@ -54,13 +54,15 @@
   import Sort from "../../components/Sort.vue";
   import UploadFile from "../../components/UploadFile";
   export default {
+    props: {
+      value: Number
+    },
     data() {
       return {
         form: { ClassName: "", ClassImg: "" },
         isCreate: false,
         isSort: false,
         sortList: [],
-        curIndex: 0,
         classifys: []
       };
     },
@@ -68,20 +70,25 @@
     created() {
       this.getClassList();
     },
+    model: {
+      event: "input",
+      prop: "value"
+    },
     methods: {
       getClassList() {
         Data.get("/getClassify").then(res => {
           this.classifys = res.data;
           this.classifys.unshift({
             ClassID: 0,
+            ClassImg: "",
             ClassName: "全部"
           });
         });
       },
-      change(item, index) {
-        if (this.curIndex === index) return;
+      change(item) {
+        if (this.value === item.ClassID) return;
         this.$emit("change", item.ClassID);
-        this.curIndex = index;
+        this.$emit("input", item.ClassID);
       },
       addClassify() {
         this.form = { ClassName: "" };
@@ -123,7 +130,8 @@
         });
       },
       async onSubmit() {
-        this.form.ClassImg = await this.$refs.UpFileRef.upload();
+        let imgs = await this.$refs.UpFileRef.upload();
+        this.form.ClassImg = imgs.join();
         Data.post("/saveClassify", this.form).then(res => {
           // 更新数据
           if (this.form.ClassID) {
@@ -131,6 +139,7 @@
               item => item.ClassID === this.form.ClassID
             );
             classItem.ClassName = this.form.ClassName;
+            classItem.ClassImg = imgs;
           } else {
             Object.assign(this.form, res.data);
             this.classifys.push(this.form);
@@ -143,12 +152,16 @@
 </script>
 
 <style lang="less" scoped>
-  .classify-list {
-    margin-top: 15px;
+  @import url("../../assets/style/color.less");
+  .classify {
+    padding-top: 10px;
+  }
+  .classify-header {
+    padding: 10px;
+    border-bottom: 1px solid #e8e8e8;
   }
   .class-item {
-    margin-bottom: 6px;
-    padding: 6px 5px;
+    padding: 5px 10px;
     display: flex;
     cursor: pointer;
     font-size: 15px;
@@ -164,11 +177,12 @@
       }
     }
     &.active {
-      background-color: #e8e8e8;
+      background-color: #f5f5f5;
+      color: @active;
     }
     .item-img {
-      width: 20px;
-      height: 20px;
+      width: 30px;
+      height: 30px;
       vertical-align: middle;
       object-fit: cover;
     }
@@ -180,9 +194,9 @@
     }
 
     [class^="el-icon-"] {
-      padding: 4px;
+      padding: 3px;
       vertical-align: middle;
-      font-size: 12px;
+      font-size: 14px;
       vertical-align: top;
       cursor: pointer;
       &:hover {
@@ -192,6 +206,6 @@
   }
   .footer {
     text-align: right;
-    padding-top: 20px;
+    padding-top: 30px;
   }
 </style>

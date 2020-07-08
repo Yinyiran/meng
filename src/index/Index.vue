@@ -3,8 +3,7 @@
     <div class="menu-wrap">
       <span
         class="menu-item"
-        v-for="(item,index) in menu"
-        :class="{active:activeCrumb===index}"
+        v-for="item in menu"
         :key="item.key"
         @click="menuClick(item.key)"
       >{{item.Name}}</span>
@@ -24,7 +23,7 @@
         menu: [
           {
             Name: "首页",
-            key: "home"
+            key: ""
           },
           {
             Name: "产品",
@@ -90,8 +89,7 @@
     .menu-item {
       margin: 0 10px;
       cursor: pointer;
-      &:hover,
-      &.active {
+      &:hover {
         color: @active;
       }
     }

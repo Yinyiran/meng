@@ -1,8 +1,8 @@
 <template>
   <div class="m-products">
-    <classify-tree class="prod-tree" @change="getProdList" v-model="curClass" />
+    <classify-tree class="prod-tree" @change="getProdList" v-model="curClassId" />
     <div class="prod-wrap">
-      <div class="header">
+      <div class="prod-header">
         <el-button size="mini" type="primary" @click="addProd">新增产品</el-button>
       </div>
       <el-table :data="products">
@@ -34,7 +34,7 @@
         products: [],
         row: {},
         showAdd: false,
-        curClass: 0,
+        curClassId: 0,
         form: {}
       };
     },
@@ -65,7 +65,7 @@
         this.form = {
           ProdName: "",
           ProdIntro: "",
-          Classify: "",
+          Classify: this.curClassId,
           ProdStar: false,
           ProdContent: "",
           ProdImg: "",
@@ -102,16 +102,20 @@
   .m-products {
     display: flex;
     height: 100%;
+    margin: -20px -20px 0;
   }
   .prod-tree {
-    width: 200px;
-    padding-right: 10px;
+    width: 240px;
     border-right: 1px solid #e8e8e8;
   }
   .prod-wrap {
-    padding-left: 10px;
+    padding-top: 10px;
     width: 0;
     flex: 1;
+  }
+  .prod-header {
+    padding: 10px;
+    border-bottom: 1px solid #e8e8e8;
   }
   .el-input.el-input--small {
     width: 450px;

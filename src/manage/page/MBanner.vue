@@ -106,7 +106,8 @@
 
 <style lang="less" scoped>
   .header {
-    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e8e8e8;
   }
   .banner-img {
     width: 100%;
