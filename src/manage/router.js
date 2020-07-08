@@ -4,7 +4,6 @@ const MBanner = () => import('./page/MBanner.vue')
 const CompInfo = () => import('./page/CompInfo.vue')
 const MArticles = () => import('./page/MArticles.vue')
 const MProducts = () => import('./page/MProducts.vue')
-const Classify = () => import('./page/Classify.vue')
 const MImgs = () => import('./page/MImgs.vue')
 const About = () => import('./page/MAbout.vue')
 
@@ -39,11 +38,6 @@ const routes = [
     path: '/imgs',
     name: 'imgs',
     component: MImgs
-  },
-  {
-    path: '/classify',
-    name: 'classify',
-    component: Classify
   },
   {
     path: '/about',

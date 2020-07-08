@@ -1,22 +1,12 @@
 <template>
   <div class="m-products">
-    <div class="prod-tree">
-      <div class="tree-header">
-        <i class="el-icon-plus"></i>
-        <i class="el-icon-sort"></i>
-      </div>
-      <div class="tree-item" v-for="item in classifys" :key="item.ClassID">
-        <img :src="item.ClassImg" alt />
-        <span>{{item.ClassName}}</span>
-      </div>
-    </div>
+    <classify-tree class="prod-tree" @change="getProdList" v-model="curClass" />
     <div class="prod-wrap">
       <div class="header">
-        <el-button size="mini" type="primary" @click="addProd">新增</el-button>
+        <el-button size="mini" type="primary" @click="addProd">新增产品</el-button>
       </div>
       <el-table :data="products">
         <el-table-column label="产品名" prop="ProdName"></el-table-column>
-        <el-table-column label="所属分类" prop="Classify" width="150px"></el-table-column>
         <el-table-column label="星标" prop="ProdStarText" width="50px" align="center"></el-table-column>
         <el-table-column label="操作" width="100px" align="center">
           <span slot-scope="{row,$index}">
@@ -32,10 +22,11 @@
 <script>
   import UploadFile from "../../components/UploadFile.vue";
   import NewProduct from "../component/NewProduct.vue";
+  import ClassifyTree from "../component/ClassifyTree.vue";
   import { Data } from "../../service";
   import { Message, MessageBox } from "element-ui";
   export default {
-    components: { UploadFile, NewProduct },
+    components: { UploadFile, NewProduct, ClassifyTree },
     data() {
       return {
         classifys: [],
@@ -43,20 +34,25 @@
         products: [],
         row: {},
         showAdd: false,
+        curClass: 0,
         form: {}
       };
     },
     created() {
       this.getClassList();
-      Data.get("/getProdList").then(res => {
-        res.data.forEach(item => {
-          item.ProdStar = !!item.ProdStar;
-          item.ProdStarText = item.ProdStar ? "是" : "否";
-        });
-        this.products = res.data;
-      });
+      this.getProdList();
     },
     methods: {
+      getProdList(classid) {
+        let param = classid ? `?Classify=${classid}` : "";
+        Data.get(`/getProdList${param}`).then(res => {
+          res.data.forEach(item => {
+            item.ProdStar = !!item.ProdStar;
+            item.ProdStarText = item.ProdStar ? "是" : "否";
+          });
+          this.products = res.data;
+        });
+      },
       getClassList() {
         Data.get("/getClassify").then(res => {
           this.classifys = res.data;
@@ -105,13 +101,16 @@
 <style lang="less" scoped>
   .m-products {
     display: flex;
+    height: 100%;
   }
   .prod-tree {
-    background-color: #f1f1f1;
     width: 200px;
-    padding: 20px;
+    padding-right: 10px;
+    border-right: 1px solid #e8e8e8;
   }
   .prod-wrap {
+    padding-left: 10px;
+    width: 0;
     flex: 1;
   }
   .el-input.el-input--small {
