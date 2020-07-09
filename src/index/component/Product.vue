@@ -3,11 +3,25 @@
     <div class="info-wrap">
       <product-img class="product-img" :imgData="prod.imgData" size="50px" v-if="prod.imgData" />
       <div class="intro-wrap">
-        <div class="product-name">{{prod.ProdName}}</div>
+        <div class="product-name">{{prod.ProdName}}-{{curSku.SkuName}}</div>
         <p class="prodcut-intro">{{prod.ProdIntro}}</p>
         <div class="prop-item" v-for="(val,key) in prod.Property" :key="key">
           <span class="prop-key">{{key}}</span>
           <span class="prop-value">{{val}}</span>
+        </div>
+        <div class="prop-item" v-for="(val,key) in curSku.SkuProps" :key="key">
+          <span class="prop-key">{{key}}</span>
+          <span class="prop-value">{{val}}</span>
+        </div>
+        <div class="sku-list">
+          <div
+            class="sku-item"
+            v-for="(sku,index) in prod.SkuList"
+            :class="{active:curSku.SkuID === sku.SkuID}"
+            :key="sku.SkuID"
+          >
+            <img :src="sku.SkuImg[0]" width="40px" height="40px" @click="changeSku(index)" />
+          </div>
         </div>
       </div>
     </div>
@@ -23,15 +37,16 @@
     activated() {
       this.prod = {};
       let [prodId, curSku] = this.$route.params.id.split("-");
-      this.curSku = curSku;
       Data.get("/getProduct", { ProdID: prodId }).then(res => {
         let prod = res.data;
         prod.Property = JSON.parse(prod.Property);
         prod.SkuList.forEach(sku => {
           sku.SkuImg = sku.SkuImg.split(",");
+          sku.SkuProps = JSON.parse(sku.SkuProps);
         });
+        this.curSku = prod.SkuList[curSku];
         prod.imgData = {
-          imgs: prod.SkuList[this.curSku].SkuImg,
+          imgs: this.curSku.SkuImg,
           title: prod.ProdName,
           curIndex: 0
         };
@@ -41,9 +56,19 @@
     data() {
       return {
         loading: true,
-        curSku: 0,
+        curSku: {},
         prod: {}
       };
+    },
+    methods: {
+      changeSku(index) {
+        this.curSku = this.prod.SkuList[index];
+        this.prod.imgData = {
+          imgs: this.curSku.SkuImg,
+          title: this.prod.ProdName,
+          curIndex: 0
+        };
+      }
     }
   };
 </script>
@@ -62,7 +87,7 @@
   }
   .intro-wrap {
     padding-top: 40px;
-    padding-left: 20px;
+    padding-left: 40px;
   }
   .product-name {
     font-size: 28px;
@@ -72,7 +97,18 @@
     color: #999;
     margin-bottom: 30px;
   }
-
+  .sku-list {
+    display: flex;
+    padding: 10px;
+    .sku-item {
+      margin: 0 10px;
+      border: 1px solid #e8e8e8;
+      cursor: pointer;
+      &.active {
+        border: 1px solid red;
+      }
+    }
+  }
   .product-intro {
     padding-left: 20px;
     flex: 1;
@@ -80,7 +116,7 @@
   .prop-item {
     display: flex;
     line-height: 1.5;
-    padding: 10px;
+    padding: 10px 0;
     border-bottom: 1px solid #eee;
   }
   .prop-key {

@@ -2,7 +2,7 @@
   <div class="classify">
     <div class="classify-header">
       <el-button size="mini" @click="addClassify">新增分类</el-button>
-      <!-- <el-button size="mini" type="primary" @click="beginSort">编辑</el-button> -->
+      <el-button size="mini" @click="beginSort">排序</el-button>
     </div>
     <div class="classify-list">
       <div
@@ -40,11 +40,7 @@
         <el-button size="small" type="primary" @click="onSubmit">保存</el-button>
       </div>
     </el-dialog>
-    <!-- <sort :visible.sync="isSort" :list="sortList" @confirmSort="saveSort" title="编辑分类">
-      <template v-slot:default="{data}">
-        <i class="el-icon-delete" @click="delClassify(data.item,data.index)" />
-      </template>
-    </sort>-->
+    <sort :visible.sync="isSort" :list="sortList" @confirmSort="saveSort" title="分类排序"></sort>
   </div>
 </template>
 
@@ -96,7 +92,8 @@
       },
       async beginSort() {
         this.isSort = true;
-        this.sortList = this.classifys.map(item => {
+        let list = this.classifys.filter(item => item.ClassID !== 0);
+        this.sortList = list.map(item => {
           return {
             ID: item.ClassID,
             Name: item.ClassName

@@ -77,7 +77,7 @@
         <i class="el-icon-close" v-show="row.SkuList.length>1" @click="deleSku(sku,index)"></i>
       </div>
       <el-form-item label="内容描述">
-        <editor v-model="row.ProdContent"></editor>
+        <editor v-model="row.ProdContent" height="300"></editor>
       </el-form-item>
       <div class="footer">
         <el-button size="small" @click="cancel">取消</el-button>

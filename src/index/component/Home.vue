@@ -4,7 +4,7 @@
       <el-carousel indicator-position="none" :autoplay="false" height="360px">
         <el-carousel-item v-for="item in sliders" :key="item.BanID">
           <div class="img-wrap">
-            <img class="banner-img" :src="item.BanImg" @click="openDetail(item)" />
+            <img class="banner-img" :src="item.BanImg" @click="openBanDetail(item)" />
           </div>
         </el-carousel-item>
       </el-carousel>
@@ -23,7 +23,7 @@
         class="prod-wrap"
         v-for="(prod,index) in products"
         :key="index"
-        @click="openProdPage(prod.ProdID,index)"
+        @click="openProdPage(prod.ProdID,prod.imgData.curIndex)"
       >
         <product-img :imgData="prod.imgData" :info="true" />
       </div>
@@ -99,7 +99,7 @@
       miniChange(imgIndex, prodIndex) {
         this.$refs.carousel[prodIndex].setActiveItem(imgIndex);
       },
-      openDetail(item) {
+      openBanDetail(item) {
         if (item.BanType === 1) this.openProdPage(item.BanTargID, 0);
         else this.openArtPage(item.BanTargID);
       },

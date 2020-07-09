@@ -11,6 +11,10 @@
       value: {
         type: String,
         default: ""
+      },
+      height: {
+        type: String,
+        default: "480"
       }
     },
     model: {
@@ -35,7 +39,7 @@
         editContent: this.value,
         ApiKey: "kbv4la3hq4ypkqzsoxoip3y28xqv5ld9ntu099hzgcj0mxrp",
         editConfig: {
-          height: 300,
+          height: Number(this.height),
           language: "zh_CN",
           plugins: [
             "advlist autolink lists link image charmap print preview anchor",
@@ -45,17 +49,17 @@
           images_upload_base_path: ServeHost,
           images_upload_credentials: true,
           toolbar: `undo redo | formatselect fontsizeselect | bold italic fontsizes forecolor backcolor underline strikethrough  |
-                          formats blockformats fontformats | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent |
-                          removeformat | link image table | preview`,
+                    formats blockformats fontformats | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent |
+                    removeformat | link image table | preview`,
           images_upload_handler: (blobInfo, success, failure) => {
             let formData = new FormData();
             formData.append("file", blobInfo.blob(), blobInfo.filename());
             // Data.post("/uploadFile",formData);
-            UpLoadFile(formData).then(res=>{
-              res.data.forEach(url=>{
-                success(url)
-              })
-            })
+            UpLoadFile(formData).then(res => {
+              res.data.forEach(url => {
+                success(url);
+              });
+            });
             // success("/resource/img/2020-06-03/1591175209134.jpg");
           }
           // setup: editor => {
