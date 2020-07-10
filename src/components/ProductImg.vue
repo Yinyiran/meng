@@ -37,6 +37,11 @@
       info: Boolean,
       size: String
     },
+    watch: {
+      imgData(val) {
+        this.$refs.carousel.setActiveItem(0);
+      }
+    },
     methods: {
       carChange(index) {
         this.imgData.curIndex = index;

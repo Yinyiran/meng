@@ -1,5 +1,6 @@
 <template>
   <div>
+    <span>设置关于我们：</span>
     <el-select v-model="targetID" class="select-wrap" :placeholder="`请选择文章`" clearable>
       <el-option
         v-for="item in targOptions"

@@ -11,14 +11,24 @@ const routes = [
     component: Home
   },
   {
+    path: '/products',
+    name: 'products',
+    component: () => import('./component/Products.vue')
+  },
+  {
+    path: '/articles',
+    name: 'articles',
+    component: () => import('./component/Articles.vue')
+  },
+  {
     path: '/product/:id',
-    name: 'Product',
-    component: () => import(/* webpackChunkName: "about" */ './component/Product.vue')
+    name: 'productPage',
+    component: () => import('./component/ProductPage.vue')
   },
   {
     path: '/article/:id',
-    name: 'article',
-    component: () => import(/* webpackChunkName: "about" */ './component/Article.vue')
+    name: 'articlePage',
+    component: () => import('./component/ArticlePage.vue')
   }
 ]
 

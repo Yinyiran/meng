@@ -9,15 +9,16 @@
         </el-carousel-item>
       </el-carousel>
     </div>
-    <div class="menu-wrap">
+    <!-- <div class="menu-wrap">
       <span
         class="menu-item"
         v-for="(item,index) in classify"
         :class="{active:activeClass===index}"
         :key="index"
       >{{item.ClassName}}</span>
-    </div>
+    </div> -->
     <!-- 产品 -->
+    <div class="main-title">PRODUCTS</div>
     <div class="products">
       <div
         class="prod-wrap"
@@ -28,6 +29,7 @@
         <product-img :imgData="prod.imgData" :info="true" />
       </div>
     </div>
+    <div class="main-title">PRODUCTS</div>
     <div class="article">
       <div
         class="arti-item"
@@ -70,10 +72,10 @@
       Data.get("/getBanner").then(res => {
         this.sliders = res.data;
       });
-      Data.get("/getClassify").then(res => {
-        this.classify = res.data;
-        this.classify.unshift({ ClassID: 0, ClassName: "全部" });
-      });
+      // Data.get("/getClassify").then(res => {
+      //   this.classify = res.data;
+      //   this.classify.unshift({ ClassID: 0, ClassName: "全部" });
+      // });
       Data.get("/getArticle", { isStar: 1 }).then(res => {
         this.articles = res.data;
       });
@@ -119,7 +121,7 @@
   .main-title {
     text-align: center;
     font-size: 24px;
-    margin: 30px 0;
+    padding: 40px 0;
   }
   .menu-wrap {
     display: flex;

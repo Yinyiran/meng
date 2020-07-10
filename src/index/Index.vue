@@ -1,11 +1,13 @@
 <template>
   <div id="app">
     <div class="menu-wrap">
+      <img class="comp-logo" :src="compLogo" width="30px" height="30px" />
       <span
         class="menu-item"
         v-for="item in menu"
-        :key="item.key"
-        @click="menuClick(item.key)"
+        :key="item.route"
+        :class="{active:item.route === activeRoute}"
+        @click="menuClick(item.route)"
       >{{item.Name}}</span>
     </div>
     <keep-alive>
@@ -20,26 +22,23 @@
     data() {
       return {
         activeCrumb: 0,
+        compLogo: "",
         menu: [
           {
             Name: "首页",
-            key: ""
+            route: "/"
           },
           {
             Name: "产品",
-            key: "product"
+            route: "/products"
           },
           {
             Name: "客户案例",
-            key: "artcle"
-          },
-          {
-            Name: "联系我们",
-            key: "contact"
+            route: "/articles"
           },
           {
             Name: "关于我们",
-            key: "about"
+            route: "/about"
           }
         ]
       };
@@ -47,20 +46,26 @@
     created() {
       this.getCompInfo();
     },
+    computed: {
+      activeRoute() {
+        return this.$route.path;
+      }
+    },
     methods: {
-      menuClick(key) {
-        switch (key) {
-          case "about":
+      menuClick(route) {
+        switch (route) {
+          case "/about":
             this.openArtPage(this.AboutID);
             break;
-
           default:
+            if (this.$route.path !== route) this.$router.push(route);
             break;
         }
       },
       getCompInfo() {
         Data.get("/getCompInfo", { CompID: 10000 }).then(res => {
           this.AboutID = res.data.AboutID;
+          this.compLogo = res.data.CompLogo;
         });
         screen;
       },
@@ -84,12 +89,22 @@
     border-bottom: 1px solid @border;
     display: flex;
     justify-content: center;
+    align-items: center;
     font-size: 14px;
-    padding: 20px;
+    padding: 10px 20px;
+    .comp-logo {
+      margin-right: 30px;
+      width: 30px;
+      height: 30px;
+      vertical-align: middle;
+      object-fit: cover;
+    }
     .menu-item {
+      vertical-align: middle;
       margin: 0 10px;
       cursor: pointer;
-      &:hover {
+      &:hover,
+      &.active {
         color: @active;
       }
     }
