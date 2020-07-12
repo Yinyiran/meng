@@ -39,7 +39,9 @@
     },
     watch: {
       imgData(val) {
-        this.$refs.carousel.setActiveItem(0);
+        this.$nextTick(() => {
+          if (this.$refs.carousel) this.$refs.carousel.setActiveItem(0);
+        });
       }
     },
     methods: {

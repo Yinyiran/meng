@@ -9,27 +9,10 @@
         </el-carousel-item>
       </el-carousel>
     </div>
-    <!-- <div class="menu-wrap">
-      <span
-        class="menu-item"
-        v-for="(item,index) in classify"
-        :class="{active:activeClass===index}"
-        :key="index"
-      >{{item.ClassName}}</span>
-    </div> -->
     <!-- 产品 -->
     <div class="main-title">PRODUCTS</div>
-    <div class="products">
-      <div
-        class="prod-wrap"
-        v-for="(prod,index) in products"
-        :key="index"
-        @click="openProdPage(prod.ProdID,prod.imgData.curIndex)"
-      >
-        <product-img :imgData="prod.imgData" :info="true" />
-      </div>
-    </div>
-    <div class="main-title">PRODUCTS</div>
+    <product-list :list="products"/>
+    <div class="main-title">ARTICLE</div>
     <div class="article">
       <div
         class="arti-item"
@@ -53,11 +36,11 @@
 
 <script>
   import "../../element/Carousel";
-  import ProductImg from "../../components/ProductImg";
+  import ProductList from "../component/ProductList";
   import { Data } from "../../service";
   export default {
     name: "App",
-    components: { ProductImg },
+    components: { ProductList },
     data() {
       return {
         sliders: [],
@@ -72,25 +55,10 @@
       Data.get("/getBanner").then(res => {
         this.sliders = res.data;
       });
-      // Data.get("/getClassify").then(res => {
-      //   this.classify = res.data;
-      //   this.classify.unshift({ ClassID: 0, ClassName: "全部" });
-      // });
       Data.get("/getArticle", { isStar: 1 }).then(res => {
         this.articles = res.data;
       });
       Data.get("/getProdList", { ProdStar: 1 }).then(res => {
-        res.data.forEach(prod => {
-          prod.SkuList.forEach(sku => {
-            sku.SkuImg = sku.SkuImg.split(",");
-          });
-          let imgs = prod.SkuList.map(item => item.SkuImg[0]);
-          prod.imgData = {
-            imgs: imgs,
-            title: prod.ProdName,
-            curIndex: 0
-          };
-        });
         this.products = res.data;
       });
     },
@@ -123,20 +91,6 @@
     font-size: 24px;
     padding: 40px 0;
   }
-  .menu-wrap {
-    display: flex;
-    justify-content: center;
-    font-size: 16px;
-    padding: 20px;
-    .menu-item {
-      margin: 0 10px;
-      cursor: pointer;
-      &:hover,
-      &.active {
-        color: @active;
-      }
-    }
-  }
   .banner-wrap {
     position: relative;
     height: 360px;
@@ -152,33 +106,6 @@
       width: 100%;
 
       object-fit: contain;
-    }
-  }
-  .products {
-    display: flex;
-    flex-wrap: wrap;
-    border-top: 1px solid @border;
-    background-color: #f9f9f9;
-    position: relative;
-    &::after {
-      position: absolute;
-      content: "";
-      height: 0;
-      bottom: 0;
-      width: 100%;
-      border-top: 1px solid #dfdfdf;
-    }
-    .prod-wrap {
-      position: relative;
-      width: 25%;
-      border-right: 1px solid @border;
-      border-bottom: 1px solid @border;
-      background-color: #f9f9f9;
-      transition: 0.25s;
-      box-sizing: border-box;
-      &:hover {
-        background-color: #fff;
-      }
     }
   }
 
