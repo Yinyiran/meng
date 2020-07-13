@@ -38,7 +38,7 @@
 <style lang="less" scoped>
   @import url("../../assets/style/color.less");
   .article-item {
-    padding: 30px 0;
+    padding: 20px 0;
     border-bottom: 1px solid #e8e8e8;
     display: flex;
     cursor: pointer;
@@ -50,7 +50,7 @@
   }
   .article-cover {
     width: 300px;
-    height: 200px;
+    height: 150px;
     object-fit: cover;
     border: 1px solid #e8e8e8;
   }
@@ -62,7 +62,7 @@
       font-weight: bold;
     }
     .article-intro {
-      margin-top: 30px;
+      margin-top: 20px;
       font-size: 14px;
       color: #7a7a7a;
     }

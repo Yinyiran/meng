@@ -20,7 +20,9 @@
     methods: {
       getArticle() {
         this.article = {}; // 清除上次数据
-        Data.get("/getArticle", { id: this.$route.params.id }).then(res => {
+        console.log(this.$route);
+        let { params, query } = this.$route;
+        Data.get("/getArticle", { id: params.id || query.id }).then(res => {
           this.article = res.data[0];
         });
       }
@@ -36,6 +38,6 @@
   .intro {
     color: #888;
     font-size: 12px;
-    padding-bottom: 20px ;
+    padding-bottom: 20px;
   }
 </style>

@@ -4,7 +4,7 @@
       <div class="carousel-item">
         <el-carousel ref="carousel" @change="carChange" indicator-position="none" :autoplay="false">
           <el-carousel-item v-for="(img,index) in imgData.imgs" :key="index">
-            <img width="100%" :src="img" alt />
+            <img class="carousel-img" :src="img" alt />
           </el-carousel-item>
         </el-carousel>
       </div>
@@ -70,8 +70,13 @@
     height: 0;
     position: relative;
   }
+  .carousel-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
   .img-wrap {
-    margin-top: 15px;
+    margin-top: 20px;
   }
   .img-mini {
     display: inline-block;

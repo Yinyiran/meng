@@ -53,13 +53,11 @@
     },
     methods: {
       menuClick(route) {
-        switch (route) {
-          case "/about":
-            this.openArtPage(this.AboutID);
-            break;
-          default:
-            if (this.$route.path !== route) this.$router.push(route);
-            break;
+        if (this.$route.path !== route) {
+          if (route === "/about") {
+            route += `?id=${this.AboutID}`;
+          }
+          this.$router.push(route);
         }
       },
       getCompInfo() {
