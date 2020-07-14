@@ -97,3 +97,65 @@ console.log(s1 === s2)
 
 // 策略模式
 // 策略模式的定义：定义一系列的算法，把他们一个个封装起来，并且使他们可以互相替换
+// 一个基于策略模式的程序至少由两部分组成。第一部分是一组策略类（可变），策略类封装了具体的算法，并负责具体的计算过程。第二部分是环境类Context（不变），Context接受客户的请求，随后将请求委托给某一个策略类。要做到这一点，说明Context中要维持对某个策略对象的引用
+// 创建校验器
+// 例子：场景是这样的，某个电商网站希望举办一个活动，通过打折促销来销售库存物品，有的商品满 100 见 30，有的商品满 200 见 80，有的商品直接8折出售
+const priceCalculate = (function () {
+  const DiscountMap = {
+    minus100_30(price) {
+      return price - Math.floor(price / 100) * 30
+    },
+    minus200_80(price) {
+      return price - Math.floor(price / 200) * 80
+    },
+    percent80(price) {
+      return price * 0.8
+    }
+  }
+  return function (type, price) {
+    if (DiscountMap[type]) {
+      return DiscountMap[type](price)
+    } else {
+      throw `DiscountMap is not exist "${type}"`
+    }
+  }
+})()
+
+let countA = priceCalculate("minus100_30", 270)
+let countB = priceCalculate("percent80", 270)
+console.log(countA)
+console.log(countB)
+
+
+
+// 代理模式
+// 代理模式的定义：为一个对象提供一个代用品或占位符，以便控制它的访问
+// 某一个花销很大的操作，可以通过虚拟代理的方式延迟这种需要他的时候才去创建（例：使用虚拟代理实现图片懒加载）
+
+const imgFn = (() => {
+  const imgNode = document.createElement("img")
+  document.body.appendChild(imgNode);
+  return {
+    setSrc(src) {
+      imgNode.src = src
+    }
+  }
+})();
+
+const proxyImage = (() => {
+  let img = new Image();
+  img.onload = () => {
+    imgFn.setSrc(this.src)
+  }
+  return {
+    setSrc(src) {
+      imgFn.setSrc("./loading.jpg")
+      img.src = src
+    }
+  }
+})()
+
+proxyImage.setSrc("./pic.png")
+
+
+// 装饰器模式
