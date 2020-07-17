@@ -159,3 +159,53 @@ proxyImage.setSrc("./pic.png")
 
 
 // 装饰器模式
+
+
+// 外观模式
+// 即在内部让多个方法一起被调用
+// 涉及到兼容性，参数支持多格式，有很多这种代码，对外暴露统一API，比如上面的$on支持数组，$off参数支持多种情况，对面只用一个函数，内部判断实现
+// 封装一些事件，让其兼容各个浏览器
+const myEvent = {
+  stopBubble(e) {
+    if (typeof e.preventDefault() === 'function') {
+      e.preventDefault()
+    }
+    if (typeof e.stopPropagation() === 'function') {
+      e.stopPropagation()
+    }
+    // for IE
+    if (typeof e.returnValue === 'boolean') {
+      e.returnValue = false
+    }
+    if (typeof e.cancelBubble === 'boolean') {
+      e.cancelBubble = false
+    }
+  },
+  addEvent(dom, type, cb) {
+    if (dom.addEventListener) {
+      dom.addEventListener(type, cb, false)
+    } else if (dom.attachEvent) {
+      dom.attachEvent('on' + type, cb)
+    } else {
+      dom['on' + type] = cb
+    }
+  }
+}
+// 以上就用外观模式封装了两个基本事件，让其兼容各种浏览器，调用者不需要知道内部的构造，只要知道这个方法怎么用就行了。
+
+
+// 工厂模式
+// 定义：提供创建对象的接口，把成员对象的创建工作转交给一个外部对象，好处就是消除对象直接的耦合（也就是相互影响）
+class Man {
+  constructor(name) {
+    this.name = name
+  }
+  say() {
+    console.log(`我的名字 ` + this.name)
+  }
+}
+const p = new Man('JavaScript')
+p.say() // 我的名字 JavaScript
+
+
+// https://www.toutiao.com/a6806638758180422158/
