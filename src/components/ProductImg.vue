@@ -1,13 +1,11 @@
 <template>
   <div class="product-img">
     <template v-if="imgData.imgs.length>1">
-      <div class="carousel-item">
-        <el-carousel ref="carousel" @change="carChange" indicator-position="none" :autoplay="false">
-          <el-carousel-item v-for="(img,index) in imgData.imgs" :key="index">
-            <img class="carousel-img" :src="img" alt />
-          </el-carousel-item>
-        </el-carousel>
-      </div>
+      <el-carousel ref="carousel" @change="carChange" indicator-position="none" :autoplay="false">
+        <el-carousel-item v-for="(img,index) in imgData.imgs" :key="index">
+          <img class="carousel-img" :src="img" alt />
+        </el-carousel-item>
+      </el-carousel>
       <div class="img-wrap" @click.stop>
         <img
           class="img-mini"
@@ -60,15 +58,7 @@
 
   .product-img {
     text-align: center;
-    margin-top: 15px;
     width: 100%;
-  }
-
-  .carousel-item {
-    cursor: pointer;
-    padding-bottom: 100%;
-    height: 0;
-    position: relative;
   }
   .carousel-img {
     width: 100%;
@@ -97,14 +87,12 @@
   }
   .prod-item {
     cursor: pointer;
-    padding-bottom: 100%;
-    height: 0;
+    height: 300px;
     position: relative;
   }
   .prod-img {
-    position: absolute;
-    left: 0;
-    right: 0;
     width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
 </style>

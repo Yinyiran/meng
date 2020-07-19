@@ -21,5 +21,9 @@ module.exports = {
       entry: "src/manage.js",
       title: 'manage',
     },
+    login: {
+      entry: "src/login.js",
+      title: 'login',
+    },
   },
 }

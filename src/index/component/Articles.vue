@@ -1,9 +1,14 @@
 <template>
   <div class="articles">
-    <div class="article-item" v-for="art in articls" :key="art.ArtID">
+    <div
+      class="article-item"
+      v-for="art in articls"
+      :key="art.ArtID"
+      @click="openArticle(art.ArtID)"
+    >
       <img class="article-cover" :src="art.ArtCover" alt />
       <div class="article-info">
-        <div class="article-title" @click="openArticle(art.ArtID)">{{art.ArtTitle}}</div>
+        <div class="article-title">{{art.ArtTitle}}</div>
         <div class="article-title">{{art.ModifyDate}}</div>
         <div class="article-intro">{{art.ArtIntro}}</div>
       </div>

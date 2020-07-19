@@ -10,9 +10,22 @@
         @click="menuClick(item.route)"
       >{{item.Name}}</span>
     </div>
-    <keep-alive>
-      <router-view />
-    </keep-alive>
+    <div class="content">
+      <keep-alive>
+        <router-view />
+      </keep-alive>
+    </div>
+    <div class="footer">
+      <span>
+        <span
+          class="menu-item"
+          v-for="item in contacts"
+          :key="item.Name"
+          @click="contactClick(item)"
+        >{{item.Name}}</span>
+      </span>
+      <span></span>
+    </div>
   </div>
 </template>
 
@@ -23,6 +36,7 @@
       return {
         activeCrumb: 0,
         compLogo: "",
+        wechatQR: "",
         menu: [
           {
             Name: "首页",
@@ -39,6 +53,28 @@
           {
             Name: "关于我们",
             route: "/about"
+          }
+        ],
+        contacts: [
+          {
+            Name: "WeChat",
+            icon: "",
+            url: ""
+          },
+          {
+            Name: "Facebook",
+            icon: "",
+            url: ""
+          },
+          {
+            Name: "Twitter",
+            icon: "",
+            url: ""
+          },
+          {
+            Name: "Youtube",
+            icon: "",
+            url: ""
           }
         ]
       };
@@ -60,12 +96,22 @@
           this.$router.push(route);
         }
       },
+      contactClick(item) {
+        if (item.Name === "WeChat") {
+          window.open(this.wechatQR);
+        } else {
+          window.open(`https://${item.url}`);
+        }
+      },
       getCompInfo() {
         Data.get("/getCompInfo", { CompID: 10000 }).then(res => {
           this.AboutID = res.data.AboutID;
           this.compLogo = res.data.CompLogo;
+          this.wechatQR = res.data.CompLogo;
+          this.contacts.forEach(item => {
+            item.url = res.data[item.Name];
+          });
         });
-        screen;
       },
       openArtPage(artId) {
         this.$router.push(`/article/${artId}`);
@@ -81,30 +127,45 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     color: #2c3e50;
-    position: relative;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    height: 100%;
+    flex-direction: column;
   }
   .menu-wrap {
     border-bottom: 1px solid @border;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 14px;
-    padding: 10px 20px;
+    padding: 15px;
     .comp-logo {
       margin-right: 30px;
-      width: 30px;
       height: 30px;
       vertical-align: middle;
       object-fit: cover;
     }
-    .menu-item {
-      vertical-align: middle;
-      margin: 0 10px;
-      cursor: pointer;
-      &:hover,
-      &.active {
-        color: @active;
-      }
+  }
+  .menu-item {
+    vertical-align: middle;
+    margin: 0 15px;
+    cursor: pointer;
+    &:hover,
+    &.active {
+      color: @active;
     }
+  }
+  .content {
+    flex: 1;
+  }
+  .footer {
+    display: flex;
+    justify-content: center;
+    border-top: 1px solid @border;
+    margin-top: 40px;
+    padding: 30px 40px;
   }
 </style>

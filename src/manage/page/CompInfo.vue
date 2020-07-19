@@ -1,5 +1,11 @@
 <template>
   <el-form ref="formRef" :model="form" label-width="100px" size="small">
+    <el-form-item label="账号">
+      <el-input v-model="form.UserName"></el-input>
+    </el-form-item>
+    <el-form-item label="密码">
+      <el-input v-model="form.PassWord"></el-input>
+    </el-form-item>
     <el-form-item label="企业名称">
       <el-input v-model="form.CompName"></el-input>
     </el-form-item>
@@ -9,17 +15,17 @@
     <el-form-item label="手机">
       <el-input v-model="form.Mobile"></el-input>
     </el-form-item>
-    <el-form-item label="电话">
-      <el-input v-model="form.Telephone"></el-input>
-    </el-form-item>
-    <el-form-item label="微信">
-      <el-input v-model="form.WeChat"></el-input>
-    </el-form-item>
     <el-form-item label="微信二维码">
-      <el-input v-model="form.WeChatQR"></el-input>
+      <upload-file limit="1" :imgs="form.WeChatQR" ref="UpFileRef2"></upload-file>
     </el-form-item>
     <el-form-item label="Facebook">
-      <el-input v-model="form.Facebook"></el-input>
+      <el-input v-model="form.Facebook" placeholder="facebook 地址"></el-input>
+    </el-form-item>
+    <el-form-item label="Twitter">
+      <el-input v-model="form.Twitter" placeholder="twitter 地址"></el-input>
+    </el-form-item>
+    <el-form-item label="Youtube">
+      <el-input v-model="form.Youtube" placeholder="Youtube 地址"></el-input>
     </el-form-item>
     <div class="footer">
       <el-button size="small">取消</el-button>
@@ -50,20 +56,27 @@
     },
     created() {
       Data.get("/getCompInfo", { CompID: 10000 }).then(res => {
-        let logo = res.data.CompLogo;
-        res.data.CompLogo.split(",");
         this.form = res.data;
       });
     },
     methods: {
       async onSubmit() {
-        this.form.CompLogo = await this.$refs.UpFileRef.upload();
+        console.log(this.$refs);
+        let promiseArr = [
+          this.$refs.UpFileRef.upload(),
+          this.$refs.UpFileRef2.upload()
+        ];
+        const [logo, wechatQr] = await Promise.all(promiseArr);
+        this.form.CompLogo = logo;
+        this.form.WeChatQR = wechatQr;
         let Obj = Object.assign({}, this.form);
         let params = Object.assign(Obj, {
           CompID: 10000,
-          CompLogo: this.form.CompLogo.toString()
+          CompLogo: this.form.CompLogo.toString(),
+          WeChatQR: this.form.WeChatQR.toString()
         });
         Data.post(`/saveCompInfo`, params).then(res => {
+          console.log(res);
           Message.success("保存成功！");
         });
       }

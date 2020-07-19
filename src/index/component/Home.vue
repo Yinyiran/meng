@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div>
     <div class="banner-wrap">
       <el-carousel indicator-position="none" :autoplay="false" height="360px">
         <el-carousel-item v-for="item in sliders" :key="item.BanID">
@@ -25,11 +25,6 @@
         </div>
         <div class="arti-title">{{item.ArtTitle}}</div>
       </div>
-    </div>
-    <div class="footer">
-      <div class="footer-item">电话:15692390339</div>
-      <div class="footer-item">微信</div>
-      <div class="footer-item">在线客服</div>
     </div>
   </div>
 </template>
@@ -138,19 +133,12 @@
       width: 100%;
     }
     .arti-title {
-      margin-top: 10px;
+      margin-top: 20px;
+      line-height: 1.5;
+      color: #999;
     }
   }
 
-  .footer {
-    display: flex;
-    height: 200px;
-    justify-content: center;
-    align-items: center;
-    .footer-item {
-      margin: 30px;
-    }
-  }
   .el-carousel {
     position: absolute;
     top: 0;

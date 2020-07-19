@@ -59,16 +59,16 @@
   .classify-item {
     margin: 20px;
     text-decoration: none;
-    width: 100px;
     text-align: center;
+    padding: 20px;
     cursor: pointer;
     &:hover {
       box-shadow: 0 0 10px 5px #e1e1e1;
     }
   }
   .classify-img {
-    width: 100%;
-    height: 60px;
+    width: 200px;
+    height: 150px;
     object-fit: cover;
   }
   .classify-name {
