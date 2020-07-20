@@ -6,6 +6,7 @@ const MArticles = () => import('./page/MArticles.vue')
 const MProducts = () => import('./page/MProducts.vue')
 const MImgs = () => import('./page/MImgs.vue')
 const About = () => import('./page/MAbout.vue')
+const Login = () => import('./page/Login.vue')
 
 Vue.use(VueRouter)
 
@@ -13,6 +14,11 @@ const routes = [
   {
     path: '/',
     redirect: "/compinfo",
+  },
+  {
+    path: '/login',
+    name: 'login',
+    component: Login,
   },
   {
     path: '/compinfo',
@@ -50,6 +56,11 @@ const router = new VueRouter({
   routes
 })
 router.beforeEach((to, from, next) => {
-  next()
+  if (!sessionStorage.getItem("userid") && to.name !== "login") {
+    router.push("/login")
+    next();
+  } else {
+    next()
+  }
 })
 export default router

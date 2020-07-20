@@ -15,15 +15,11 @@ module.exports = {
   pages: {
     index: {
       entry: "src/index.js",
-      title: 'index',
+      title: '莱蒂斯酒具有限公司',
     },
     manage: {
       entry: "src/manage.js",
-      title: 'manage',
-    },
-    login: {
-      entry: "src/login.js",
-      title: 'login',
-    },
+      title: '管理页面',
+    }
   },
 }

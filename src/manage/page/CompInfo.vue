@@ -28,7 +28,7 @@
       <el-input v-model="form.Youtube" placeholder="Youtube 地址"></el-input>
     </el-form-item>
     <div class="footer">
-      <el-button size="small">取消</el-button>
+      <!-- <el-button size="small">取消</el-button> -->
       <el-button size="small" type="primary" @click="onSubmit">确定修改</el-button>
     </div>
   </el-form>

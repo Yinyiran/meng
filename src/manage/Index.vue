@@ -1,6 +1,6 @@
 <template>
   <div id="manage">
-    <ul class="menu">
+    <ul class="menu" v-if="showMenu">
       <li
         class="menu-item"
         v-for="menu in menus"
@@ -52,6 +52,11 @@
     methods: {
       changeMenu(item) {
         this.$router.push(item.router);
+      }
+    },
+    computed: {
+      showMenu() {
+        return this.$route.name !== "login";
       }
     },
     watch: {
