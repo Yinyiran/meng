@@ -76,7 +76,6 @@
           WeChatQR: this.form.WeChatQR.toString()
         });
         Data.post(`/saveCompInfo`, params).then(res => {
-          console.log(res);
           Message.success("保存成功！");
         });
       }

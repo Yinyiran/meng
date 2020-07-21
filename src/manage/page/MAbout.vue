@@ -43,7 +43,7 @@
       saveAbout() {
         let param = {
           CompID: 10000,
-          AboutID: this.targetID
+          AboutID: this.targetID || null
         };
         Data.post(`/saveCompInfo`, param).then(res => {
           Message.success("保存成功！");
