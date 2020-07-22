@@ -1,6 +1,6 @@
 import Data from "./data"
 
-export const ServeHost = process.env.NODE_ENV === "production" ? "api.yunyiran.com" : "//127.0.0.1:7001"
+export const ServeHost = process.env.NODE_ENV === "production" ? "" : "//127.0.0.1:7001"
 
 // 封装获取 cookie 的方法
 export function GetCookie(name) {
