@@ -26,7 +26,7 @@
     mounted() {
       Data.get("/getFiles?type=img").then(res => {
         res.data.sort((a, b) => {
-          let reg = /\/([^\/]+)\..+$/g; // "resource/img/2020-05-17/1589680887039.jpg";
+          let reg = /\/([^\/]+)\..+$/g; //文件名字截取;
           a.match(reg);
           let aname = RegExp.$1;
           b.match(reg);

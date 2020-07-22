@@ -4,8 +4,7 @@
 
 <script>
   import Tinymce from "@tinymce/tinymce-vue";
-  import { ServeHost, UpLoadFile } from "../service/util";
-  import { Data } from "../service";
+  import { ServeHost, UpLoadFile, Data } from "../service";
   export default {
     props: {
       value: {
@@ -49,8 +48,8 @@
           images_upload_base_path: ServeHost,
           images_upload_credentials: true,
           toolbar: `undo redo | formatselect fontsizeselect | bold italic fontsizes forecolor backcolor underline strikethrough  |
-                    formats blockformats fontformats | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent |
-                    removeformat | link image table | preview`,
+                        formats blockformats fontformats | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent |
+                        removeformat | link image table | preview`,
           images_upload_handler: (blobInfo, success, failure) => {
             let formData = new FormData();
             formData.append("file", blobInfo.blob(), blobInfo.filename());

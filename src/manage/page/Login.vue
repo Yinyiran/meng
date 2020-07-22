@@ -4,10 +4,10 @@
       <div class="title">登 录</div>
       <el-form ref="formRef" class="art-editor" :model="loginForm" label-width="40px" size="mini">
         <el-form-item label="账号">
-          <el-input v-model="loginForm.UserName" autofocus></el-input>
+          <el-input v-model="loginForm.UserName" @keyup.enter.native="loginWeb" autofocus></el-input>
         </el-form-item>
         <el-form-item label="密码">
-          <el-input v-model="loginForm.PassWord" type="password"></el-input>
+          <el-input v-model="loginForm.PassWord" @keyup.enter.native="loginWeb" type="password"></el-input>
         </el-form-item>
       </el-form>
       <el-button type="primary" size="mini" @click="loginWeb">登陆</el-button>

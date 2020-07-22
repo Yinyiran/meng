@@ -20,8 +20,7 @@
 <script>
   import ImgItem from "../components/ImgItem";
   import { Message } from "element-ui";
-  import { UploadAccept, Data } from "../service";
-  import { UpLoadFile, TypeOf } from "../service/util";
+  import { UploadAccept, Data ,UpLoadFile, TypeOf } from "../service";
   import { MD5 } from "crypto-js";
 
   export default {
