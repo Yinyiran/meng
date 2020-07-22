@@ -31,7 +31,6 @@
 <script>
   import Editor from "../../components/Editor";
   import UploadFile from "../../components/UploadFile";
-  import { Message } from "element-ui";
   import { Data } from "../../service";
   export default {
     props: { article: Object, show: Boolean },
@@ -57,7 +56,7 @@
           ArtContent
         };
         Data.post("/saveArticle", param).then(res => {
-          Message.success("保存成功！");
+          this.$message.success("保存成功！");
           if (!param.ArtID) param.ArtID = res.data.insertId; // 新建添加ArtID
           param.ArtCover = cover;
           param.ArtStarText = param.ArtStar ? "是" : "否";

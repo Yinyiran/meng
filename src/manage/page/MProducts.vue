@@ -24,7 +24,6 @@
   import NewProduct from "../component/NewProduct.vue";
   import ClassifyTree from "../component/ClassifyTree.vue";
   import { Data } from "../../service";
-  import { Message, MessageBox } from "element-ui";
   export default {
     components: { UploadFile, NewProduct, ClassifyTree },
     data() {
@@ -85,10 +84,10 @@
         this.showAdd = true;
       },
       delProd(row, index) {
-        MessageBox.confirm(`确定要删除产品${row.ProdName}么？`, "提示").then(
+        this.$messagebox.confirm(`确定要删除产品${row.ProdName}么？`, "提示").then(
           () => {
             let path = Data.post("/delProducts", { ID: row.ProdID }).then(res => {
-              Message.success("删除成功");
+              this.$message.success("删除成功");
               this.products.splice(index, 1);
             });
           }

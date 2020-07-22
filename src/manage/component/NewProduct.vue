@@ -90,7 +90,6 @@
 <script>
   import Editor from "../../components/Editor";
   import UploadFile from "../../components/UploadFile";
-  import { Message } from "element-ui";
   import { Data } from "../../service";
   export default {
     props: { product: Object, visible: Boolean },
@@ -210,7 +209,7 @@
           SkuList: skuParmas
         };
         Data.post("/saveProduct", param).then(res => {
-          Message.success("保存成功！");
+          this.$message.success("保存成功！");
           if (!param.ProdID) param.ProdID = res.data.insertId; // 新建添加ArtID
           this.$emit("saveSuccess", param);
         });

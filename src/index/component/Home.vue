@@ -30,7 +30,6 @@
 </template>
 
 <script>
-  import "../../element/Carousel";
   import ProductList from "../component/ProductList";
   import { Data } from "../../service";
   export default {

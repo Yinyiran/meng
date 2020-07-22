@@ -2,7 +2,7 @@ import Vue from "vue"
 import {
   Input, Button, Form, FormItem,
   Option, Select, Carousel, CarouselItem,
-  Checkbox, Radio, Dialog, Table, TableColumn
+  Checkbox, Radio, Dialog, Table, TableColumn, Message, MessageBox
 } from "element-ui"
 
 Vue.use(Input)
@@ -18,3 +18,6 @@ Vue.use(Radio)
 Vue.use(Dialog)
 Vue.use(Table)
 Vue.use(TableColumn)
+
+Vue.prototype.$message = Message;
+Vue.prototype.$messagebox = MessageBox;

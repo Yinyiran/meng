@@ -20,7 +20,6 @@
 
 <script>
   import { Data } from "../../service";
-  import { MessageBox, Message } from "element-ui";
   import NewArticle from "../component/NewArticle.vue";
   export default {
     components: { NewArticle },
@@ -63,10 +62,10 @@
         this.showAdd = false;
       },
       delArticle(row, index) {
-        MessageBox.confirm("确定要删除这条新闻么？", { type: "warning" }).then(
+        this.$messagebox.confirm("确定要删除这条新闻么？", { type: "warning" }).then(
           res => {
             Data.post("/delArticle", { ArtID: row.ArtID }).then(res => {
-              Message.success("删除成功！");
+              this.$message.success("删除成功！");
               this.articles.splice(index, 1);
             });
           }

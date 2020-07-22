@@ -46,7 +46,6 @@
 
 <script>
   import { Data } from "../../service";
-  import { MessageBox, Message } from "element-ui";
   import Sort from "../../components/Sort.vue";
   import UploadFile from "../../components/UploadFile";
   export default {
@@ -102,7 +101,7 @@
       },
       saveSort(list) {
         Data.post("/sortClassify", list).then(res => {
-          Message.success("保存成功");
+          this.$message.success("保存成功");
           this.isSort = false;
           this.getClassList();
         });
@@ -119,9 +118,9 @@
         this.isCreate = true;
       },
       delClassify(item, index) {
-        MessageBox.confirm(`确定要删除“${item.ClassName}”么？`).then(res => {
+        this.$messagebox.confirm(`确定要删除“${item.ClassName}”么？`).then(res => {
           Data.post("/delClassify", { ClassID: item.ClassID }).then(res => {
-            Message.success("删除成功");
+            this.$message.success("删除成功");
             this.classifys.splice(index, 1);
           });
         });

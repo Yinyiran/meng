@@ -17,7 +17,6 @@
 
 <script>
   import { Data } from "../../service";
-  import { Message } from "element-ui";
   export default {
     data() {
       return {
@@ -28,11 +27,11 @@
       loginWeb() {
         Data.post("/login", this.loginForm)
           .then(res => {
-            sessionStorage.setItem("userid","loginSuccess")
-            this.$router.push("/compinfo").catch(()=>{});
+            sessionStorage.setItem("userid", "loginSuccess");
+            this.$router.push("/compinfo").catch(() => {});
           })
           .catch(res => {
-            Message.error("账号或密码错误，请重新尝试！");
+            this.$message.error("账号或密码错误，请重新尝试！");
           });
       }
     }

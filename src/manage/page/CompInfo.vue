@@ -36,7 +36,6 @@
 <script>
   import UploadFile from "../../components/UploadFile.vue";
   import { Data } from "../../service";
-  import { Message } from "element-ui";
 
   export default {
     components: { UploadFile },
@@ -76,7 +75,7 @@
           WeChatQR: this.form.WeChatQR.toString()
         });
         Data.post(`/saveCompInfo`, params).then(res => {
-          Message.success("保存成功！");
+          this.$message.success("保存成功！");
         });
       }
     }

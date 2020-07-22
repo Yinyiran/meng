@@ -44,7 +44,6 @@
 <script>
   import UploadFile from "../../components/UploadFile";
   import { Data, BanType } from "../../service/";
-  import { Message } from "element-ui";
   export default {
     props: {
       banner: Object,
@@ -111,7 +110,7 @@
         params.BanType = Number(this.form.BanType);
         delete params.BanTypeText;
         Data.post("/saveBanner", params).then(res => {
-          Message.success("保存成功");
+          this.$message.success("保存成功");
           let Obj = Object.assign(params, {
             BanID: this.form.BanID || res.data.insertId,
             BanImg: img

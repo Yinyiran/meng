@@ -27,7 +27,6 @@
   import { Data, BanType } from "../../service";
   import NewBanner from "../component/NewBanner";
   import Sort from "../../components/Sort";
-  import { Message, MessageBox } from "element-ui";
   export default {
     components: { Sort, NewBanner },
     created() {
@@ -68,11 +67,11 @@
         this.isCreate = true;
       },
       deleBan(row, index) {
-        MessageBox.confirm("确定要删除这个轮播图么？", { type: "warning" }).then(
+        this.$messagebox.confirm("确定要删除这个轮播图么？", { type: "warning" }).then(
           res => {
             Data.post("/delBanner", { id: row.BanID }).then(res => {
               this.banners.splice(index, 1);
-              Message.success("删除成功");
+              this.$message.success("删除成功");
             });
           }
         );
@@ -95,7 +94,7 @@
       },
       saveSort(list) {
         Data.post("/sortBanner", list).then(res => {
-          Message.success("保存成功");
+          this.$message.success("保存成功");
           this.isSort = false;
           this.getBanner();
         });

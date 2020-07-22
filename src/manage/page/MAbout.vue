@@ -15,7 +15,6 @@
 
 <script>
   import { Data } from "../../service";
-  import { Message } from "element-ui";
   export default {
     data() {
       return {
@@ -46,7 +45,7 @@
           AboutID: this.targetID || null
         };
         Data.post(`/saveCompInfo`, param).then(res => {
-          Message.success("保存成功！");
+          this.$message.success("保存成功！");
         });
       }
     }

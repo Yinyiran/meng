@@ -17,7 +17,6 @@
 </template>
 
 <script>
-  import { Message, MessageBox } from "element-ui";
   import ImgItem from "../../components/ImgItem";
   import UploadFile from "../../components/UploadFile";
   import { Data } from "../../service";
@@ -44,9 +43,9 @@
     },
     methods: {
       deleImg(src) {
-        MessageBox.confirm("确定要删除这个图片么？", "提示").then(() => {
+        this.$messagebox.confirm("确定要删除这个图片么？", "提示").then(() => {
           let path = Data.post("/deleteFile", { FilePath: src }).then(res => {
-            Message.success("删除成功");
+            this.$message.success("删除成功");
             let index = this.imgPaths.indexOf(src);
             this.imgPaths.splice(index, 1);
           });
@@ -61,7 +60,7 @@
           let exist = this.imgPaths.includes(img);
           if (!exist) this.imgPaths.unshift(img);
         });
-        Message.success("上传成功!");
+        this.$message.success("上传成功!");
         this.showUpDlg = false;
       }
     }

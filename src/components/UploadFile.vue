@@ -19,8 +19,7 @@
 
 <script>
   import ImgItem from "../components/ImgItem";
-  import { Message } from "element-ui";
-  import { UploadAccept, Data ,UpLoadFile, TypeOf } from "../service";
+  import { UploadAccept, Data, UpLoadFile, TypeOf } from "../service";
   import { MD5 } from "crypto-js";
 
   export default {
@@ -135,7 +134,7 @@
           if (
             [].some.call(files, v => Math.round(v.size / 1024) > this.limitSize)
           ) {
-            Message.warning("图片大小最大支持2M");
+            this.$message.warning("图片大小最大支持2M");
           } else {
             files.forEach((file, index) => {
               let url = URL.createObjectURL(file);
@@ -147,7 +146,7 @@
             });
           }
         } else {
-          Message.warning(`图片超过最大数量（${this.limit}个）`);
+          this.$message.warning(`图片超过最大数量（${this.limit}个）`);
         }
       },
       removeImg(src) {
