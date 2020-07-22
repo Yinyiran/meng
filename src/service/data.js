@@ -1,6 +1,6 @@
 import Axios from "axios"
 import { GetCookie } from "./util"
-const Host = process.env.NODE_ENV === "production" ? "api.yunyiran.com" : ""
+const Host = process.env.NODE_ENV === "production" ? "http://api.yunyiran.com" : ""
 const Data = {
   get(url, params, config) {
     return Axios.get(`${Host}/api${url}`, { params }, config)
