@@ -12,47 +12,48 @@ Vue.use(VueRouter)
 
 const routes = [
   {
-    path: '/',
-    redirect: "/compinfo",
+    path: '/manage',
+    redirect: "/manage/compinfo",
   },
   {
-    path: '/login',
+    path: '/manage/login',
     name: 'login',
     component: Login,
   },
   {
-    path: '/compinfo',
+    path: '/manage/compinfo',
     name: 'compinfo',
     component: CompInfo
   },
   {
-    path: '/banner',
+    path: '/manage/banner',
     name: 'banner',
     component: MBanner
   },
   {
-    path: '/article',
+    path: '/manage/article',
     name: 'article',
     component: MArticles
   },
   {
-    path: '/products',
+    path: '/manage/products',
     name: 'products',
     component: MProducts
   },
   {
-    path: '/imgs',
+    path: '/manage/imgs',
     name: 'imgs',
     component: MImgs
   },
   {
-    path: '/about',
+    path: '/manage/about',
     name: 'about',
     component: About
-  },
+  }
 ]
 
 const router = new VueRouter({
+  mode: 'history',
   routes
 })
 router.beforeEach((to, from, next) => {

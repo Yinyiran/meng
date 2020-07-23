@@ -24,46 +24,48 @@
         menus: [
           {
             name: "企业信息",
-            router: "compinfo"
+            router: "compinfo",
           },
           {
             name: "首页轮播",
-            router: "banner"
+            router: "banner",
           },
           {
             name: "产品管理",
-            router: "products"
+            router: "products",
           },
           {
             name: "新闻管理",
-            router: "article"
+            router: "article",
           },
           {
             name: "图片中心",
-            router: "imgs"
+            router: "imgs",
           },
           {
             name: "关于我们",
-            router: "about"
-          }
-        ]
+            router: "about",
+          },
+        ],
       };
     },
     methods: {
       changeMenu(item) {
-        this.$router.push(item.router);
-      }
+        if (item.router !== this.active) {
+          this.$router.push(`/manage/${item.router}`);
+        }
+      },
     },
     computed: {
       showMenu() {
         return this.$route.name !== "login";
-      }
+      },
     },
     watch: {
       $route(val) {
         this.active = val.name;
-      }
-    }
+      },
+    },
   };
 </script>
 <style lang="less">
