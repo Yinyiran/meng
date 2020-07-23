@@ -30,12 +30,11 @@ module.exports = {
           vueBase: {
             name: 'vueBase',
             test: /vue|vue-router/,
-            chunks: 'initial',
+            chunks: 'all',
             priority: 2,
           },
           commons: {
             name: 'chunk-common',
-            chunks: 'initial',
             priority: 1,
             minChunks: 2
           }
