@@ -1,5 +1,6 @@
 let isProd = process.env.NODE_ENV === 'production'
 module.exports = {
+  productionSourceMap: false,
   devServer: {
     port: 8888,
     proxy: {
@@ -23,24 +24,22 @@ module.exports = {
       title: '管理页面',
     }
   },
-//   configureWebpack: isProd ? {
-//     optimization: {
-//       splitChunks: {
-//         cacheGroups: {
-//           vueBase: {
-//             name: 'vueBase',
-//             test: /vue|vue-router/,
-//             chunks: 'all',
-//             priority: 2,
-//           },
-//           commons: {
-//             name: 'chunk-common',
-//             priority: 1,
-//             minChunks: 2
-//           }
-//         }
-//       }
-//     }
-//   } : {},
-
+  configureWebpack: isProd ? {
+    optimization: {
+      splitChunks: {
+        cacheGroups: {
+          vueBase: {
+            name: 'vueBase',
+            test: /vue|vue-router/,
+            chunks: 'all',
+          },
+          commons: {
+            name: 'chunk-common',
+            chunks: 'initial',
+            minChunks: 2
+          }
+        }
+      }
+    }
+  } : {},
 }
