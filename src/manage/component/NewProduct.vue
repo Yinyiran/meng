@@ -4,10 +4,17 @@
       {{title}}
       <el-button class="m-right" size="small" @click="cancel">返回</el-button>
     </div>
-    <el-form ref="formRef" class="art-editor" :model="row" label-width="80px" size="mini">
+    <el-form
+      ref="formRef"
+      class="art-editor"
+      :model="row"
+      label-width="80px"
+      size="mini"
+      @submit.native.prevent
+    >
       <div class="form-wrap">
         <el-form-item label="产品名称">
-          <el-input v-model="row.ProdName"></el-input>
+          <el-input v-model="row.ProdName" ref="prodNameRef" clearable></el-input>
         </el-form-item>
         <el-form-item label="是否星标">
           <el-checkbox v-model="row.ProdStar"></el-checkbox>
@@ -15,7 +22,7 @@
       </div>
       <div class="form-wrap">
         <el-form-item label="产品简介">
-          <el-input type="textarea" v-model="row.ProdIntro"></el-input>
+          <el-input type="textarea" v-model="row.ProdIntro" clearable></el-input>
         </el-form-item>
         <el-form-item label="所属分类">
           <el-select v-model="row.Classify" placeholder="请选择所属分类" clearable>
@@ -35,9 +42,9 @@
               <span class="add-prop-btn" @click="addProp">添加属性</span>
             </div>
             <div class="prop-item" v-for="(item,index) in row.Property" :key="index">
-              <el-input class="prop-input" v-model="item.key" placeholder></el-input>
+              <el-input class="prop-input" v-model="item.key" placeholder clearable></el-input>
               <span class="prop-separator">:</span>
-              <el-input class="prop-input" v-model="item.value"></el-input>
+              <el-input class="prop-input" v-model="item.value" clearable></el-input>
               <i class="el-icon-remove-outline dele-prop-btn" @click="deleProp(index)"></i>
             </div>
           </div>
@@ -50,7 +57,7 @@
       <div class="sku-item" v-for="(sku,index) in row.SkuList" :key="index">
         <div class="form-wrap">
           <el-form-item label="SKU名称">
-            <el-input v-model="sku.SkuName"></el-input>
+            <el-input v-model="sku.SkuName" clearable></el-input>
           </el-form-item>
           <el-form-item label="是否首位">
             <el-radio v-model="skuIndex" :label="index">{{skuIndex === index?"是":"否"}}</el-radio>
@@ -60,9 +67,9 @@
           <el-form-item label="SKU属性">
             <div class="prop-wrap">
               <div class="prop-item" v-for="(item,i) in sku.SkuProps" :key="i">
-                <el-input class="prop-input" v-model="item.key" placeholder></el-input>
+                <el-input class="prop-input" v-model="item.key" placeholder clearable></el-input>
                 <span class="prop-separator">:</span>
-                <el-input class="prop-input" v-model="item.value"></el-input>
+                <el-input class="prop-input" v-model="item.value" clearable></el-input>
                 <i class="el-icon-remove-outline dele-prop-btn" @click="deleSkuProp(sku,i)"></i>
               </div>
               <div class="prop-item">
@@ -97,7 +104,7 @@
     computed: {
       title() {
         return this.product.ProdID ? "编辑" : "新建" + "产品";
-      }
+      },
     },
     created() {
       this.getClassList();
@@ -111,18 +118,18 @@
             {
               SkuName: "",
               SkuImg: [],
-              SkuProps: [{ key: "", value: "" }]
-            }
-          ]
+              SkuProps: [{ key: "", value: "" }],
+            },
+          ],
         },
         classifys: [],
-        skuIndex: 0
+        skuIndex: 0,
       };
     },
     watch: {
       visible(val) {
         if (val && this.product.ProdID) {
-          Data.get("/getProduct", { ProdID: this.product.ProdID }).then(res => {
+          Data.get("/getProduct", { ProdID: this.product.ProdID }).then((res) => {
             res.data.Property = this.formatProps(res.data.Property);
             res.data.ProdStar = !!res.data.ProdStar;
             res.data.SkuList.forEach((sku, index) => {
@@ -137,16 +144,19 @@
           let defaultRow = JSON.parse(JSON.stringify(this.defalutRow));
           this.row = Object.assign({}, this.product, defaultRow);
         }
-      }
+        this.$nextTick(() => {
+          this.$refs.prodNameRef.focus();
+        });
+      },
     },
     methods: {
       getClassList() {
-        Data.get("/getClassify").then(res => {
+        Data.get("/getClassify").then((res) => {
           this.classifys = res.data;
           this.classifys.unshift({
             ClassID: 0,
             ClassImg: "",
-            ClassName: "全部"
+            ClassName: "全部",
           });
         });
       },
@@ -168,7 +178,7 @@
         this.row.SkuList.push({
           SkuName: "",
           SkuImg: [],
-          SkuProps: [{ key: "", value: "" }]
+          SkuProps: [{ key: "", value: "" }],
         });
       },
       deleSku(sku, index) {
@@ -206,9 +216,9 @@
           ProdContent: this.row.ProdContent,
           ProdStar: this.row.ProdStar ? 1 : 0,
           Property: this.getStrKeyVal(this.row.Property),
-          SkuList: skuParmas
+          SkuList: skuParmas,
         };
-        Data.post("/saveProduct", param).then(res => {
+        Data.post("/saveProduct", param).then((res) => {
           this.$message.success("保存成功！");
           if (!param.ProdID) param.ProdID = res.data.insertId; // 新建添加ArtID
           this.$emit("saveSuccess", param);
@@ -216,12 +226,12 @@
       },
       getStrKeyVal(list) {
         let property = {};
-        list.forEach(item => {
+        list.forEach((item) => {
           if (item.key) property[item.key] = item.value;
         });
         return JSON.stringify(property);
-      }
-    }
+      },
+    },
   };
 </script>
 

@@ -78,7 +78,7 @@
             this.imgList = [].concat(val);
             break;
           default:
-            console.error("图片展示组件传入的格式不正确", val);
+            this.$message.error("图片展示组件传入的格式不正确", val);
         }
       },
       async upload() {

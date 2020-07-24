@@ -6,9 +6,9 @@
     width="800px"
     :append-to-body="true"
   >
-    <el-form :model="form" label-width="100px" size="mini">
+    <el-form :model="form" label-width="100px" size="mini" @submit.native.prevent>
       <el-form-item label="轮播名称">
-        <el-input v-model="form.BanName"></el-input>
+        <el-input v-model="form.BanName" ref="banNameRef" clearable></el-input>
       </el-form-item>
       <el-form-item label="轮播类型">
         <el-select v-model="form.BanType" placeholder="请选择类型" @change="changeType">
@@ -47,27 +47,30 @@
   export default {
     props: {
       banner: Object,
-      visible: Boolean
+      visible: Boolean,
     },
     components: { UploadFile },
     computed: {
       typeText() {
         return this.form.BanType == 1 ? "链接的产品" : "链接的新闻";
-      }
+      },
     },
     data() {
       return {
         typeOptions: BanType,
         targOptions: [],
         form: {},
-        cacheOptions: {}
+        cacheOptions: {},
       };
     },
     watch: {
       visible(val) {
         this.form = Object.assign({}, this.banner);
         if (val) this.getTargList();
-      }
+        this.$nextTick(() => {
+          this.$refs.banNameRef.focus();
+        });
+      },
     },
     methods: {
       changeType() {
@@ -80,8 +83,8 @@
           this.targOptions = this.cacheOptions[typeNum];
         } else {
           let url = typeNum == 1 ? "/getProdList" : "/getArticle";
-          Data.get(url).then(res => {
-            this.targOptions = res.data.map(item => {
+          Data.get(url).then((res) => {
+            this.targOptions = res.data.map((item) => {
               if (typeNum === 1) {
                 return { label: item.ProdName, value: item.ProdID };
               } else {
@@ -109,16 +112,16 @@
         params.BanImg = img.toString();
         params.BanType = Number(this.form.BanType);
         delete params.BanTypeText;
-        Data.post("/saveBanner", params).then(res => {
+        Data.post("/saveBanner", params).then((res) => {
           this.$message.success("保存成功");
           let Obj = Object.assign(params, {
             BanID: this.form.BanID || res.data.insertId,
-            BanImg: img
+            BanImg: img,
           });
           this.$emit("saveSuccess", Obj);
         });
-      }
-    }
+      },
+    },
   };
 </script>
 

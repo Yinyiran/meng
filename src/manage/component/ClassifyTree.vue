@@ -27,9 +27,9 @@
       width="400px"
       :append-to-body="true"
     >
-      <el-form :model="form" label-width="80px" size="small">
+      <el-form :model="form" label-width="80px" size="small" @keyup.stop>
         <el-form-item label="分类名称">
-          <el-input v-model="form.ClassName"></el-input>
+          <el-input ref="classNameRef" v-model="form.ClassName" clearable></el-input>
         </el-form-item>
         <el-form-item label="分类图片">
           <upload-file :imgs="form.ClassImg" size="50px" limit="1" ref="UpFileRef"></upload-file>
@@ -50,7 +50,7 @@
   import UploadFile from "../../components/UploadFile";
   export default {
     props: {
-      value: Number
+      value: Number,
     },
     data() {
       return {
@@ -58,7 +58,7 @@
         isCreate: false,
         isSort: false,
         sortList: [],
-        classifys: []
+        classifys: [],
       };
     },
     components: { Sort, UploadFile },
@@ -67,16 +67,16 @@
     },
     model: {
       event: "input",
-      prop: "value"
+      prop: "value",
     },
     methods: {
       getClassList() {
-        Data.get("/getClassify").then(res => {
+        Data.get("/getClassify").then((res) => {
           this.classifys = res.data;
           this.classifys.unshift({
             ClassID: 0,
             ClassImg: "",
-            ClassName: "全部"
+            ClassName: "全部",
           });
         });
       },
@@ -87,20 +87,26 @@
       },
       addClassify() {
         this.form = { ClassName: "" };
+        this.showClassDialog();
+      },
+      showClassDialog() {
         this.isCreate = true;
+        this.$nextTick(() => {
+          this.$refs.classNameRef.focus();
+        });
       },
       async beginSort() {
         this.isSort = true;
-        let list = this.classifys.filter(item => item.ClassID !== 0);
-        this.sortList = list.map(item => {
+        let list = this.classifys.filter((item) => item.ClassID !== 0);
+        this.sortList = list.map((item) => {
           return {
             ID: item.ClassID,
-            Name: item.ClassName
+            Name: item.ClassName,
           };
         });
       },
       saveSort(list) {
-        Data.post("/sortClassify", list).then(res => {
+        Data.post("/sortClassify", list).then((res) => {
           this.$message.success("保存成功");
           this.isSort = false;
           this.getClassList();
@@ -115,24 +121,26 @@
       },
       editClassify(item) {
         Object.assign(this.form, item);
-        this.isCreate = true;
+        this.showClassDialog();
       },
       delClassify(item, index) {
-        this.$messagebox.confirm(`确定要删除“${item.ClassName}”么？`).then(res => {
-          Data.post("/delClassify", { ClassID: item.ClassID }).then(res => {
-            this.$message.success("删除成功");
-            this.classifys.splice(index, 1);
+        this.$messagebox
+          .confirm(`确定要删除“${item.ClassName}”么？`)
+          .then((res) => {
+            Data.post("/delClassify", { ClassID: item.ClassID }).then((res) => {
+              this.$message.success("删除成功");
+              this.classifys.splice(index, 1);
+            });
           });
-        });
       },
       async onSubmit() {
         let imgs = await this.$refs.UpFileRef.upload();
         this.form.ClassImg = imgs.join();
-        Data.post("/saveClassify", this.form).then(res => {
+        Data.post("/saveClassify", this.form).then((res) => {
           // 更新数据
           if (this.form.ClassID) {
             let classItem = this.classifys.find(
-              item => item.ClassID === this.form.ClassID
+              (item) => item.ClassID === this.form.ClassID
             );
             classItem.ClassName = this.form.ClassName;
             classItem.ClassImg = imgs;
@@ -142,8 +150,8 @@
           }
           this.isCreate = false;
         });
-      }
-    }
+      },
+    },
   };
 </script>
 

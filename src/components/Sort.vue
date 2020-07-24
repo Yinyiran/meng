@@ -58,7 +58,6 @@
         this.$emit("update:visible", false);
       },
       saveSort() {
-        console.log(this.sortList);
         let sortIds = this.sortList.map(item => item.ID);
         this.$emit("confirmSort", sortIds);
       }

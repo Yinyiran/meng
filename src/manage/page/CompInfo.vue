@@ -1,31 +1,31 @@
 <template>
-  <el-form ref="formRef" :model="form" label-width="100px" size="small">
+  <el-form ref="formRef" :model="form" label-width="100px" size="small" @submit.native.prevent>
     <el-form-item label="账号">
-      <el-input v-model="form.UserName"></el-input>
+      <el-input v-model="form.UserName" clearable></el-input>
     </el-form-item>
     <el-form-item label="密码">
-      <el-input v-model="form.PassWord"></el-input>
+      <el-input v-model="form.PassWord" clearable></el-input>
     </el-form-item>
     <el-form-item label="企业名称">
-      <el-input v-model="form.CompName"></el-input>
+      <el-input v-model="form.CompName" clearable></el-input>
     </el-form-item>
     <el-form-item label="企业Logo">
       <upload-file limit="1" :imgs="form.CompLogo" ref="UpFileRef"></upload-file>
     </el-form-item>
     <el-form-item label="手机">
-      <el-input v-model="form.Mobile"></el-input>
+      <el-input v-model="form.Mobile" clearable></el-input>
     </el-form-item>
     <el-form-item label="微信二维码">
       <upload-file limit="1" :imgs="form.WeChatQR" ref="UpFileRef2"></upload-file>
     </el-form-item>
     <el-form-item label="Facebook">
-      <el-input v-model="form.Facebook" placeholder="facebook 地址"></el-input>
+      <el-input v-model="form.Facebook" placeholder="facebook 地址" clearable></el-input>
     </el-form-item>
     <el-form-item label="Twitter">
-      <el-input v-model="form.Twitter" placeholder="twitter 地址"></el-input>
+      <el-input v-model="form.Twitter" placeholder="twitter 地址" clearable></el-input>
     </el-form-item>
     <el-form-item label="Youtube">
-      <el-input v-model="form.Youtube" placeholder="Youtube 地址"></el-input>
+      <el-input v-model="form.Youtube" placeholder="Youtube 地址" clearable></el-input>
     </el-form-item>
     <div class="footer">
       <!-- <el-button size="small">取消</el-button> -->
@@ -49,21 +49,20 @@
           Telephone: "",
           WeChat: "",
           WeChatQR: "",
-          Facebook: ""
-        }
+          Facebook: "",
+        },
       };
     },
     created() {
-      Data.get("/getCompInfo", { CompID: 10000 }).then(res => {
+      Data.get("/getCompInfo", { CompID: 10000 }).then((res) => {
         this.form = res.data;
       });
     },
     methods: {
       async onSubmit() {
-        console.log(this.$refs);
         let promiseArr = [
           this.$refs.UpFileRef.upload(),
-          this.$refs.UpFileRef2.upload()
+          this.$refs.UpFileRef2.upload(),
         ];
         const [logo, wechatQr] = await Promise.all(promiseArr);
         this.form.CompLogo = logo;
@@ -72,13 +71,13 @@
         let params = Object.assign(Obj, {
           CompID: 10000,
           CompLogo: this.form.CompLogo.toString(),
-          WeChatQR: this.form.WeChatQR.toString()
+          WeChatQR: this.form.WeChatQR.toString(),
         });
-        Data.post(`/saveCompInfo`, params).then(res => {
+        Data.post(`/saveCompInfo`, params).then((res) => {
           this.$message.success("保存成功！");
         });
-      }
-    }
+      },
+    },
   };
 </script>
 

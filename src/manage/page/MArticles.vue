@@ -14,7 +14,7 @@
         </span>
       </el-table-column>
     </el-table>
-    <new-article :article="row" @saveSuccess="saveSuccess" :show.sync="showAdd"></new-article>
+    <new-article :article="row" @saveSuccess="saveSuccess" :visible.sync="showAdd"></new-article>
   </div>
 </template>
 

@@ -20,7 +20,6 @@
     methods: {
       getArticle() {
         this.article = {}; // 清除上次数据
-        console.log(this.$route);
         let { params, query } = this.$route;
         Data.get("/getArticle", { id: params.id || query.id }).then(res => {
           this.article = res.data[0];

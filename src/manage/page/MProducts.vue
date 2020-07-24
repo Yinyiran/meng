@@ -57,9 +57,6 @@
           this.classifys = res.data;
         });
       },
-      treeClick(data) {
-        console.log(data);
-      },
       addProd() {
         this.form = {
           ProdName: "",
