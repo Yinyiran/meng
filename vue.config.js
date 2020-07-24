@@ -23,24 +23,24 @@ module.exports = {
       title: '管理页面',
     }
   },
-  configureWebpack: isProd ? {
-    optimization: {
-      splitChunks: {
-        cacheGroups: {
-          vueBase: {
-            name: 'vueBase',
-            test: /vue|vue-router/,
-            chunks: 'all',
-            priority: 2,
-          },
-          commons: {
-            name: 'chunk-common',
-            priority: 1,
-            minChunks: 2
-          }
-        }
-      }
-    }
-  } : {},
+//   configureWebpack: isProd ? {
+//     optimization: {
+//       splitChunks: {
+//         cacheGroups: {
+//           vueBase: {
+//             name: 'vueBase',
+//             test: /vue|vue-router/,
+//             chunks: 'all',
+//             priority: 2,
+//           },
+//           commons: {
+//             name: 'chunk-common',
+//             priority: 1,
+//             minChunks: 2
+//           }
+//         }
+//       }
+//     }
+//   } : {},
 
 }

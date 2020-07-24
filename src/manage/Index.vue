@@ -52,7 +52,7 @@
     methods: {
       changeMenu(item) {
         if (item.router !== this.active) {
-          this.$router.push(`/manage/${item.router}`);
+          this.$router.push(`${item.router}`);
         }
       },
     },
