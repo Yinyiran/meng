@@ -21,7 +21,7 @@
     data() {
       return {
         classify: [],
-        products: []
+        products: [],
       };
     },
     created() {
@@ -33,18 +33,18 @@
         let prodsPr = Data.get("/getProdList");
         Promise.all([classPr, prodsPr]).then(([classifys, products]) => {
           let classProds = {};
-          products.data.forEach(prod => {
+          products.data.forEach((prod) => {
             let pl = classProds[prod.Classify];
             if (pl) pl.push(prod);
             else classProds[prod.Classify] = [prod];
           });
-          classifys.data.forEach(item => {
+          classifys.data.forEach((item) => {
             item.Products = classProds[item.ClassID] || [];
           });
           this.classify = classifys.data;
         });
-      }
-    }
+      },
+    },
   };
 </script>
 
@@ -55,9 +55,10 @@
   }
   .classify {
     display: flex;
+    padding: 20px 0;
   }
   .classify-item {
-    margin: 20px;
+    margin: 5px;
     text-decoration: none;
     text-align: center;
     padding: 20px;
