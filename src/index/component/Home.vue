@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="banner-wrap">
-      <el-carousel indicator-position="none" :autoplay="false" height="360px">
+      <el-carousel indicator-position="none" :autoplay="false" height="100%">
         <el-carousel-item v-for="item in sliders" :key="item.BanID">
           <div class="img-wrap">
             <img class="banner-img" :src="item.BanImg" @click="openBanDetail(item)" />
@@ -11,7 +11,7 @@
     </div>
     <!-- 产品 -->
     <div class="main-title">PRODUCTS</div>
-    <product-list :list="products"/>
+    <product-list :list="products" />
     <div class="main-title">ARTICLE</div>
     <div class="article">
       <div
@@ -42,18 +42,15 @@
         AboutID: 0,
         classify: [],
         articles: [],
-        products: []
+        products: [],
       };
     },
     mounted() {
-      Data.get("/getBanner").then(res => {
-        this.sliders = res.data;
-      });
-      Data.get("/getArticle", { isStar: 1 }).then(res => {
-        this.articles = res.data;
-      });
-      Data.get("/getProdList", { ProdStar: 1 }).then(res => {
-        this.products = res.data;
+      Data.get("/getHomeInfo").then((res) => {
+        const { banners, articles, products } = res.data;
+        this.sliders = banners;
+        this.articles = articles;
+        this.products = products;
       });
     },
     methods: {
@@ -72,8 +69,8 @@
       },
       openArtPage(artId) {
         this.$router.push(`/article/${artId}`);
-      }
-    }
+      },
+    },
   };
 </script>
 
@@ -87,7 +84,8 @@
   }
   .banner-wrap {
     position: relative;
-    height: 360px;
+    height: 0;
+    padding-top: 40%;
     .img-wrap {
       position: absolute;
       top: 0;

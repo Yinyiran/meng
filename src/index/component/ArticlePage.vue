@@ -11,7 +11,7 @@
   export default {
     data() {
       return {
-        article: {}
+        article: {},
       };
     },
     activated() {
@@ -21,11 +21,11 @@
       getArticle() {
         this.article = {}; // 清除上次数据
         let { params, query } = this.$route;
-        Data.get("/getArticle", { id: params.id || query.id }).then(res => {
+        Data.get("/getArticle", { ID: params.id || query.id }).then((res) => {
           this.article = res.data[0];
         });
-      }
-    }
+      },
+    },
   };
 </script>
 
@@ -38,5 +38,10 @@
     color: #888;
     font-size: 12px;
     padding-bottom: 20px;
+  }
+  .content {
+    /deep/ img {
+      width: 100%;
+    }
   }
 </style>
