@@ -1,4 +1,4 @@
-export { ServeHost, UpLoadFile, GetCookie, TypeOf } from "./util"
 export { UploadAccept, BanType } from "./enum"
 import Data from "./data"
-export { Data }
+import UtilService from "./util"
+export { Data, UtilService }
