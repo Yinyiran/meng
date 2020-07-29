@@ -1,11 +1,6 @@
 <template>
   <div class="img-item">
-    <div
-      class="thumb-wrap"
-      v-for="(item,index) in imgs"
-      :key="index"
-      :style="{width:size,height:size}"
-    >
+    <div class="thumb-wrap" v-for="(item,index) in imgs" :key="index">
       <img class="thumb-img" :src="item" />
       <div class="thumb-btn">
         <i class="el-icon-view" title="大图预览" @click="previewImg(item)"></i>
@@ -25,15 +20,11 @@
   export default {
     props: {
       imgs: Array,
-      size: {
-        type: String,
-        default: "100px"
-      }
     },
     data() {
       return {
         showPreview: false,
-        curUrl: ""
+        curUrl: "",
       };
     },
     methods: {
@@ -43,8 +34,8 @@
       },
       removeImg(src) {
         this.$emit("removeImg", src);
-      }
-    }
+      },
+    },
   };
 </script>
 
@@ -61,6 +52,8 @@
     position: relative;
     border-radius: 6px;
     display: inline-block;
+    width: 80px;
+    height: 60px;
     &:hover {
       .thumb-btn {
         opacity: 1;

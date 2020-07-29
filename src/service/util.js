@@ -52,4 +52,18 @@ export default class UtilService {
     });
     return Promise.all(promisArr);
   }
+
+  static GetImgs() {
+    return Data.get("/getFiles?type=img").then(res => {
+      res.data.sort((a, b) => {
+        let reg = /\/([^\/]+)\..+$/g; //文件名字截取;
+        a.match(reg);
+        let aname = RegExp.$1;
+        b.match(reg);
+        let bname = RegExp.$1;
+        return Number(bname) - Number(aname);
+      });
+      return res.data;
+    });
+  }
 }

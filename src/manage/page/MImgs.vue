@@ -19,32 +19,24 @@
 <script>
   import ImgItem from "../../components/ImgItem";
   import UploadFile from "../../components/UploadFile";
-  import { Data } from "../../service";
+  import { Data, UtilService } from "../../service";
   export default {
     components: { ImgItem, UploadFile },
     mounted() {
-      Data.get("/getFiles?type=img").then(res => {
-        res.data.sort((a, b) => {
-          let reg = /\/([^\/]+)\..+$/g; //文件名字截取;
-          a.match(reg);
-          let aname = RegExp.$1;
-          b.match(reg);
-          let bname = RegExp.$1;
-          return Number(bname) - Number(aname);
-        });
-        this.imgPaths = res.data;
+      UtilService.GetImgs().then((res) => {
+        this.imgPaths = res;
       });
     },
     data() {
       return {
         showUpDlg: false,
-        imgPaths: []
+        imgPaths: [],
       };
     },
     methods: {
       deleImg(src) {
         this.$messagebox.confirm("确定要删除这个图片么？", "提示").then(() => {
-          let path = Data.post("/deleteFile", { FilePath: src }).then(res => {
+          let path = Data.post("/deleteFile", { FilePath: src }).then((res) => {
             this.$message.success("删除成功");
             let index = this.imgPaths.indexOf(src);
             this.imgPaths.splice(index, 1);
@@ -56,14 +48,14 @@
       },
       async uploadFile() {
         let res = await this.$refs.UpFileRef.upload();
-        res.forEach(img => {
+        res.forEach((img) => {
           let exist = this.imgPaths.includes(img);
           if (!exist) this.imgPaths.unshift(img);
         });
         this.$message.success("上传成功!");
         this.showUpDlg = false;
-      }
-    }
+      },
+    },
   };
 </script>
 

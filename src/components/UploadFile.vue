@@ -1,7 +1,7 @@
 <template>
   <div class="upload-file">
-    <img-item :imgs="imgList" @removeImg="removeImg" :size="size">
-      <div class="input-wrap" v-show="imgList.length<limit" :style="{width:size,height:size}">
+    <img-item :imgs="imgList" @removeImg="removeImg">
+      <div class="input-wrap" v-show="imgList.length<limit">
         <input
           class="upload-input"
           type="file"
@@ -11,40 +11,45 @@
           :multiple="multi"
           @change="fileCheck()"
         />
+        <i class="el-icon-picture-outline upload-icon" @click="showImgDialog"></i>
         <i class="el-icon-plus upload-icon"></i>
       </div>
     </img-item>
+    <el-dialog :visible="showImgs">
+      <img
+        v-for="(item,index) in allImgs"
+        :key="index"
+        :src="item"
+        class="item-img"
+        @click="selectImg(item)"
+      />
+    </el-dialog>
   </div>
 </template>
 
 <script>
   import ImgItem from "../components/ImgItem";
-  import { UploadAccept, Data, UpLoadFile, TypeOf } from "../service";
-  import { MD5 } from "crypto-js";
+  import { UploadAccept, Data, UtilService } from "../service";
 
   export default {
     props: {
       multi: {
         type: Boolean,
-        default: true
-      },
-      size: {
-        type: String,
-        default: "100px"
+        default: true,
       },
       imgs: [Array, String],
       limitSize: {
         type: Number,
-        default: 5120
+        default: 5120,
       },
       limit: {
         type: String,
-        default: "20"
+        default: "20",
       },
       accept: {
         type: String,
-        default: "img"
-      }
+        default: "img",
+      },
     },
     components: { ImgItem },
     data() {
@@ -52,8 +57,10 @@
         showPreview: false,
         curUrl: "",
         localfiles: [],
+        showImgs: false,
         imgList: [],
-        acceptType: UploadAccept[this.accept] || ""
+        allImgs: null,
+        acceptType: UploadAccept[this.accept] || "",
       };
     },
     watch: {
@@ -61,13 +68,13 @@
         handler(val) {
           this.getImgs(val);
         },
-        immediate: true
-      }
+        immediate: true,
+      },
     },
     methods: {
       getImgs(val) {
         this.localfiles = [];
-        switch (TypeOf(val)) {
+        switch (UtilService.TypeOf(val)) {
           case "undefined":
             this.imgList = [];
             break;
@@ -81,10 +88,26 @@
             this.$message.error("图片展示组件传入的格式不正确", val);
         }
       },
+      showImgDialog() {
+        this.showImgs = true;
+        if (!this.allImgs) {
+          UtilService.GetImgs().then((res) => {
+            this.allImgs = res;
+          });
+        }
+      },
+      selectImg(url) {
+        let index = this.imgList.indexOf(url);
+        if (index > -1) {
+          this.imgList.splice(index, 1);
+        } else {
+          this.imgList.push(url);
+        }
+      },
       async upload() {
         if (this.localfiles.length === 0) return this.imgList;
-        await this.getFileHash();
-        let hashs = this.localfiles.map(item => item.filehash);
+        await UtilService.getFileHash(this.localfiles);
+        let hashs = this.localfiles.map((item) => item.filehash);
         let { data } = await Data.post("/fileExist", hashs);
         let formData = new FormData();
         let upFile = [];
@@ -92,7 +115,11 @@
           let existpath = data[item.filehash];
           if (existpath) {
             let index = this.imgList.indexOf(item.url);
-            this.imgList.splice(index, 1, existpath);
+            if (index > -1) {
+              this.imgList.splice(index, 1, existpath);
+            } else {
+              this.imgList.push(existpath);
+            }
           } else {
             formData.append(`file_${index}`, item.file);
             formData.append(`file_${index}`, `${item.filehash}`);
@@ -101,26 +128,11 @@
         });
         let uplen = upFile.length;
         if (uplen) {
-          let res = await UpLoadFile(formData);
-          this.imgList = this.imgList.filter(url => !url.startsWith("blob:"));
+          let res = await UtilService.UpLoadFile(formData);
+          this.imgList = this.imgList.filter((url) => !url.startsWith("blob:"));
           this.imgList.push(...res.data);
         }
         return this.imgList;
-      },
-
-      async getFileHash() {
-        let promisArr = [].map.call(this.localfiles, item => {
-          return new Promise((resolve, reject) => {
-            var reader = new FileReader();
-            reader.onload = event => {
-              var binary = event.target.result;
-              item.filehash = MD5(binary).toString();
-              resolve();
-            };
-            reader.readAsBinaryString(item.file);
-          });
-        });
-        return Promise.all(promisArr);
       },
 
       async fileCheck() {
@@ -132,13 +144,13 @@
         let imgLen = this.imgList.length + files.length;
         if (imgLen <= this.limit) {
           if (
-            [].some.call(files, v => Math.round(v.size / 1024) > this.limitSize)
+            [].some.call(files, (v) => Math.round(v.size / 1024) > this.limitSize)
           ) {
             this.$message.warning("图片大小最大支持2M");
           } else {
             files.forEach((file, index) => {
               let url = URL.createObjectURL(file);
-              const isExist = this.imgList.find(item => item === url);
+              const isExist = this.imgList.find((item) => item === url);
               if (!isExist) {
                 this.localfiles.push({ file, filehash: "", url });
                 this.imgList.push(url);
@@ -155,11 +167,11 @@
         this.removeUpFile(src); // 删除缓存的图片
       },
       removeUpFile(src) {
-        let upindex = this.localfiles.findIndex(item => (item.url = src));
+        let upindex = this.localfiles.findIndex((item) => (item.url = src));
         if (upindex > -1) this.localfiles.splice(-1);
         this.$refs.uploadRef.value = "";
-      }
-    }
+      },
+    },
   };
 </script>
 
@@ -173,30 +185,55 @@
     border-radius: 6px;
     display: inline-block;
     overflow: hidden;
+    width: 80px;
+    height: 60px;
     transition: 0.2s;
     &:hover {
       border-color: #409eff;
-      .upload-icon {
+    }
+    .upload-input {
+      position: absolute;
+      left: 68%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 28px;
+      height: 28px;
+      opacity: 0;
+      z-index: 10;
+      &:hover {
+        color: #409eff;
+      }
+      + .el-icon-plus {
+        cursor: pointer;
         color: #409eff;
       }
     }
-    .upload-input {
-      vertical-align: top;
-      height: 100%;
-      width: 100%;
-      opacity: 0;
-      z-index: 10;
-      cursor: pointer;
-    }
+  }
+  .item-img {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    margin: 0 4px;
+    border: 1px solid #e8e8e8;
   }
   .upload-icon {
-    font-size: 20px;
-    color: #c0ccda;
     position: absolute;
     top: 50%;
-    left: 50%;
-    z-index: 0;
-    pointer-events: none;
     transform: translate(-50%, -50%);
+    cursor: pointer;
+    font-size: 20px;
+    color: #c0ccda;
+    padding: 4px;
+    z-index: 0;
+    &:hover {
+      color: #409eff;
+    }
+  }
+  .el-icon-picture-outline {
+    left: 34%;
+  }
+  .el-icon-plus {
+    left: 68%;
+    pointer-events: none;
   }
 </style>

@@ -4,34 +4,34 @@
 
 <script>
   import Tinymce from "@tinymce/tinymce-vue";
-  import { ServeHost, UpLoadFile, Data } from "../service";
+  import { UtilService, Data } from "../service";
   export default {
     props: {
       value: {
         type: String,
-        default: ""
+        default: "",
       },
       height: {
         type: String,
-        default: "480"
-      }
+        default: "480",
+      },
     },
     model: {
       prop: "value",
-      event: "change"
+      event: "change",
     },
     components: {
-      editor: Tinymce
+      editor: Tinymce,
     },
     methods: {
       change() {
         this.$emit("change", this.editContent);
-      }
+      },
     },
     watch: {
       value(val) {
         this.editContent = val || "";
-      }
+      },
     },
     data() {
       return {
@@ -43,24 +43,31 @@
           plugins: [
             "advlist autolink lists link image charmap print preview anchor",
             "searchreplace visualblocks code fullscreen",
-            "insertdatetime media table paste code help wordcount"
+            "insertdatetime media table paste code help wordcount",
           ],
-          images_upload_base_path: ServeHost,
+          images_upload_base_path: UtilService.ServeHost,
           images_upload_credentials: true,
           toolbar: `undo redo | formatselect fontsizeselect | bold italic fontsizes forecolor backcolor underline strikethrough  |
-                        formats blockformats fontformats | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent |
-                        removeformat | link image table | preview`,
-          images_upload_handler: (blobInfo, success, failure) => {
-            let formData = new FormData();
-            formData.append("file", blobInfo.blob(), blobInfo.filename());
-            // Data.post("/uploadFile",formData);
-            UpLoadFile(formData).then(res => {
-              res.data.forEach(url => {
-                success(url);
+                    formats blockformats fontformats | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent |
+                    removeformat | link image table | preview`,
+          images_upload_handler: async (blobInfo, success, failure) => {
+            let file = { file: blobInfo.blob(), filehash: "" };
+            await UtilService.getFileHash([file]);
+            let { data } = await Data.post("/fileExist", [file.filehash]);
+            let existpath = data[file.filehash];
+            if (existpath) {
+              success(existpath);
+            } else {
+              let formData = new FormData();
+              formData.append(`file_0`, file.file);
+              formData.append(`file_0`, `${file.filehash}`);
+              UtilService.UpLoadFile(formData).then((res) => {
+                res.data.forEach((url) => {
+                  success(url);
+                });
               });
-            });
-            // success("/resource/img/2020-06-03/1591175209134.jpg");
-          }
+            }
+          },
           // setup: editor => {
           //   //设置自定义功能的按钮
           //   editor.ui.registry.addButton("imageUpload", {
@@ -76,7 +83,7 @@
           //     }
           //   });
           // }
-        }
+        },
         // menu: {
         //   file: {
         //     title: "File",
@@ -112,7 +119,7 @@
         //   help: { title: "Help", items: "help" }
         // }
       };
-    }
+    },
   };
 </script>
 

@@ -78,7 +78,7 @@
             </div>
           </el-form-item>
           <el-form-item label="SKU图片">
-            <upload-file :imgs="sku.SkuImg" size="50px" ref="UpFileRef"></upload-file>
+            <upload-file :imgs="sku.SkuImg" ref="UpFileRef"></upload-file>
           </el-form-item>
         </div>
         <i class="el-icon-close" v-show="row.SkuList.length>1" @click="deleSku(sku,index)"></i>
