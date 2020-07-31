@@ -1,12 +1,17 @@
 <template>
   <div class="products">
     <div class="classify">
-      <a class="classify-item" v-for="cl in classify" :key="cl.ClassID" :href="`#${cl.ClassID}`">
+      <div
+        class="classify-item"
+        v-for="cl in classify"
+        :key="cl.ClassID"
+        @click="scrollToProd(cl.ClassID)"
+      >
         <img class="classify-img" :src="cl.ClassImg" alt />
         <div class="classify-name">{{cl.ClassName}}</div>
-      </a>
+      </div>
     </div>
-    <div v-for="cl in classify" :key="`${cl.ClassID}-prod`" :id="cl.ClassID">
+    <div v-for="cl in classify" :key="`${cl.ClassID}-prod`" :id="`#${cl.ClassID}`">
       <div class="classify-title">{{cl.ClassName}}</div>
       <product-list :list="cl.Products" />
     </div>
@@ -44,6 +49,11 @@
           this.classify = classifys.data;
         });
       },
+      scrollToProd(id){
+        debugger
+        let prodEl = document.getElementById(`#${id}`)
+        if(prodEl) prodEl.scrollIntoView();
+      }
     },
   };
 </script>

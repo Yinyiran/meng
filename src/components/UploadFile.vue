@@ -15,14 +15,17 @@
         <i class="el-icon-plus upload-icon"></i>
       </div>
     </img-item>
-    <el-dialog :visible="showImgs">
-      <img
-        v-for="(item,index) in allImgs"
-        :key="index"
-        :src="item"
-        class="item-img"
-        @click="selectImg(item)"
-      />
+    <el-dialog title="图片列表" :visible.sync="showImgs" :append-to-body="true">
+      <div class="img-wrap">
+        <img
+          v-for="(item,index) in allImgs"
+          :key="index"
+          :src="item"
+          class="item-img"
+          :class="{select:imgList.includes(item)}"
+          @click="selectImg(item)"
+        />
+      </div>
     </el-dialog>
   </div>
 </template>
@@ -101,7 +104,11 @@
         if (index > -1) {
           this.imgList.splice(index, 1);
         } else {
-          this.imgList.push(url);
+          if(this.limit>this.imgList.length){
+            this.imgList.push(url);
+          } else {
+            this.$message.warning(`最多上传${this.limit}张图片`)
+          }
         }
       },
       async upload() {
@@ -210,11 +217,15 @@
     }
   }
   .item-img {
-    width: 40px;
-    height: 40px;
+    width: 60px;
+    height: 60px;
     object-fit: cover;
     margin: 0 4px;
     border: 1px solid #e8e8e8;
+    cursor: pointer;
+    &.select{
+      border: 1px solid red;
+    }
   }
   .upload-icon {
     position: absolute;
@@ -228,6 +239,9 @@
     &:hover {
       color: #409eff;
     }
+  }
+  .img-wrap {
+    height: 300px;
   }
   .el-icon-picture-outline {
     left: 34%;
