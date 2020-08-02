@@ -11,18 +11,18 @@
           :multiple="multi"
           @change="fileCheck()"
         />
-        <i class="el-icon-picture-outline upload-icon" @click="showImgDialog"></i>
         <i class="el-icon-plus upload-icon"></i>
+        <i class="el-icon-picture-outline upload-icon" title="选择已经上传过的图片" @click="showImgDialog"></i>
       </div>
     </img-item>
-    <el-dialog title="图片列表" :visible.sync="showImgs" :append-to-body="true">
-      <div class="img-wrap">
+    <el-dialog title="选择已经上传过的图片" :visible.sync="showImgs" :append-to-body="true">
+      <div class="img-list">
         <img
+          class="img"
           v-for="(item,index) in allImgs"
           :key="index"
-          :src="item"
-          class="item-img"
-          :class="{select:imgList.includes(item)}"
+          :class="{select:item.selected}"
+          :src="item.src"
           @click="selectImg(item)"
         />
       </div>
@@ -95,19 +95,27 @@
         this.showImgs = true;
         if (!this.allImgs) {
           UtilService.GetImgs().then((res) => {
-            this.allImgs = res;
+            this.allImgs = res.map((item) => {
+              return { src: item, selected: this.imgList.includes(item) };
+            });
+          });
+        } else {
+          this.allImgs.forEach((item) => {
+            item.selected = this.imgList.includes(item.src);
           });
         }
       },
-      selectImg(url) {
-        let index = this.imgList.indexOf(url);
+      selectImg(item) {
+        let index = this.imgList.indexOf(item.src);
         if (index > -1) {
+          item.selected = false;
           this.imgList.splice(index, 1);
         } else {
-          if(this.limit>this.imgList.length){
-            this.imgList.push(url);
+          if (this.limit > this.imgList.length) {
+            this.imgList.push(item.src);
+            item.selected = true;
           } else {
-            this.$message.warning(`最多上传${this.limit}张图片`)
+            this.$message.warning(`最多上传${this.limit}张图片`);
           }
         }
       },
@@ -206,27 +214,24 @@
       width: 28px;
       height: 28px;
       opacity: 0;
+      cursor: pointer;
+      font-size: 0; // cursor: pointer 起作用
       z-index: 10;
       &:hover {
         color: #409eff;
-      }
-      + .el-icon-plus {
-        cursor: pointer;
-        color: #409eff;
+        + .el-icon-plus {
+          color: #409eff;
+        }
       }
     }
-  }
-  .item-img {
-    width: 60px;
-    height: 60px;
-    object-fit: cover;
-    margin: 0 4px;
-    border: 1px solid #e8e8e8;
-    cursor: pointer;
-    &.select{
-      border: 1px solid red;
+    .el-icon-picture-outline {
+      left: 34%;
+    }
+    .el-icon-plus {
+      left: 68%;
     }
   }
+
   .upload-icon {
     position: absolute;
     top: 50%;
@@ -240,14 +245,33 @@
       color: #409eff;
     }
   }
-  .img-wrap {
+  .img-list {
     height: 300px;
+    .img {
+      width: 60px;
+      height: 60px;
+      margin: 0 4px;
+      border: 1px solid #e8e8e8;
+      object-fit: cover;
+      cursor: pointer;
+      &.select {
+        border: 1px solid red;
+        position: relative;
+        &::after {
+          position: absolute;
+          top: 0;
+          right: 0;
+          content: "";
+          width: 10px;
+          height: 10px;
+          background-color: red;
+          transform: rotate(-45deg);
+        }
+      }
+    }
   }
-  .el-icon-picture-outline {
-    left: 34%;
-  }
-  .el-icon-plus {
-    left: 68%;
-    pointer-events: none;
+  .dialog-footer {
+    padding-right: 20px;
+    text-align: right;
   }
 </style>
