@@ -50,7 +50,6 @@
         });
       },
       scrollToProd(id){
-        debugger
         let prodEl = document.getElementById(`#${id}`)
         if(prodEl) prodEl.scrollIntoView();
       }

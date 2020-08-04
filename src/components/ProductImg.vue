@@ -6,6 +6,12 @@
           <img class="carousel-img" :src="img" alt />
         </el-carousel-item>
       </el-carousel>
+    </template>
+        <template v-else>
+      <div class="prod-item">
+        <img class="prod-img" :src="imgData.imgs" />
+      </div>
+        </template>
       <div class="img-wrap" @click.stop>
         <img
           class="img-mini"
@@ -18,13 +24,6 @@
         />
       </div>
       <div class="prod-intro" v-if="info">{{imgData.title}}</div>
-    </template>
-    <template v-else>
-      <div class="prod-item">
-        <img class="prod-img" :src="imgData.imgs" />
-      </div>
-      <div class="prod-intro" v-if="info">{{imgData.title}}</div>
-    </template>
   </div>
 </template>
 
@@ -33,14 +32,14 @@
     props: {
       imgData: Object,
       info: Boolean,
-      size: String
+      size: String,
     },
     watch: {
       imgData(val) {
         this.$nextTick(() => {
           if (this.$refs.carousel) this.$refs.carousel.setActiveItem(0);
         });
-      }
+      },
     },
     methods: {
       carChange(index) {
@@ -48,8 +47,8 @@
       },
       miniChange(imgIndex) {
         this.$refs.carousel.setActiveItem(imgIndex);
-      }
-    }
+      },
+    },
   };
 </script>
 
@@ -83,7 +82,7 @@
   .prod-intro {
     text-align: center;
     cursor: pointer;
-    padding: 10px 0 20px;
+    padding: 15px 0 30px;
   }
   .prod-item {
     cursor: pointer;
